@@ -1,6 +1,14 @@
 from fastapi import APIRouter
 
-from app.api.routes import items
+from app.api.routes import items, code_review_form
 
 api_router = APIRouter()
+
+
+@api_router.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
 api_router.include_router(items.router)
+api_router.include_router(code_review_form.router)

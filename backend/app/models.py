@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
 
-class Item(BaseModel):
-    name: str
+class CodeReviewForm(BaseModel):
+    programming_language: str
+    raw_code: str
+    error: str
