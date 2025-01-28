@@ -2,12 +2,10 @@
 
 ## General Workflow
 
-By default, the dependencies are managed with [uv](https://docs.astral.sh/uv/), go there and install it.
-
-From `./backend/` you can install all the dependencies with:
+Make a virtual environment with:
 
 ```console
-$ uv sync
+$ python -m venv .venv
 ```
 
 Then you can activate the virtual environment with:
@@ -16,7 +14,11 @@ Then you can activate the virtual environment with:
 $ source .venv/bin/activate
 ```
 
-Make sure your editor is using the correct Python virtual environment, with the interpreter at `backend/.venv/bin/python`.
+You can install all the dependencies with:
+
+```console
+$ pip install -r requirements.txt
+```
 
 You can now run the backend with:
 
