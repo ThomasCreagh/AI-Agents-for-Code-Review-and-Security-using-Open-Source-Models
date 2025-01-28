@@ -1,9 +1,10 @@
 from fastapi import APIRouter
-from typing import Union
+
+from app.models import Item
 
 router = APIRouter(prefix="/items")
 
 
 @router.get("/{id}")
-def read_item(item_id: int, q: Union[str, None] = None):
+def read_item(item_id: int, q: Item):
     return {"item_id": item_id, "q": q}
