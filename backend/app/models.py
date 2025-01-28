@@ -1,0 +1,2 @@
+class Item:
+    name: str
