@@ -32,5 +32,5 @@ For development run it like this:
 $ fastapi dev app/main.py
 ```
 
-help template:
+template used to help design api files structure:
 [github](https://github.com/fastapi/full-stack-fastapi-template)

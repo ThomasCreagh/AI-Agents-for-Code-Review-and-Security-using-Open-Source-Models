@@ -5,5 +5,5 @@ router = APIRouter(prefix="/code-review-form", tags=["code-review-form"])
 
 
 @router.post("/")
-def read_item(code_review_form: CodeReviewForm):
-    return {"code": code_review_form}
+def read_item(code_review_form: CodeReviewForm) -> dict:
+    return {"agents_response": "some response that the ai agents returned"}
