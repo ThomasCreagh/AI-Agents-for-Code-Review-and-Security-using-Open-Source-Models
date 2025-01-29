@@ -32,5 +32,11 @@ For development run it like this:
 $ fastapi dev app/main.py
 ```
 
+To run tests use this:
+
+```console
+$ pytest
+```
+
 template used to help design api files structure:
 [github](https://github.com/fastapi/full-stack-fastapi-template)
