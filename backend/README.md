@@ -2,6 +2,10 @@
 
 ## General Workflow
 
+### NOTE
+
+When installing and runing the next commands make sure your working in the `backend/` directory and not `backend/app`.
+
 Make a virtual environment with:
 
 ```console
