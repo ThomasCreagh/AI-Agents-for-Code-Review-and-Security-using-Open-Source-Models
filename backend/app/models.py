@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Union
 
 
 class TestOuput(BaseModel):
@@ -9,5 +8,8 @@ class TestOuput(BaseModel):
 
 class CodeReviewForm(BaseModel):
     programming_language: str
+    error: str | None = None
+
+
+class CodeReviewFormTextBox(CodeReviewForm):
     raw_code: str
-    error: Union[str, None] = None
