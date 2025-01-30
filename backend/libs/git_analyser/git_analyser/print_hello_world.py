@@ -1,2 +1,3 @@
-def run() -> None:
+def run() -> str:
     print("hello world")
+    return "hello world"
