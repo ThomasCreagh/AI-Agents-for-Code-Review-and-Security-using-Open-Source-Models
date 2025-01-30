@@ -1,15 +1,21 @@
 from pydantic import BaseModel
+from enum import Enum
 
 
-class TestOuput(BaseModel):
-    returned_message: str
-    input_value: dict
+class CodeSourceType(str, Enum):
+    file = "file"
+    text = "text"
 
 
-class CodeReviewForm(BaseModel):
-    programming_language: str
-    error: str | None = None
+class CodeReviewResponse(BaseModel):
+    code_source_type: CodeSourceType
+    filename: str | None = None
+    error_description: str | None = None
+    language: str
+    suggestion: str
 
 
-class CodeReviewFormTextBox(CodeReviewForm):
-    raw_code: str
+class CodeReviewRequest(BaseModel):
+    code: str
+    error_description: str | None = None
+    language: str
