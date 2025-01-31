@@ -4,6 +4,10 @@ from app.core.config import settings
 from app.models import CodeSourceType
 
 
+def auth_headers():
+    return {"X-API-Key": f"{settings.API_KEY}"}
+
+
 def test_review_code_text(client: TestClient):
     code_data = {
         "code": "import random; print(random.randint(4))",
@@ -14,6 +18,7 @@ def test_review_code_text(client: TestClient):
     response = client.post(
         f"{settings.API_V1_STR}/code-review/text",
         json=code_data,
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
@@ -45,6 +50,7 @@ def test_review_code_file(client: TestClient):
         f"{settings.API_V1_STR}/code-review/file",
         data=code_data,
         files=files,
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
