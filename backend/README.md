@@ -27,13 +27,7 @@ $ pip install -r requirements.txt
 You can now run the backend with:
 
 ```console
-$ fastapi run app/main.py
-```
-
-For development run it like this:
-
-```console
-$ fastapi dev app/main.py
+$ uvicorn app.main:app --reload
 ```
 
 To run tests use this:
