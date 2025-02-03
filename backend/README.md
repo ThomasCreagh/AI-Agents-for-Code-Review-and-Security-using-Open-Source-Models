@@ -6,6 +6,8 @@
 
 When installing and runing the next commands make sure your working in the `backend/` directory and not `backend/app`.
 
+When running commands with windows omit the $, and follow other given commands where necessary
+
 Make a virtual environment with:
 
 ```console
