@@ -15,7 +15,14 @@ $ python -m venv .venv
 Then you can activate the virtual environment with:
 
 ```console
+#### Linux:
+
 $ source .venv/bin/activate
+
+#### Windows:
+
+.venv\Scripts\activate
+
 ```
 
 You can install all the dependencies with:
