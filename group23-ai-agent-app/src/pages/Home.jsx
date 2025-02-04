@@ -4,16 +4,6 @@ import "../styles/Home.css";
 const Home = () => {
   return (
     <div className="container">
-      <nav className="navbar">
-  <div className="nav-left">
-    <div className="logo">
-      <img src="ibm.png" alt="IBM Logo" />
-    </div>
-    <div className="separator"></div>
-    <span className="about-link">About</span>
-  </div>
-</nav>
-
       <div className="content">
       <div className="text-section">
         <h1>AI Code Review & Security</h1>
