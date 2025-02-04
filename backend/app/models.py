@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum
 
-
 class CodeSourceType(str, Enum):
     file = "file"
     text = "text"
@@ -21,3 +20,15 @@ class CodeReviewRequest(BaseModel):
     code: str
     error_description: str | None = None
     language: str
+
+class Login(BaseModel):
+    email: str
+    password: str
+
+class Logout(BaseModel):
+    response: str
+
+class CreateAccount(BaseModel):
+    email: str
+    password: str
+    uuid: str                   # Unique identifier for each account
