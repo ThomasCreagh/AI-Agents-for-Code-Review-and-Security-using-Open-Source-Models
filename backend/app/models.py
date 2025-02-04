@@ -13,9 +13,11 @@ class CodeReviewResponse(BaseModel):
     error_description: str | None = None
     language: str
     suggestion: str
+    line_nums: list
 
 
 class CodeReviewRequest(BaseModel):
+    code_source_type: CodeSourceType
     code: str
     error_description: str | None = None
     language: str
