@@ -1,5 +1,4 @@
 from fastapi import APIRouter, File, UploadFile, Form, Depends
-from git_analyser import print_hello_world
 
 from app.core.security import verify_api_key
 from app.models import (
@@ -17,7 +16,6 @@ router = APIRouter(prefix="/code-review", tags=["code-review"])
     dependencies=[Depends(verify_api_key)],
 )
 def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
-    print_hello_world.run()
     return CodeReviewResponse(
         code_source_type=CodeSourceType.text,
         language=request.language,
