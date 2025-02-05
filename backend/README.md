@@ -45,19 +45,8 @@ To run tests use this:
 $ pytest
 ```
 
-Build with docker:
-
-```console
-$ sudo docker build --no-cache -t fastapi-app -f Dockerfile .
-```
-
-Run it through docker:
-
-```console
-$ sudo docker run -p 5000:8000 --env-file ../.env fastapi-app
-```
-
-this runs it on local host and is on port 5000 `http://0.0.0.0:5000`, add `-d` to run in detached mode
+Run docker contatiner:
+To run the docker container you have to run the commands in the `../README.md`
 
 template used to help design api files structure:
 [github](https://github.com/fastapi/full-stack-fastapi-template)
