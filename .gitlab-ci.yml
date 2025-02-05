@@ -1,19 +1,19 @@
 stages:
-  # - test
+  - test
   - build
   - deploy
 
-# test_job:
-#   stage: test
-#   before_script:
-#     - cd backend
-#     - python -m venv .venv
-#     - source .venv/bin/activate
-#     - pip install -r requirements.txt
-#     - pip install pytest
-#   script:
-#     - echo "Running tests..."
-#     - pytest
+test_job:
+  stage: test
+  before_script:
+    - cd backend
+    - python -m venv .venv
+    - source .venv/bin/activate
+    - pip install -r requirements.txt
+    - pip install pytest
+  script:
+    - echo "Running tests..."
+    - pytest
 
 build_job:
   stage: build
@@ -28,4 +28,3 @@ deploy_job:
     - docker compose up -d
   only:
     - main
-    - backend
