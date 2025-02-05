@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
-from app.models import CodeSourceType
 
 
 def auth_headers():
@@ -10,7 +9,7 @@ def auth_headers():
 
 def test_review_code_text(client: TestClient):
     code_data = {
-        "code": "import random; print(random.randint(4))",
+        "code": "import random;\nprint(random.randint(4))",
         "error_description": "test error",
         "language": "python",
     }
@@ -25,7 +24,6 @@ def test_review_code_text(client: TestClient):
     data = response.json()
 
     assert len(data["suggestion"]) > 0
-    assert data["code_source_type"] == CodeSourceType.text
     assert data["language"] == code_data["language"]
 
 
@@ -56,7 +54,6 @@ def test_review_code_file(client: TestClient):
     assert response.status_code == 200
     data = response.json()
 
-    assert data["code_source_type"] == CodeSourceType.file
     assert data["filename"] == filename
     assert data["language"] == code_data["language"]
     assert len(data["suggestion"]) > 0

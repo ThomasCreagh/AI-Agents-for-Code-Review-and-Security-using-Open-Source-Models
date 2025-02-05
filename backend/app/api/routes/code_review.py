@@ -2,7 +2,6 @@ from fastapi import APIRouter, File, UploadFile, Form, Depends
 
 from app.core.security import verify_api_key
 from app.models import (
-    CodeSourceType,
     CodeReviewRequest,
     CodeReviewResponse
 )
@@ -17,11 +16,11 @@ router = APIRouter(prefix="/code-review", tags=["code-review"])
 )
 def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
     return CodeReviewResponse(
-        code_source_type=CodeSourceType.text,
         language=request.language,
         error_description=request.error_description,
         filename=None,
         suggestion="test",
+        line_nums=[1, 5]  # placeholder
     )
 
 
@@ -36,7 +35,6 @@ async def review_code_file(
         language: str = Form(...),
 ) -> CodeReviewResponse:
     return CodeReviewResponse(
-        code_source_type=CodeSourceType.file,
         filename=file.filename,
         language=language,
         error_description=error_description,
@@ -59,7 +57,6 @@ def no_vulnerabilities_found(
     language: str = Form(...),
 ) -> CodeReviewResponse:
     return CodeReviewResponse(
-        code_source_type=CodeSourceType.file,
         filename=file.filename,
         language=language,
         error_description=error_description,
