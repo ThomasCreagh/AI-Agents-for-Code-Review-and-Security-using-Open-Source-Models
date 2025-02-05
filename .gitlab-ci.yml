@@ -1,0 +1,25 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test_job:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - pytest
+
+build_job:
+  stage: build
+  script:
+    - echo "Building the application..."
+    - docker compose build
+
+deploy_job:
+  stage: deploy
+  script:
+    - echo "Deploying to production..."
+    - docker compose up -d
+  only:
+    - main
+    - backend
