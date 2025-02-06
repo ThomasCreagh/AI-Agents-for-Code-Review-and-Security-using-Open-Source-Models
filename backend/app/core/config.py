@@ -11,5 +11,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "sweng2025group23"
     API_KEY: str
 
+    EMAIL_TEST_USER: str = "exampleEmail@gmail.com" # Test user for paramaters, for testing purposes
+    PASSWORD_TEST_USER: str = "123456"
+
+    FRONTEND_HOST: str = "http://localhost:7755" # Arbitrary value to get frontend host (Need to get from front end team)
+
 
 settings = Settings()
