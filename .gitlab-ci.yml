@@ -5,6 +5,8 @@ stages:
 
 test_job:
   stage: test
+  tags:
+    - maven
   before_script:
     - cd backend
     - python -m venv .venv
@@ -17,14 +19,19 @@ test_job:
 
 build_job:
   stage: build
+  tags:
+    - maven
   script:
     - echo "Building the application..."
     - docker compose build
 
 deploy_job:
   stage: deploy
+  tags:
+    - maven
   script:
     - echo "Deploying to production..."
     - docker compose up -d
   only:
     - main
+    - backend
