@@ -4,6 +4,8 @@ import os
 import argparse
 
 # load security patterns from YAML file
+
+
 def load_patterns():
     """load patterns for credential scanning here"""
     with open("security_scanner/config/patterns.yaml", "r") as file:
@@ -11,6 +13,8 @@ def load_patterns():
     return data["credential_patterns"]
 
 # Scan a file for credential patterns
+
+
 def scan_file(file_path, patterns):
     """scan for patterns"""
     results = []
@@ -27,6 +31,8 @@ def scan_file(file_path, patterns):
     return results
 
 # scan whole dir
+
+
 def scan_directory(directory):
     """scan all files in dir"""
     patterns = load_patterns()
@@ -34,11 +40,12 @@ def scan_directory(directory):
 
     for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith((".py", ".js", ".env", ".json", ".txt")): 
+            if file.endswith((".py", ".js", ".env", ".json", ".txt")):
                 file_path = os.path.join(root, file)
                 findings.extend(scan_file(file_path, patterns))
 
     return findings
+
 
 if __name__ == "__main__":
     target_directory = "test_files"  # needs to be changed
@@ -50,4 +57,3 @@ if __name__ == "__main__":
             print(f"[{res['file']}:{res['line']}] {res['match']} → {res['content']}")
     else:
         print("No credentials found")
-
