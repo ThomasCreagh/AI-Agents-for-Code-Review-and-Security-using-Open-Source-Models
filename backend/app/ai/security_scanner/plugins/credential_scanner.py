@@ -24,7 +24,7 @@ def scan_file(file_path, patterns):
 def scan_text(text: str, patterns, file_path: str = None) -> list:
     """scan text for patterns"""
     results = []
-    for line_num, line in enumerate(text, start=1):
+    for line_num, line in enumerate(text.split("\n"), start=1):
         for pattern in patterns:
             print(line, line_num)
             if re.search(pattern["pattern"], line):

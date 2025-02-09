@@ -9,7 +9,7 @@ def auth_headers():
 
 def test_review_code_text(client: TestClient):
     code_data = {
-        "code": "import random;\nprint(random.randint(4))",
+        "code": '"API_KEY = "AIzaSyD3Xz7-EXAMPLEKEY"  # Google API Key',
         "error_description": "test error",
         "language": "python",
     }
@@ -23,7 +23,7 @@ def test_review_code_text(client: TestClient):
     assert response.status_code == 200
     data = response.json()
 
-    assert len(data["suggestion"]) > 0
+    assert data["suggestion"] != "[]"
     assert data["language"] == code_data["language"]
 
 
@@ -34,7 +34,7 @@ def test_review_code_file(client: TestClient):
     }
 
     file_content = ""
-    with open("app/tests/api/routes/test_files/script.txt", "r") as reader:
+    with open("app/tests/ai/test_files/example.py", "r") as reader:
         file_content = reader.read()
 
     file_content_type = "text/plain"
@@ -56,4 +56,4 @@ def test_review_code_file(client: TestClient):
 
     assert data["filename"] == filename
     assert data["language"] == code_data["language"]
-    assert len(data["suggestion"]) > 0
+    assert data["suggestion"] != "[]"
