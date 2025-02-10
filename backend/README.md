@@ -14,39 +14,57 @@ Make a virtual environment with:
 $ python -m venv .venv
 ```
 
-Then you can activate the virtual environment with:
+### Then you can activate the virtual environment with:
 
-```console
 #### Linux:
 
+```console
 $ source .venv/bin/activate
+```
 
 #### Windows:
 
+```console
 .venv\Scripts\activate
-
 ```
 
-You can install all the dependencies with:
+### You can install all the dependencies with:
 
 ```console
 $ pip install -r requirements.txt
 ```
 
-You can now run the backend with:
+### You can now run the backend with:
 
 ```console
 $ uvicorn app.main:app --reload
 ```
+
+### To run the backend independantly with docker
+
+Build with docker:
+
+```console
+$ sudo docker build --no-cache -t fastapi-app -f Dockerfile .
+```
+
+Run it through docker:
+
+```console
+$ sudo docker run -p 8000:8000 --env-file ../.env fastapi-app
+```
+
+### To run docker contatiner:
+
+To run the docker container you have to run the commands in the `../README.md`
+
+## Tests
 
 To run tests use this:
 
 ```console
 $ pytest
 ```
-
-Run docker contatiner:
-To run the docker container you have to run the commands in the `../README.md`
 
 template used to help design api files structure:
 [github](https://github.com/fastapi/full-stack-fastapi-template)
