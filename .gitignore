@@ -22,3 +22,10 @@ output/
 # Test cache
 .pytest_cache/
 .coverage
+
+
+.env
+venv
+__pycache__
+chroma_db
+.gradio
