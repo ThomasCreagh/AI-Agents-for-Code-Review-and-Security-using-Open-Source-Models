@@ -1,0 +1,13 @@
+credential_patterns:
+  - name: "AWS Access Key"
+    pattern: "AKIA[0-9A-Z]{16}"
+  - name: "Generic API Key"
+    pattern: "[A-Za-z0-9]{32,45}"
+  - name: "Google API Key"
+    pattern: "AIza[0-9A-Za-z-_]{10,50}"
+  - name: "Slack Token"
+    pattern: "xox[baprs]-[0-9a-zA-Z]{10,48}"
+  - name: "Basic Auth Password"
+    pattern: "[\"']?(password|pass|pwd)[\"']?\\s*[:=]\\s*[\"'][^\"']{4,}[\"']"
+
+ 
