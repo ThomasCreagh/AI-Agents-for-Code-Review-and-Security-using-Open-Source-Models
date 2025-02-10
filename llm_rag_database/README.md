@@ -32,11 +32,17 @@ python ingest_pdfs.py
 
 3. Run the RAG application:
 ```bash
-python llm_rag_database.py
+python launch.py
 ```
+4. Click on gradio link in terminal (http://127.0.0.1:7860)
 
 This will launch a Gradio web interface where you can ask questions about your documents.
 
 ### Note
 Unless you pay for hugging face premium good luck finding a model to run from there
 
+## Lightweight Models: 
+    granite3.1-dense:2b
+    deepseek-r1:1.5b
+
+    
