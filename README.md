@@ -14,6 +14,12 @@ Run without Build:
 $ sudo docker compose up -d
 ```
 
+Run with errors:
+
+```console
+$ sudo docker compose up
+```
+
 Stop:
 
 ```console
