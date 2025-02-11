@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+
+
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  .text-section {
+    max-width: 60%;
+    margin-left: 100px;
+  }
+  
+  h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+.cta-button {
+    background-color: rgb(0, 110, 255);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+  
+  .cta-button:hover {
+    background-color: darkblue;
+  }
+  
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .text-section {
+      max-width: 100%;
+    }
+
+  }
+  
+  .dropdown {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 350px;
+  }
+  
+  .team-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    margin-top: 40px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .team-section h2 {
+    margin-bottom: 20px; 
+    text-align: center; 
+
+  }
+  
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 50px;
+    justify-content: center; 
+    width: fit-content;
+  }
+  
+  
+  .team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .team-name {
+    margin-top: 10px; 
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  
+  .team-photo {
+    width: 150px; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 50%; 
+    border: 2px solid #ddd; 
+  }
+  
+  
