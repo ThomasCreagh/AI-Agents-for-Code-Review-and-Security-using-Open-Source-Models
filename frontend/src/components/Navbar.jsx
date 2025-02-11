@@ -13,6 +13,20 @@ const Navbar = () => {
         <Link to="/about" className="about-link" style={{ textDecoration: "none", color: "inherit" }}>
           About
         </Link>
+        <Link
+          to="/upload"
+          className="upload-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Code Review
+        </Link>
+        <Link
+          to="/how_to_use"
+          className="how_to_use-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          How_To_Use
+        </Link>
       </div>
     </nav>
   );
