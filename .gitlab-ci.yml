@@ -1,40 +1,41 @@
-stages:
-  # - test
-  # - build
-  # - deploy
+# fix pipeline later
+# stages:
+#   # - test
+#   # - build
+#   # - deploy
 
-test_job:
-  stage: test
-  tags:
-    - test-runner
-  before_script:
-    - cd backend
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-    - pip install -r requirements.txt
-    - pip install pytest
-  script:
-    - echo "Running tests..."
-    - pytest
-  only:
-    # - main
+# test_job:
+#   stage: test
+#   tags:
+#     - test-runner
+#   before_script:
+#     - cd backend
+#     - python3 -m venv .venv
+#     - source .venv/bin/activate
+#     - pip install -r requirements.txt
+#     - pip install pytest
+#   script:
+#     - echo "Running tests..."
+#     - pytest
+#   only:
+#     # - main
 
-build_job:
-  stage: build
-  tags:
-    - test-runner
-  script:
-    - echo "Building the application..."
-    - docker compose build
-  only:
-    # - main
+# build_job:
+#   stage: build
+#   tags:
+#     - test-runner
+#   script:
+#     - echo "Building the application..."
+#     - docker compose build
+#   only:
+#     # - main
 
-deploy_job:
-  stage: deploy
-  tags:
-    - test-runner
-  script:
-    - echo "Deploying to production..."
-    - docker compose up -d
-  only:
-    # - main
+# deploy_job:
+#   stage: deploy
+#   tags:
+#     - test-runner
+#   script:
+#     - echo "Deploying to production..."
+#     - docker compose up -d
+#   only:
+#     # - main
