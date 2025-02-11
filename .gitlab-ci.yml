@@ -20,7 +20,7 @@ stages:
 build_job:
   stage: build
   tags:
-    - docker
+    - test-runner
   script:
     - echo "Building the application..."
     - docker compose build
@@ -28,7 +28,7 @@ build_job:
 deploy_job:
   stage: deploy
   tags:
-    - docker
+    - test-runner
   script:
     - echo "Deploying to production..."
     - docker compose up -d
