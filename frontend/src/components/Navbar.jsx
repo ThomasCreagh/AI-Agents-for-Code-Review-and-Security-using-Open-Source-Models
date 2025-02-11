@@ -31,6 +31,13 @@ const Navbar = () => {
         >
           Code Review
         </Link>
+        <Link
+          to="/how_to_use"
+          className="how_to_use-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          How_To_Use
+        </Link>
       </div>
     </nav>
   );
