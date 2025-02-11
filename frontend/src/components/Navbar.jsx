@@ -10,7 +10,18 @@ const Navbar = () => {
           <img src="/ibm.png" alt="IBM Logo" />
         </div>
         <div className="separator"></div>
-        <Link to="/about" className="about-link" style={{ textDecoration: "none", color: "inherit" }}>
+        <Link
+          to="/"
+          className="home-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Home
+        </Link>
+        <Link
+          to="/about"
+          className="about-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           About
         </Link>
         <Link
