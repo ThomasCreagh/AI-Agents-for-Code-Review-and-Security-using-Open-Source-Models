@@ -7,7 +7,9 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-left">
         <div className="logo">
+        <a href="https://www.ibm.com" target="_blank" rel="noopener noreferrer" className="logo">
           <img src="/ibm.png" alt="IBM Logo" />
+        </a>
         </div>
         <div className="separator"></div>
         <Link
