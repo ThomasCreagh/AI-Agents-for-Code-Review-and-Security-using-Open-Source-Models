@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Form, Depends
+from fastapi import APIRouter, File, UploadFile, Form, Depends, HTTPException
 
 from app.ai.security_scanner.plugins.credential_scanner import (
     scan_text, load_patterns
@@ -28,20 +28,27 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
     )
 
 
+# TODO: check if i need "| None" for the documentation file
 @router.post(
     "/file",
     response_model=CodeReviewResponse,
     dependencies=[Depends(verify_api_key)],
 )
 async def review_code_file(
-        file: UploadFile = File(...),
+        code_file: UploadFile = File(...),
+        documentation_file: UploadFile = File(...),
+        model: str | None = Form(None),
         error_description: str | None = Form(None),
         language: str = Form(...),
 ) -> CodeReviewResponse:
-    text = str(file.file.read())
-    suggestion = str(scan_text(text, load_patterns(), file.filename))
+    if not code_file:
+        raise HTTPException(
+            status_code=400, detail="Invalid input: code file must be given")
+
+    text = str(code_file.file.read())
+    suggestion = str(scan_text(text, load_patterns(), code_file.filename))
     return CodeReviewResponse(
-        filename=file.filename,
+        filename=code_file.filename,
         language=language,
         error_description=error_description,
         suggestion=suggestion,
