@@ -4,7 +4,7 @@ stages:
   - deploy
 
 # Backend Tests
-backend-tests:
+test-backend:
   stage: test
   image: python:3.9
   before_script:
