@@ -6,8 +6,6 @@ WORKDIR /code
 
 COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /uvx /bin/
 
-COPY ./requirements.txt .
-
 ENV PATH="/code/.venv/bin:$PATH"
 
 ENV UV_COMPILE_BYTECODE=1
