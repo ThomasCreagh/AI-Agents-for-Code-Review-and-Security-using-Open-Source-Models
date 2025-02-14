@@ -1,0 +1,30 @@
+stages:
+  - install
+  - test
+  - deploy
+
+# Backend Tests
+backend-tests:
+  stage: test
+  image: python:3.9
+  before_script:
+    - cd backend
+    - pip install -r requirements.txt
+  script:
+    - pytest tests/
+  artifacts:
+    reports:
+      junit: backend/reports/test-results.xml
+
+# Frontend Tests
+frontend-tests:
+  stage: test
+  image: node:18
+  before_script:
+    - cd frontend
+    - npm install
+  script:
+    - npm test
+  artifacts:
+    reports:
+      junit: frontend/test-results.xml
