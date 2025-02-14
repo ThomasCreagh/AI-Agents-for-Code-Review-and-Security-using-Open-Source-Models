@@ -9,7 +9,8 @@ test-backend:
   image: python:3.9
   before_script:
     - cd backend
-    - pip install -r requirements.txt
+    - python -m pip install --upgrade pip  # Ensure latest pip version
+    - pip install --no-cache-dir -r requirements.txt  # Install dependencies efficiently
   script:
     - pytest tests/
   artifacts:
