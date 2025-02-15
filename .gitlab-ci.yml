@@ -2,7 +2,7 @@ image: docker:dind
 
 test:
   script:
-    - docker info
+    - docker compose up
   tags:
     - maven
     
