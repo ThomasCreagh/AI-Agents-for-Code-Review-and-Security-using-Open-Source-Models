@@ -9,7 +9,7 @@ variables:
 
 before_script:
   - docker info
-  - echo "working.."
+  - echo "working."
 
 stages:
   - build
