@@ -8,13 +8,6 @@ test:
     - source $HOME/.local/bin/env
     - cd backend
     - ls -a
-    - cat pyproject.toml
-    - rm -f uv.lock
-    # - uv pip freeze | xargs uv pip uninstall -y
-    - source .venv/bin/activate
-    - pip freeze | xargs pip uninstall -y
-    - uv cache clean
-    - uv sync --reinstall
     - echo "REACT_APP_API_KEY=test" > .env
     - pytest
   tags:
