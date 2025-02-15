@@ -6,7 +6,7 @@ build:
   stage: build
   script:
     - docker compose build
-  tags
+  tags:
     - shared
 
 test:
@@ -15,5 +15,5 @@ test:
     - docker compose up -d
     - docker exec sweng25_group_23_ibm-backend-1 pytest
     - docker compose down
-  tags
+  tags:
     - shared
