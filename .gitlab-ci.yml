@@ -8,7 +8,6 @@ test:
     - source $HOME/.local/bin/env
     - cd backend
     - uv cache clean
-    - rm -r "$(uv python dir)"
     - rm -r "$(uv tool dir)"
     - uv sync
     - echo "REACT_APP_API_KEY=test" > .env
