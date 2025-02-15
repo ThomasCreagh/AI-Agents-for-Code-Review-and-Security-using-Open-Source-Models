@@ -8,7 +8,7 @@ test:
     - source $HOME/.local/bin/env
     - cd backend
     - uv sync
-    - echo "REACT_APP_API_KEY=test" > .env
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http:localhost:3000" > .env
     - source .venv/bin/activate
     - pytest
   tags:
