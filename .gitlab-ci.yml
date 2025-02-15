@@ -9,7 +9,7 @@ test:
     - cd backend
     - uv sync
     - echo "REACT_APP_API_KEY=test" > .env
-    - ls -a
+    - source .venv/bin/activate
     - pytest
   tags:
     - maven
