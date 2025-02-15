@@ -9,7 +9,7 @@ test:
     - cd backend
     - cat pyproject.toml
     - rm -f uv.lock
-    - uv pip freeze | xargs uv pip uninstall -y
+    # - uv pip freeze | xargs uv pip uninstall -y
     - source .venv/bin/activate
     - pip freeze | xargs pip uninstall -y
     - uv cache clean
