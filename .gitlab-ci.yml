@@ -1,9 +1,16 @@
-image: docker:dind
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
 
 test:
   script:
+    - docker info
     - docker compose build
     - echo "build complete"
   tags:
     - maven
-    
