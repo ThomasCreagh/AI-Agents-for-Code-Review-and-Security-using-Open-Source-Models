@@ -7,8 +7,6 @@ test:
     - wget -qO- https://astral.sh/uv/install.sh | sh
     - source $HOME/.local/bin/env
     - cd backend
-    - uv cache clean
-    - rm -r "$(uv tool dir)"
     - uv sync
     - echo "REACT_APP_API_KEY=test" > .env
     - ls -a
