@@ -5,9 +5,6 @@ stages:
 build:
   stage: build
   script:
-    - apt-get clean
-    - docker system prune -a
-    - rm -rf /tmp/*
     - docker compose build
   tags:
     - toms-local-runner
