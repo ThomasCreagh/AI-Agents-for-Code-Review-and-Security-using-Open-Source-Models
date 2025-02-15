@@ -10,7 +10,7 @@ build:
     - rm -rf /tmp/*
     - docker compose build
   tags:
-    - rsjQoYFx
+    - toms-local-runner
 
 test:
   stage: test
@@ -19,4 +19,4 @@ test:
     - docker exec sweng25_group_23_ibm-backend-1 pytest
     - docker compose down
   tags:
-    - rsjQoYFx
+    - toms-local-runner
