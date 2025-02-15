@@ -4,7 +4,7 @@ test:
   script:
     - echo "hello world"
     - python --version
-    - wget -LsSf https://astral.sh/uv/install.sh | sh
+    - wget -qO- https://astral.sh/uv/install.sh | sh
   tags:
     - maven
 
