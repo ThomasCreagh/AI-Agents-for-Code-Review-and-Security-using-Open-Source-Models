@@ -1,6 +1,9 @@
+image: python:alpine
+
 test:
   script:
     - echo "hello world"
+    - python --version
   tags:
     - maven
 
