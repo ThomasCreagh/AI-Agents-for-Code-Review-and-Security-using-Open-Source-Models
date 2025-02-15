@@ -1,3 +1,11 @@
+image: docker:24.0.7
+
+services:
+  - docker:24.0.7-dind
+
+before_script:
+  - docker info
+
 stages:
   - build
   - test
