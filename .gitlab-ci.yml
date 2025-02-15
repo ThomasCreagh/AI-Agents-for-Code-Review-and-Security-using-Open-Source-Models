@@ -2,7 +2,8 @@ image: docker:dind
 
 test:
   script:
-    - docker compose bake
+    - docker compose build
+    - echo "build complete"
   tags:
     - maven
     
