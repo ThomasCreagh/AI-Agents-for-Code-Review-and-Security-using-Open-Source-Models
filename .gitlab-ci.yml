@@ -5,6 +5,10 @@ test:
     - echo "hello world"
     - python --version
     - wget -qO- https://astral.sh/uv/install.sh | sh
+    - cd backend
+    - uv sync
+    - echo "REACT_APP_API_KEY=test" > .env
+    - pytest
   tags:
     - maven
 
