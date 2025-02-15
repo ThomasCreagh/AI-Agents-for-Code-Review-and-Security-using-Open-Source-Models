@@ -1,9 +1,11 @@
 image: python:3.11
 
-test:
+stages:
+  - tests
+
+test-job:
+  stage: tests
   script:
-    - echo "hello world"
-    - python --version
     - wget -qO- https://astral.sh/uv/install.sh | sh
     - source $HOME/.local/bin/env
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
