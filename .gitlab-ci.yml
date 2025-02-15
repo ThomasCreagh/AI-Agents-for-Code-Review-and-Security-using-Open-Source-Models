@@ -8,7 +8,7 @@ test:
     - source $HOME/.local/bin/env
     - cd backend
     - rm -f uv.lock
-    - uv sync --clean
+    - uv sync
     - echo "REACT_APP_API_KEY=test" > .env
     - pytest
   tags:
