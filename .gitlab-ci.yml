@@ -11,8 +11,6 @@ build:
   stage: build
   script:
     - docker compose build
-  tags:
-    - toms-local-runner
 
 test:
   stage: test
@@ -20,5 +18,3 @@ test:
     - docker compose up -d
     - docker exec sweng25_group_23_ibm-backend-1 pytest
     - docker compose down
-  tags:
-    - toms-local-runner
