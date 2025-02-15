@@ -2,7 +2,7 @@ image: docker:dind
 
 test:
   script:
-    - docker compose build
+    - docker compose bake
   tags:
     - maven
     
