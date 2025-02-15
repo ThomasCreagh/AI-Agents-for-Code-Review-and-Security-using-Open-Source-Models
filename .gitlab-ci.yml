@@ -9,6 +9,8 @@ test:
     - cd backend
     - cat pyproject.toml
     - rm -f uv.lock
+    - rm -f .venv
+    - uv cache clean
     - uv sync --reinstall
     - echo "REACT_APP_API_KEY=test" > .env
     - pytest
