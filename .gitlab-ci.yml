@@ -3,7 +3,6 @@ image: docker:latest
 services:
   - name: docker:dind
     command: ["--tls=false"]
-    privileged: true
 
 variables:
   DOCKER_HOST: tcp://docker:2375
@@ -17,3 +16,4 @@ test:
     - echo "build complete"
   tags:
     - maven
+
