@@ -8,10 +8,19 @@ before_script:
 
 deploiement:
   image: docker:latest
+  
+stages:
+  - build
+
+build-job:
+  stage: build
   before_script:
-    - docker version
+  - docker version
   script:
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd backend
     - docker info
+    # - docker compose build
   tags:
     - google-5gb
 
@@ -56,12 +65,4 @@ deploiement:
 #   tags:
 #     - google-5gb
 
-# build-job:
-#   stage: build
-#   script:
-#     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-#     - cd backend
-#     - docker info
-#     # - docker compose build
-#   tags:
-#     - google-5gb
+
