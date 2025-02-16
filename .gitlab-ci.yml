@@ -3,6 +3,8 @@ image: dind
 test:
   script:
     - docker info
+  tags:
+    - google-5bg
 
 # image: python:3.11
 
