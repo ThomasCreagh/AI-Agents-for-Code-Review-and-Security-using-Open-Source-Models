@@ -30,9 +30,9 @@ frontend-tests:
   image: node:18
   stage: test
   before_script:
-    - npm install
-    - cd frontend
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd frontend
+    - npm install
   script:
     - echo "please make tests for frontend"
     # - npm test
