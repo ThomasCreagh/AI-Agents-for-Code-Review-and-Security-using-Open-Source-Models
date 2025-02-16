@@ -1,10 +1,14 @@
 image: dind
 
-test:
+stages:
+  - build
+
+build-test:
+  stage: build
   script:
     - docker info
   tags:
-    - google-5bg
+    - google-5gb
 
 # image: python:3.11
 
