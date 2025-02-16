@@ -5,11 +5,10 @@ before_script:
   - df
   - cat /etc/resolv.conf
   - cat /etc/hosts
-  
+
 stages:
   - test
   - build
-  
 
 backend-tests:
   image: python:3.11
@@ -34,11 +33,10 @@ frontend-tests:
     - cd frontend
     - npm install
   script:
-    - echo "please make tests for frontend"
+    - echo "please make tests for frontend..."
     # - npm test
   tags:
     - google-5gb
-
 
 build:
   image: docker:latest
@@ -51,4 +49,3 @@ build:
     - docker compose build
   tags:
     - google-5gb
-
