@@ -14,5 +14,5 @@ test-job:
     - source .venv/bin/activate
     - pytest
   tags:
-    - maven
+    - google-5gb
 
