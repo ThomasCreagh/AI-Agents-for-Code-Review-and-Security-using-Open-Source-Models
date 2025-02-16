@@ -22,8 +22,6 @@ build-job:
   script:
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     - cd backend
-    - uv sync
-    - source .venv/bin/activate
     - docker info
     # - docker compose build
   tags:
