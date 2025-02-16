@@ -12,6 +12,8 @@ deploiement:
     - docker version
   script:
     - docker info
+  tags:
+    - google-5gb
 
 
 # image: python:3.11
