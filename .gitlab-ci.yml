@@ -6,13 +6,14 @@ before_script:
   - cat /etc/resolv.conf
   - cat /etc/hosts
 
-deploiement:
-  image: docker:latest
+# deploiement:
+  
   
 stages:
   - build
 
 build-job:
+  image: docker:latest
   stage: build
   before_script:
   - docker version
