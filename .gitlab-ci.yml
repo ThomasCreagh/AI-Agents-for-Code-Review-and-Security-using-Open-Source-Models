@@ -21,6 +21,8 @@ build-job:
   stage: build
   script:
     - pwd
+  tags:
+    - google-5gb
     # - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     # - cd backend
     # - uv sync
