@@ -30,10 +30,11 @@ build-job:
   image: docker:latest
   stage: build
   before_script:
-  - docker version
+    - docker version
   script:
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     - cd backend
+    - export COMPOSE_BAKE=true
     - docker compose build
   tags:
     - google-5gb
