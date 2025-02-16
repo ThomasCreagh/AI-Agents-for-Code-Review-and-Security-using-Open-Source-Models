@@ -14,13 +14,14 @@ stages:
 backend-tests:
   image: python:3.11
   stage: test
-  script:
+  before_script:
     - wget -qO- https://astral.sh/uv/install.sh | sh
     - source $HOME/.local/bin/env
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     - cd backend
     - uv sync
     - source .venv/bin/activate
+  script:
     - pytest
   tags:
     - google-5gb
@@ -29,8 +30,9 @@ frontend-tests:
   image: node:18
   stage: test
   before_script:
-    - cd frontend
     - npm install
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd frontend
   script:
     - echo "please make tests for frontend"
     # - npm test
@@ -42,11 +44,10 @@ build:
   image: docker:latest
   stage: build
   before_script:
-    - docker version
-  script:
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     - cd backend
     - export COMPOSE_BAKE=true
+  script:
     - docker compose build
   tags:
     - google-5gb
