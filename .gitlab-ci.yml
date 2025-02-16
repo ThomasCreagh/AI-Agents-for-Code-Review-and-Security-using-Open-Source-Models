@@ -2,6 +2,7 @@ image: python:3.11
 
 stages:
   - tests
+  - build
 
 test-job:
   stage: tests
@@ -16,3 +17,12 @@ test-job:
   tags:
     - google-5gb
 
+build-job:
+  stage: build
+  script:
+    - pwd
+    # - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    # - cd backend
+    # - uv sync
+    # - source .venv/bin/activate
+    # - docker compose build
