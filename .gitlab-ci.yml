@@ -1,3 +1,5 @@
+image: docker:latest
+
 variables:
   DOCKER_DRIVER: overlay2
 
@@ -5,23 +7,18 @@ before_script:
   - df
   - cat /etc/resolv.conf
   - cat /etc/hosts
-
-# deploiement:
-  
   
 stages:
   - build
 
 build-job:
-  image: docker:latest
   stage: build
   before_script:
   - docker version
   script:
     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
     - cd backend
-    - docker info
-    # - docker compose build
+    - docker compose build
   tags:
     - google-5gb
 
