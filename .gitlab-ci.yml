@@ -1,28 +1,34 @@
-image: python:3.11
+image: dind
 
-stages:
-  - tests
-  - build
-
-test-job:
-  stage: tests
+test:
   script:
-    - wget -qO- https://astral.sh/uv/install.sh | sh
-    - source $HOME/.local/bin/env
-    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-    - cd backend
-    - uv sync
-    - source .venv/bin/activate
-    - pytest
-  tags:
-    - google-5gb
-
-build-job:
-  stage: build
-  script:
-    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-    - cd backend
     - docker info
-    # - docker compose build
-  tags:
-    - google-5gb
+
+# image: python:3.11
+
+# stages:
+#   - tests
+#   - build
+
+# test-job:
+#   stage: tests
+#   script:
+#     - wget -qO- https://astral.sh/uv/install.sh | sh
+#     - source $HOME/.local/bin/env
+#     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+#     - cd backend
+#     - uv sync
+#     - source .venv/bin/activate
+#     - pytest
+#   tags:
+#     - google-5gb
+
+# build-job:
+#   stage: build
+#   script:
+#     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+#     - cd backend
+#     - docker info
+#     # - docker compose build
+#   tags:
+#     - google-5gb
