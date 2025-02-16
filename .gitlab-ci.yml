@@ -1,5 +1,3 @@
-image: docker:latest
-
 variables:
   DOCKER_DRIVER: overlay2
 
@@ -10,8 +8,26 @@ before_script:
   
 stages:
   - build
+  - backend-tests
+
+
+backend-test-job:
+  image: python:3.11
+  stage: backend-tests
+  script:
+    - wget -qO- https://astral.sh/uv/install.sh | sh
+    - source $HOME/.local/bin/env
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd backend
+    - uv sync
+    - source .venv/bin/activate
+    - pytest
+  tags:
+    - google-5gb
+
 
 build-job:
+  image: docker:latest
   stage: build
   before_script:
   - docker version
@@ -21,46 +37,3 @@ build-job:
     - docker compose build
   tags:
     - google-5gb
-
-
-# image: python:3.11
-
-# services:
-#   - docker:dind
-
-# stages:
-#   - build
-
-# variables:
-#   DOCKER_DRIVER: overlay2
-
-# before_script:
-#   - apt-get update && apt-get install -y docker.io
-
-# build-test:
-#   stage: build
-#   script:
-#     - docker info
-#   tags:
-#     - google-5gb
-
-# image: python:3.11
-
-# stages:
-#   - tests
-#   - build
-
-# test-job:
-#   stage: tests
-#   script:
-#     - wget -qO- https://astral.sh/uv/install.sh | sh
-#     - source $HOME/.local/bin/env
-#     - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-#     - cd backend
-#     - uv sync
-#     - source .venv/bin/activate
-#     - pytest
-#   tags:
-#     - google-5gb
-
-
