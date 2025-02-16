@@ -7,9 +7,9 @@ before_script:
   - cat /etc/hosts
   
 stages:
-  - build
   - backend-tests
-
+  - build
+  
 
 backend-test-job:
   image: python:3.11
