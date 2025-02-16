@@ -33,9 +33,6 @@ frontend-tests:
     - npm install
   script:
     - npm test
-  artifacts:
-    reports:
-      junit: frontend/test-results.xml
   tags:
     - google-5gb
 
