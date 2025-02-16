@@ -7,7 +7,7 @@ stages:
   - build
 
 variables:
-  DOCKER_DRIVER: overlay2  # Use overlay2 storage driver
+  DOCKER_DRIVER: overlay2
 
 before_script:
   - apt-get update && apt-get install -y docker.io
