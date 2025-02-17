@@ -64,11 +64,11 @@ def test_review_code_file_with_code_and_document(client: TestClient):
             code_filename,
             code_file_content,
             code_file_content_type),
-        "documentation_files": (
+        "api_documentation": (
             document_filename,
             document_file_content,
             document_file_content_type),
-        "documentation_files": (
+        "security_documentation": (
             document_filename,
             document_file_content,
             document_file_content_type),
