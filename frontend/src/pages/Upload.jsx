@@ -5,28 +5,38 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Upload = () => {
-  const [file, setFile] = useState(null);
+  const [codeFile, setCodeFile] = useState(null);
+  const [docFile, setDocFile] = useState(null);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
 
-  const fileChange = (event) => {
-    setFile(event.target.files[0]);
+  const codeUpload = (event) => {
+    setCodeFile(event.target.files[0]);
+  };
+
+  const documentationUpload = (event) => {
+    setDocFile(event.target.files[0]);
   };
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (!message.trim() && !file) {
+    if (!message.trim() && !codeFile[0]) {
       setError("Please enter a message or upload a file.");
       return;
     }
+
+    /*if (!docFile[0]) {    Not working at the moment
+      setError("Please upload your documentation.");
+      return;
+    }*/
     
     const formData = new FormData();
-    if (file) formData.append("file", file);
+    if (codeFile[0]) formData.append("file", codeFile[0]);
     formData.append("message", message);
-
+    if (docFile[0]) formData.append("documentation", docFile[0]);
     formData.append("model", selectedModel);
 
     try {
@@ -76,17 +86,32 @@ const Upload = () => {
           <input
             type="file"
             id="file-upload"
-            onChange={fileChange}
+            onChange={codeUpload}
             className="file-input"
           />
           <label htmlFor="file-upload" className="file-label">📎</label>
         </div>
+        <div className="input-container">
+          <input
+            type="file"
+            id="file-upload"
+            placeholder="Include documentation... (Optional)"
+            onChange={documentationUpload}
+            className="chat-input"
+          />
+        </div>
         <button type="submit" className="send-button">Send</button>
       </form>
 
-      {file && (
+      {codeFile && (
         <div className="file-info">
-          <p><strong>File:</strong> {file.name}</p>
+          <p><strong>File:</strong> {codeFile.name}</p>
+        </div>
+      )}
+
+      {docFile && (
+        <div className="file-info">
+          <p><strong>Documentation:</strong> {docFile.name}</p>
         </div>
       )}
 
