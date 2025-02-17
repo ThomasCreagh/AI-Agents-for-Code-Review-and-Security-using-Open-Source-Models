@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, Form, Depends
 from typing import List
 
+from app.docling.processor import convert_bytes_to_docling
 from app.ai.security_scanner.plugins.credential_scanner import (
     scan_text, load_patterns
 )
@@ -40,13 +41,20 @@ async def review_code_file(
         error_description: str | None = Form(None),
         language: str = Form(None),
 ) -> CodeReviewResponse:
-    name = None
+    names = []
     suggestion = ""
     if code_files:
-        text = str(code_files[0].file.read())
-        suggestion = str(
-            scan_text(text, load_patterns(), code_files[0].filename))
-        name = code_files[0].filename
+        for code_file in code_files:
+            names.append(code_file.filename)
+            suggestion += str(scan_text(str(code_file.file.read()),
+                              load_patterns(), code_file.filename))
+    if documentation_files:
+        for documentation_file in documentation_files:
+            names.append(documentation_file.filename)
+            suggestion += str(convert_bytes_to_docling(
+                documentation_file.filename,
+                documentation_file.file.read()).model_dump())
+    name = str(names)
     return CodeReviewResponse(
         filename=name,
         language=language,
