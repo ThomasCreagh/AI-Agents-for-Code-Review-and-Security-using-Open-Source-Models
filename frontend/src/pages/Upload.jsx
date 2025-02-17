@@ -6,37 +6,49 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Upload = () => {
   const [codeFile, setCodeFile] = useState(null);
-  const [docFile, setDocFile] = useState(null);
+  const [APIFile, setAPIFile] = useState(null);
+  const [SecurityFile, setSecurityFile] = useState(null);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  let numOfAPIFiles = 0;
+  let numOfSecurityFiles = 0;
 
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
+  const [selectedDoctype, setSelectedDoctype] = useState("API_Documentation");
 
   const codeUpload = (event) => {
     setCodeFile(event.target.files[0]);
   };
 
   const documentationUpload = (event) => {
-    setDocFile(event.target.files[0]);
+    if (selectedDoctype == "API_Documentation") {
+      setAPIFile(event.target.files[numOfAPIFiles++]);
+    }
+    else if (selectedDoctype == "Security_Documentation") {
+      setSecurityFile(event.target.files[numOfSecurityFiles++]);
+    }
+    else {
+      
+    }
   };
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (!message.trim() && !codeFile[0]) {
+    if (!message.trim() && !codeFile) {
       setError("Please enter a message or upload a file.");
       return;
     }
-
-    /*if (!docFile[0]) {    Not working at the moment
-      setError("Please upload your documentation.");
-      return;
-    }*/
     
     const formData = new FormData();
     if (codeFile[0]) formData.append("file", codeFile[0]);
     formData.append("message", message);
-    if (docFile[0]) formData.append("documentation", docFile[0]);
+    for (let i = 0; i < numOfAPIFiles; i++)  {
+      formData.append("API_documentation", APIFile[i]);
+    }
+    for (let i = 0; i < numOfSecurityFiles; i++)  {
+      formData.append("Security_documentation", SecurityFile[i]);
+    }
     formData.append("model", selectedModel);
 
     try {
@@ -91,6 +103,17 @@ const Upload = () => {
           />
           <label htmlFor="file-upload" className="file-label">📎</label>
         </div>
+        <div className="model-selector">
+          <select 
+            className="model-dropdown" 
+            value={selectedDoctype} 
+            onChange={(e) => setSelectedDoctype(e.target.value)}
+          >
+            <option value="API_Documentation">API Documentation</option>
+            <option value="Security_Documentation">Security Documentation</option>
+            <option value="Librarys/Dependencies">Librarys/Dependencies</option>
+          </select>
+        </div>
         <div className="input-container">
           <input
             type="file"
@@ -109,9 +132,15 @@ const Upload = () => {
         </div>
       )}
 
-      {docFile && (
+      {APIFile && (
         <div className="file-info">
-          <p><strong>Documentation:</strong> {docFile.name}</p>
+          <p><strong>API Documentation:</strong> {APIFile.name}</p>
+        </div>
+      )}
+
+      {SecurityFile && (
+        <div className="file-info">
+          <p><strong>Security Documentation:</strong> {SecurityFile.name}</p>
         </div>
       )}
 
