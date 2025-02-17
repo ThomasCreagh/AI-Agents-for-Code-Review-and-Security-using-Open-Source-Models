@@ -23,8 +23,6 @@ backend-tests:
     - source .venv/bin/activate
   script:
     - pytest
-  tags:
-    - google-5gb
 
 frontend-tests:
   image: node:18
@@ -36,8 +34,6 @@ frontend-tests:
   script:
     - echo "please make tests for frontend..."
     # - npm test
-  tags:
-    - google-5gb
 
 build:
   image: docker:latest
@@ -49,7 +45,6 @@ build:
   script:
     - docker compose build
   tags:
-    - google-5gb
 
 deploy:
   stage: deploy
