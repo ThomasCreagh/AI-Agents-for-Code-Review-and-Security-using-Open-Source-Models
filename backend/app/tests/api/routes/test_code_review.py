@@ -35,7 +35,8 @@ def test_review_code_file_with_code_and_document(client: TestClient):
     }
 
     file_content = ""
-    with open("app/tests/ai/test_files/example.py", "r") as reader:
+    filepath = "app/tests/ai/test_files/example.py"
+    with open(filepath, "r") as reader:
         file_content = reader.read()
 
     file_content_type = "text/plain"
@@ -70,7 +71,8 @@ def test_review_code_file_with_only_code(client: TestClient):
     }
 
     file_content = ""
-    with open("app/tests/ai/test_files/example.py", "r") as reader:
+    filepath = "app/tests/ai/test_files/example.py"
+    with open(filepath, "r") as reader:
         file_content = reader.read()
 
     file_content_type = "text/plain"

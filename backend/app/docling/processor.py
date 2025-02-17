@@ -1,7 +1,7 @@
 from docling.document_converter import DocumentConverter
 
 
-def convert_file_to_doling(filepath):
+def convert_filepath_to_docling(filepath):
     converter = DocumentConverter()
     return converter.convert(filepath)
 
