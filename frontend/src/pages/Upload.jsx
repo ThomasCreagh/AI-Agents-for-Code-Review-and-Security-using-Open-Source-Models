@@ -71,6 +71,15 @@ const Upload = () => {
       setError(err.message);
     }
   };
+  const clearAll = () => {
+    setMessage("");        
+    setCodeFile(null);     
+    setAPIFile(null);      
+    setSecurityFile(null); 
+    setResponse(null);     
+    setError(null);        
+  };
+
 
   return (
     <div className="chat-container">
@@ -124,6 +133,7 @@ const Upload = () => {
           />
         </div>
         <button type="submit" className="send-button">Send</button>
+        <button onClick={clearAll} type="button" className="clear-button">Clear All</button>
       </form>
 
       {codeFile && (
