@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.main import api_router
 from app.core.config import settings
 # from fastapi.routing import APIRoute
-from app.ai.llm_rag_database.create_rag_db import RagDB
 
 # def custom_generate_unique_id(route: APIRoute) -> str:
 #     return f"{route.tags[0]}-{route.name}"
@@ -24,6 +23,3 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
-# print("init db...")
-# db = RagDB()

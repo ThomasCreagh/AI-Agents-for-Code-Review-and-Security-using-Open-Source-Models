@@ -65,8 +65,8 @@ class RagDB:
         return db
 
     def add_documents(self, document):
-        # Adjust based on your docling document structure
-        content_to_vectorize = document.get('content')
+        # content_to_vectorize = document.get('content')
+        content_to_vectorize = str(document.model_dump_json())
         vectors = self.embeddings.embed_documents(
             [content_to_vectorize])  # Assuming this produces vectors
         # Use first vector
