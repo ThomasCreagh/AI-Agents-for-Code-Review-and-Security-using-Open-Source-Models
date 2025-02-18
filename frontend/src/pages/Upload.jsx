@@ -12,16 +12,9 @@ const Upload = () => {
   const [language, setLanguage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  let numOfAPIFiles = 0;
-  let numOfSecurityFiles = 0;
 
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
   const [selectedDoctype, setSelectedDoctype] = useState("API_Documentation");
-  //
-  // const handleCodeFileChange = (event) => {
-  //   const selectedFiles = Array.from(event.target.files);
-  //   setCodeFiles(selectedFiles);
-  // };
 
   const codeUpload = (event) => {
     const selectedFiles = Array.from(event.target.files);
