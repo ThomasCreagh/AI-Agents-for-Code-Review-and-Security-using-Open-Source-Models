@@ -71,5 +71,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ## Docker
 
-Run docker contatiner:
-To run the docker container you have to run the commands in the `../README.md`
+To run the Dockerfile sperately you can run these commands:
+
+```console
+sudo docker build -t docker-reactjs .
+sudo docker run -p 3000:3000 docker-reactjs
+```

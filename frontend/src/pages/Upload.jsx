@@ -6,82 +6,87 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Upload = () => {
   const [file, setFile] = useState(null);
-  const [errorDescription, setErrorDescription] = useState("");
-  const [language, setLanguage] = useState("");
+  const [message, setMessage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+
+  const [selectedModel, setSelectedModel] = useState("gpt-3.5");
 
   const fileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
-  const fileSubmit = async (event) => {
+  const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("error_description", errorDescription);
-      formData.append("language", language);
+    if (!message.trim() && !file) {
+      setError("Please enter a message or upload a file.");
+      return;
+    }
+    
+    const formData = new FormData();
+    if (file) formData.append("file", file);
+    formData.append("message", message);
 
-      try {
-        const res = await fetch(BACKEND_URL + "/api/v1/code-review/file", {
-          method: "POST",
-          headers: {
-            Authorization: API_KEY,
-          },
-          body: formData,
-        });
+    formData.append("model", selectedModel);
 
-        if (!res.ok) {
-          throw new Error("File upload failed.");
-        }
+    try {
+      const res = await fetch(BACKEND_URL + "/api/v1/code-review", {
+        method: "POST",
+        headers: {
+          Authorization: API_KEY,
+        },
+        body: formData,
+      });
 
-        const data = await res.json();
-        setResponse(data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
+      if (!res.ok) {
+        throw new Error("Error processing request.");
       }
-      console.log("File to be uploaded:", file);
-    } else {
-      console.log("No file detected.");
+
+      const data = await res.json();
+      setResponse(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="upload-box">
-      <h1>Upload Your File</h1>
-      <form onSubmit={fileSubmit}>
-        <input type="file" onChange={fileChange} required />
-
-        <input
-          type="text"
-          placeholder="Enter Error Description (optional)"
-          value={errorDescription}
-          onChange={(e) => setErrorDescription(e.target.value)}
-        />
-
-        <input
-          type="text"
-          placeholder="Enter Programming Language"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          required
-        />
-
-        <button type="submit" className="upload-button">
-          Upload
-        </button>
+    <div className="chat-container">
+      <h1>Ask AI for Code Review and Security</h1>
+      <form onSubmit={handleSendMessage} className="chat-form">
+      <div className="model-selector">
+          <select 
+            className="model-dropdown" 
+            value={selectedModel} 
+            onChange={(e) => setSelectedModel(e.target.value)}
+          >
+            <option value="gpt-3.5">GPT-3.5</option>
+            <option value="gpt-4">GPT-4</option>
+            <option value="custom-model">Custom Model</option>
+          </select>
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Enter your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="chat-input"
+          />
+          <input
+            type="file"
+            id="file-upload"
+            onChange={fileChange}
+            className="file-input"
+          />
+          <label htmlFor="file-upload" className="file-label">📎</label>
+        </div>
+        <button type="submit" className="send-button">Send</button>
       </form>
 
       {file && (
         <div className="file-info">
-          <p>
-            <strong>File Name:</strong> {file.name}
-          </p>
-          <p>
-            <strong>File Size:</strong> {file.size} bytes
-          </p>
+          <p><strong>File:</strong> {file.name}</p>
         </div>
       )}
 
@@ -89,8 +94,8 @@ const Upload = () => {
 
       {response && (
         <div className="response-box">
-          <h2>Response code suggestion:</h2>
-          <p>{JSON.stringify(response.suggestion, null, 2)}</p>
+          <h2>Response:</h2>
+          <p>{response.reply}</p>
         </div>
       )}
     </div>
