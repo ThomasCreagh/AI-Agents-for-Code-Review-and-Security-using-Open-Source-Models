@@ -7,7 +7,9 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const Upload = () => {
   const [codeFiles, setCodeFiles] = useState([]);
   const [docFiles, setDocFiles] = useState([]);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
+  const [errorDescription, setErrorDescription] = useState("");
+  const [language, setLanguage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
@@ -24,7 +26,11 @@ const Upload = () => {
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (!message.trim() && codeFiles.length === 0 && docFiles.length === 0) {
+    if (
+      !errorDescription.trim() &&
+      codeFiles.length === 0 &&
+      docFiles.length === 0
+    ) {
       setError("Please enter a message or upload files.");
       return;
     }
@@ -33,21 +39,21 @@ const Upload = () => {
 
     if (codeFiles.length > 0) {
       codeFiles.forEach((file) => {
-        formData.append("codeFiles", file);
+        formData.append("code_files", file);
       });
     }
 
     if (docFiles.length > 0) {
       docFiles.forEach((file) => {
-        formData.append("docFiles", file);
+        formData.append("documentation_files", file);
       });
     }
 
-    formData.append("message", message);
+    formData.append("error_description", errorDescription);
     formData.append("model", selectedModel);
 
     try {
-      const res = await fetch(BACKEND_URL + "/api/v1/code-review", {
+      const res = await fetch(BACKEND_URL + "/code-review/file", {
         method: "POST",
         headers: {
           Authorization: API_KEY,
@@ -85,9 +91,18 @@ const Upload = () => {
         <div className="input-container">
           <input
             type="text"
-            placeholder="Enter your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter your error description..."
+            value={errorDescription}
+            onChange={(e) => setErrorDescription(e.target.value)}
+            className="chat-input"
+          />
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Enter the programming language..."
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
             className="chat-input"
           />
         </div>

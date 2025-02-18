@@ -68,8 +68,8 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
     dependencies=[Depends(verify_api_key)],
 )
 async def review_code_file(
-        code_files: List[UploadFile] = File(None),
-        documentation_files: List[UploadFile] = File(None),
+        code_files: List[UploadFile] = File(...),
+        documentation_files: List[UploadFile] = File(...),
         model: str | None = Form(None),
         error_description: str | None = Form(None),
         language: str = Form(None),

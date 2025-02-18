@@ -2,7 +2,7 @@ from docling.document_converter import DocumentConverter
 import os
 import uuid
 
-from app.main import db
+# from app.main import db
 
 
 def convert_bytes_to_docling(filename: str, data: bytes):
@@ -24,9 +24,9 @@ def convert_filepath_to_docling(filepath):
     return converter.convert(filepath)
 
 
-def add_bytes_to_rag_db(filename: str, data: bytes):
-    doc = convert_bytes_to_docling(filename, data)
-    db.add_documents(doc)
+# def add_bytes_to_rag_db(filename: str, data: bytes):
+#     doc = convert_bytes_to_docling(filename, data)
+#     db.add_documents(doc)
 
 # from enum import Enum
 # class FileType(Enum):
