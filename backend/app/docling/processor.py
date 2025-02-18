@@ -2,6 +2,8 @@ from docling.document_converter import DocumentConverter
 import os
 import uuid
 
+from app.main import db
+
 
 def convert_bytes_to_docling(filename: str, data: bytes):
     temp_file_name = str(uuid.uuid4()) + "_" + filename
@@ -21,6 +23,10 @@ def convert_filepath_to_docling(filepath):
     converter = DocumentConverter()
     return converter.convert(filepath)
 
+
+def add_bytes_to_rag_db(filename: str, data: bytes):
+    doc = convert_bytes_to_docling(filename, data)
+    db.add_documents(doc)
 
 # from enum import Enum
 # class FileType(Enum):

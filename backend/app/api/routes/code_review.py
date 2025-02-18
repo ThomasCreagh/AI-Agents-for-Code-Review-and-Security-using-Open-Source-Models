@@ -14,21 +14,6 @@ from app.models import (
 router = APIRouter(prefix="/code-review", tags=["code-review"])
 
 
-@router.post(
-    "/text",
-    response_model=CodeReviewResponse,
-    dependencies=[Depends(verify_api_key)],
-)
-def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
-    suggestion = str(scan_text(request.code, load_patterns()))
-    return CodeReviewResponse(
-        language=request.language,
-        error_description=request.error_description,
-        filename=None,
-        suggestion=suggestion,
-    )
-
-
 def add_to_suggestion_temp(
         file_list: List[str],
         names: List[str],
@@ -44,11 +29,27 @@ def add_to_suggestion_temp(
     return (suggestion, names)
 
 
+@router.post(
+    "/text",
+    response_model=CodeReviewResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
+    suggestion = str(scan_text(request.code, load_patterns()))
+    return CodeReviewResponse(
+        language=request.language,
+        error_description=request.error_description,
+        filename=None,
+        suggestion=suggestion,
+    )
+
 # api-documentation
 # security-documentation
 # library-dependency
 # code-documentation
 # version-control
+
+
 @router.post(
     "/file",
     response_model=CodeReviewResponse,

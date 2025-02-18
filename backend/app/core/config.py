@@ -18,5 +18,10 @@ class Settings(BaseSettings):
     # Arbitrary value to get frontend host (Need to get from front end team)
     FRONTEND_HOST: str = "http://localhost:7755"
 
+    USE_HUGGINGFACE: str = "yes"
+    HUGGINGFACE_API_TOKEN: str
+    REASONING_MODEL_ID: str = "deepseek-r1:7b-8k"
+    TOOL_MODEL_ID: str = "qwen2.5:14b-instruct-q4_K_M"
+
 
 settings = Settings()

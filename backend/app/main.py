@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.main import api_router
 from fastapi.routing import APIRoute
 from app.core.config import settings
+from app.core.db import init_db
+
 
 # def custom_generate_unique_id(route: APIRoute) -> str:  # Generates unique ID for API instantiation
 #     return f"{route.tags[0]}-{route.name}"
@@ -21,3 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+print("init db...")
+db = init_db()
