@@ -23,10 +23,10 @@ const Upload = () => {
   };
 
   const documentationUpload = (event) => {
-    if (selectedDoctype == "API_Documentation") {
+    if (selectedDoctype === "API_Documentation") {
       const selectedFiles = Array.from(event.target.files);
       setAPIFiles(selectedFiles);
-    } else if (selectedDoctype == "Security_Documentation") {
+    } else if (selectedDoctype === "Security_Documentation") {
       const selectedFiles = Array.from(event.target.files);
       setSecurityFiles(selectedFiles);
     } else {
