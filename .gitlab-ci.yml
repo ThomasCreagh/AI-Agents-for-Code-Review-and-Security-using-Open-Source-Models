@@ -44,7 +44,6 @@ build:
     - export COMPOSE_BAKE=true
   script:
     - docker compose build
-  tags:
 
 deploy:
   stage: deploy
