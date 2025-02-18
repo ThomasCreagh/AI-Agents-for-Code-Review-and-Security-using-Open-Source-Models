@@ -45,6 +45,13 @@ const Navbar = () => {
         >
           How To Use
         </Link>
+        <Link
+          to="/dashboard"
+          className="dashboard-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Dashboard
+        </Link>
       </div>
     </nav>
   );
