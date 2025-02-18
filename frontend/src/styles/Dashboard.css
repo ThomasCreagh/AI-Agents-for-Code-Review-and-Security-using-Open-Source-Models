@@ -1,10 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap");
 
-.chat-container {
+.docUpload-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
   background-color: #f4f4f9;
   padding: 20px;
@@ -16,12 +15,10 @@ h1 {
   margin-bottom: 20px;
 }
 
-.chat-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
+h2 {
+    font-size: 22px;
+    color: #494949;
+    margin-bottom: 20px;
 }
 
 .input-container {
@@ -31,7 +28,7 @@ h1 {
   position: relative;
 }
 
-.chat-input {
+.doc-input {
   flex-grow: 1;
   padding: 10px;
   font-size: 16px;
@@ -92,14 +89,14 @@ h1 {
   margin-top: 10px;
 }
 
-.model-selector {
+.doctype-selector {
     margin-top: 15px;
     width: 100%;
     max-width: 400px;
     position: relative;
   }
   
-  .model-dropdown {
+  .doctype-dropdown {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -115,7 +112,7 @@ h1 {
   }
 
 @media (max-width: 600px) {
-  .chat-input {
+  .doc-input {
     font-size: 14px;
   }
 
