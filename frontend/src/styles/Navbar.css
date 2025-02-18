@@ -36,13 +36,15 @@
 
 .home-link,
 .about-link,
-.upload-link {
+.upload-link,
+.how-to-use-link {
   font-weight: bold;
   cursor: pointer;
 }
 
 .home-link:hover,
 .about-link:hover,
-.upload-link:hover {
+.upload-link:hover,
+.how-to-use-link:hover {
   text-decoration: underline !important;
 }

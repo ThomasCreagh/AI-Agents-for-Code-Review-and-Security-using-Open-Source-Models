@@ -5,28 +5,45 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Upload = () => {
-  const [file, setFile] = useState(null);
+  const [codeFiles, setCodeFiles] = useState([]);
+  const [docFiles, setDocFiles] = useState([]);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
 
-  const fileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleCodeFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    setCodeFiles(selectedFiles);
+  };
+
+  const handleDocFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    setDocFiles(selectedFiles);
   };
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    if (!message.trim() && !file) {
-      setError("Please enter a message or upload a file.");
+    if (!message.trim() && codeFiles.length === 0 && docFiles.length === 0) {
+      setError("Please enter a message or upload files.");
       return;
     }
-    
-    const formData = new FormData();
-    if (file) formData.append("file", file);
-    formData.append("message", message);
 
+    const formData = new FormData();
+
+    if (codeFiles.length > 0) {
+      codeFiles.forEach((file) => {
+        formData.append("codeFiles", file);
+      });
+    }
+
+    if (docFiles.length > 0) {
+      docFiles.forEach((file) => {
+        formData.append("docFiles", file);
+      });
+    }
+
+    formData.append("message", message);
     formData.append("model", selectedModel);
 
     try {
@@ -54,10 +71,10 @@ const Upload = () => {
     <div className="chat-container">
       <h1>Ask AI for Code Review and Security</h1>
       <form onSubmit={handleSendMessage} className="chat-form">
-      <div className="model-selector">
-          <select 
-            className="model-dropdown" 
-            value={selectedModel} 
+        <div className="model-selector">
+          <select
+            className="model-dropdown"
+            value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
           >
             <option value="gpt-3.5">GPT-3.5</option>
@@ -73,20 +90,59 @@ const Upload = () => {
             onChange={(e) => setMessage(e.target.value)}
             className="chat-input"
           />
+        </div>
+        <div className="input-container">
           <input
             type="file"
-            id="file-upload"
-            onChange={fileChange}
+            id="code-file-upload"
+            onChange={handleCodeFileChange}
             className="file-input"
+            multiple
           />
-          <label htmlFor="file-upload" className="file-label">📎</label>
+          <label htmlFor="code-file-upload" className="send-button">
+            📂 Upload Code Files
+          </label>
         </div>
-        <button type="submit" className="send-button">Send</button>
+        <div className="input-container">
+          <input
+            type="file"
+            id="doc-file-upload"
+            onChange={handleDocFileChange}
+            className="file-input"
+            multiple
+          />
+          <label htmlFor="doc-file-upload" className="send-button">
+            📄 Upload Document Files
+          </label>
+        </div>
+        <button type="submit" className="send-button">
+          Send
+        </button>
       </form>
 
-      {file && (
+      {codeFiles.length > 0 && (
         <div className="file-info">
-          <p><strong>File:</strong> {file.name}</p>
+          <p>
+            <strong>Code Files:</strong>
+          </p>
+          <ul>
+            {codeFiles.map((file, index) => (
+              <li key={index}>{file.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {docFiles.length > 0 && (
+        <div className="file-info">
+          <p>
+            <strong>Document Files:</strong>
+          </p>
+          <ul>
+            {docFiles.map((file, index) => (
+              <li key={index}>{file.name}</li>
+            ))}
+          </ul>
         </div>
       )}
 

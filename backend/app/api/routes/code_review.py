@@ -49,6 +49,18 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
 # code-documentation
 # version-control
 
+# async def review_code_file(
+#         code_files: List[UploadFile] = File(None),
+#         api_documentation: List[UploadFile] = File(None),
+#         security_documentation: List[UploadFile] = File(None),
+#         library_dependency: List[UploadFile] = File(None),
+#         code_documentation: List[UploadFile] = File(None),
+#         version_control: List[UploadFile] = File(None),
+#         model: str | None = Form(None),
+#         error_description: str | None = Form(None),
+#         language: str = Form(None),
+# ) -> CodeReviewResponse:
+
 
 @router.post(
     "/file",
@@ -57,11 +69,7 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
 )
 async def review_code_file(
         code_files: List[UploadFile] = File(None),
-        api_documentation: List[UploadFile] = File(None),
-        security_documentation: List[UploadFile] = File(None),
-        library_dependency: List[UploadFile] = File(None),
-        code_documentation: List[UploadFile] = File(None),
-        version_control: List[UploadFile] = File(None),
+        documentation_files: List[UploadFile] = File(None),
         model: str | None = Form(None),
         error_description: str | None = Form(None),
         language: str = Form(None),
@@ -74,15 +82,7 @@ async def review_code_file(
             suggestion += str(scan_text(str(code_file.file.read()),
                               load_patterns(), code_file.filename))
     suggestion, names = add_to_suggestion_temp(
-        api_documentation, names, suggestion)
-    suggestion, names = add_to_suggestion_temp(
-        security_documentation, names, suggestion)
-    suggestion, names = add_to_suggestion_temp(
-        library_dependency, names, suggestion)
-    suggestion, names = add_to_suggestion_temp(
-        code_documentation, names, suggestion)
-    suggestion, names = add_to_suggestion_temp(
-        version_control, names, suggestion)
+        documentation_files, names, suggestion)
     name = str(names)
     return CodeReviewResponse(
         filename=name,

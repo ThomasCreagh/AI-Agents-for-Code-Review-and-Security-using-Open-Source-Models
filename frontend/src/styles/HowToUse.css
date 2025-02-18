@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap");
+
+.info-image img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 15px;
+  margin-right: 250px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text-section {
+    max-width: 100%;
+  }
+
+  .logo {
+    width: 120px;
+    height: auto;
+  }
+
+  .nav-left {
+    gap: 10px;
+  }
+}
