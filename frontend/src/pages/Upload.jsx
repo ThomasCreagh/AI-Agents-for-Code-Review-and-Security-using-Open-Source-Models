@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Upload.css";
+import MarkdownDisplay from "../components/MarkdownDisplay";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -207,7 +208,9 @@ const Upload = () => {
       {response && (
         <div className="response-box">
           <h2>Response:</h2>
-          <p>{response.reply}</p>
+          <div style={{ padding: "20px" }}>
+            <MarkdownDisplay content={response.reply} />
+          </div>
         </div>
       )}
     </div>

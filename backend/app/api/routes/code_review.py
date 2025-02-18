@@ -47,11 +47,11 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
         suggestion=suggestion,
     )
 
-# api-documentation
-# security-documentation
-# library-dependency
-# code-documentation
-# version-control
+# api_documentation
+# security_documentation
+# library_dependency
+# code_documentation
+# version_control?
 
 # async def review_code_file(
 #         code_files: List[UploadFile] = File(None),
@@ -73,7 +73,10 @@ def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
 )
 async def review_code_file(
         code_files: List[UploadFile] = File(...),
-        documentation_files: List[UploadFile] = File(...),
+        api_documentation: List[UploadFile] = File(None),
+        security_documentation: List[UploadFile] = File(None),
+        library_dependency: List[UploadFile] = File(None),
+        code_documentation: List[UploadFile] = File(None),
         model: str | None = Form(None),
         error_description: str | None = Form(None),
         language: str = Form(None),
@@ -84,24 +87,30 @@ async def review_code_file(
     if code_files:
         prompt, names = compile_code_to_str(
             code_files, names, prompt, language, error_description)
-        # for code_file in code_files:
-        # names.append(code_file.filename)
-        # suggestion += str(scan_text(str(code_file.file.read()),
-        #                   load_patterns(), code_file.filename))
-    if documentation_files:
-        for documentation_file in documentation_files:
+
+    if api_documentation:
+        for documentation_file in api_documentation:
+            add_bytes_to_rag_db(documentation_file.filename,
+                                documentation_file.file.read())
+
+    if security_documentation:
+        for documentation_file in security_documentation:
+            add_bytes_to_rag_db(documentation_file.filename,
+                                documentation_file.file.read())
+
+    if library_dependency:
+        for documentation_file in library_dependency:
+            add_bytes_to_rag_db(documentation_file.filename,
+                                documentation_file.file.read())
+
+    if code_documentation:
+        for documentation_file in code_documentation:
             add_bytes_to_rag_db(documentation_file.filename,
                                 documentation_file.file.read())
 
     print("RAG REASONER...")
     suggestion = launch.rag_with_reasoner(prompt)
 
-    # suggestion, names = add_to_suggestion_temp(
-    #     documentation_files, names, suggestion)
-    name = str(names)
     return CodeReviewResponse(
-        filename=name,
-        language=language,
-        error_description=error_description,
-        suggestion=suggestion,
+        suggestion=suggestion
     )

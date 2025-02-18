@@ -109,6 +109,7 @@ def rag_with_reasoner(user_query: str) -> str:
     # Create prompt with context
     prompt = f"""Based on the following context, answer the user's question. Be concise and specific.
     If there isn't sufficient information, give as your answer a better query to perform RAG with.
+    Give the response back in a MarkDown Format so it can be displayed nicely.
     
 Context:
 {context}
