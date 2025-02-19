@@ -33,8 +33,9 @@ RUN python3 app/ai/llm_rag_database/db.py
 
 EXPOSE 8000
 
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000"]
+# CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]
 # , "--workers", "4"
 # CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "--bind", "0.0.0.0:8000"]
 # CMD ["unicorn", "run"]
-CMD ["fastapi", "run", "app/main.py"]
+# CMD ["fastapi", "run", "app/main.py"]
