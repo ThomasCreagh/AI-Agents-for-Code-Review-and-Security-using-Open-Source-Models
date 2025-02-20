@@ -5,7 +5,8 @@ from app.docling.processor import convert_bytes_to_docling, add_bytes_to_rag_db
 from app.ai.security_scanner.plugins.credential_scanner import (
     scan_text, load_patterns
 )
-import app.ai.llm_rag_database.launch as launch
+from app.ai.llm_rag_database.ai_init import run_model
+# import app.ai.llm_rag_database.launch as launch
 from app.core.security import verify_api_key
 from app.models import (
     CodeReviewRequest,
@@ -109,7 +110,7 @@ async def review_code_file(
                                 documentation_file.file.read())
 
     print("RAG REASONER...")
-    suggestion = launch.rag_with_reasoner(prompt)
+    suggestion = run_model.run_rag(prompt)
 
     return CodeReviewResponse(
         suggestion=suggestion

@@ -2,7 +2,7 @@ from docling.document_converter import DocumentConverter
 import os
 import uuid
 
-from app.ai.llm_rag_database.db import db
+from app.ai.llm_rag_database.ai_init import db
 
 
 def convert_bytes_to_docling(filename: str, data: bytes):

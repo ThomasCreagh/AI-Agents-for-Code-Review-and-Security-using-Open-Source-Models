@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 # RUN pip install --no-cache-dir -r requirements.txt
 
-RUN python3 app/ai/llm_rag_database/db.py
+# RUN python3 app/ai/llm_rag_database/ai_init.py
 
 
 EXPOSE 8000
