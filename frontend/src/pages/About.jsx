@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/About.css";
 
 const teamMembers = [
-    { name: "Lucia Brown", img: "LuciaHeadShot.jpg" },
+    { name: "Lucia Brown", img: "LuciaHeadshot.jpg" },
     { name: "Tavis Yusuf", img: "TravisHeadshot.jpg" },
     { name: "Cuan Shaffrey", img: "CuanHeadshot.jpg" },
     { name: "Mohamed Ali", img: "MohamedHeadshot.jpg" },
@@ -56,7 +56,7 @@ const About = () => {
           <div className="team-grid">
             {teamMembers.map((member, index) => (
               <div key={index} className="team-member">
-                <img src={`${process.env.PUBLIC_URL}/${member.img}`} alt={member.name} className="team-photo" onClick={() => setShowDescription(index)} />
+                <img src={`${process.env.PUBLIC_URL}/${member.img}`} alt={member.name} className="team-photo" onClick={() => (showDescription != index) ? setShowDescription(index) : setShowDescription(9)} />
                 <p className="team-name">{member.name}</p>
               </div>
             ))}
@@ -83,7 +83,7 @@ const About = () => {
         {showDescription == 2 && (
           <div className="text-section">
             <h2>Cuan Shaffery: </h2>
-            <p>Last year I worked with a company called Bounce. I was a member of the backend team and we developed a chatbot that could take in
+            <p>Last year he worked with a company called Bounce. He was a member of the backend team and they developed a chatbot that could take in
                personal preferences and details about an individual and give recommendations on travel based on those details.</p>
           </div>
         )}
@@ -107,7 +107,7 @@ const About = () => {
        {showDescription == 5 && (
           <div className="text-section">
             <h2>Thomas Keating Creagh: </h2>
-            <p>Previously when I worked at DLT Capital I made a location based house price index application for the Irish housing market,
+            <p>Previously when he worked at DLT Capital he made a location based house price index application for the Irish housing market,
                using Goland, Next.JS, MongoDB and python for analysing 20+ million lines of data. This was then used my MyHome.ie.</p>
           </div>
         )}
@@ -115,16 +115,16 @@ const About = () => {
         {showDescription == 6 && (
           <div className="text-section">
             <h2>Noah Scolard: </h2>
-            <p>Last year I worked with a group of students to create an application exploring commercial flight data, within the
-               Programming Project module at Trinity. I worked on both frontend and backend aspects, creating a interactive experience through Processing.</p>
+            <p>Last year he worked with a group of students to create an application exploring commercial flight data, within the
+               Programming Project module at Trinity. He worked on both frontend and backend aspects, creating a interactive experience through Processing.</p>
           </div>
         )}
 
         {showDescription == 7 && (
           <div className="text-section">
             <h2>Anna Xue: </h2>
-            <p>Last year, as part of the Programming Project module, I worked on a team developing an application that analyzed
-               and filtered flight data. I mainly worked on the frontend development, using Processing to implement interactive visualizations. </p>
+            <p>Last year, as part of the Programming Project module, she worked on a team developing an application that analyzed
+               and filtered flight data. She mainly worked on the frontend development, using Processing to implement interactive visualizations. </p>
           </div>
         )}
 
