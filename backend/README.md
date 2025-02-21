@@ -8,22 +8,10 @@ When installing and runing the next commands make sure your working in the `back
 
 When running commands with windows omit the $, and follow other given commands where necessary
 
-### To run docker contatiner:
-
-To run the docker container you have to run the commands in the `../README.md`
-
-## Tests
-
-Install uv python package manager
+Make a virtual environment with:
 
 ```console
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Then sync the packages
-
-```console
-uv sync
+$ python -m venv .venv
 ```
 
 ### Then you can activate the virtual environment with:
@@ -39,6 +27,38 @@ $ source .venv/bin/activate
 ```console
 .venv\Scripts\activate
 ```
+
+### You can install all the dependencies with:
+
+```console
+$ pip install -r requirements.txt
+```
+
+### You can now run the backend with:
+
+```console
+$ uvicorn app.main:app --reload
+```
+
+### To run the backend independantly with docker
+
+Build with docker:
+
+```console
+$ sudo docker build --no-cache -t fastapi-app -f Dockerfile .
+```
+
+Run it through docker:
+
+```console
+$ sudo docker run -p 8000:8000 --env-file ../.env fastapi-app
+```
+
+### To run docker contatiner:
+
+To run the docker container you have to run the commands in the `../README.md`
+
+## Tests
 
 To run tests use this:
 

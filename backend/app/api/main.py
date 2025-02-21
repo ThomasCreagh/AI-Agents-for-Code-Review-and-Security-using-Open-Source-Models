@@ -7,8 +7,6 @@ api_router = APIRouter()
 
 @api_router.get("/")
 def read_root():
-    # print("LAUNCH??")
-    # launch.main()
     return {"Hello": "World"}
 
 

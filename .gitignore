@@ -1,7 +1,5 @@
 # Virtual environment
-venv
 venv/
-.venv
 
 # Python cache files
 __pycache__/
@@ -25,7 +23,3 @@ output/
 # Test cache
 .pytest_cache/
 .coverage
-
-# AI
-chroma_db
-.gradio

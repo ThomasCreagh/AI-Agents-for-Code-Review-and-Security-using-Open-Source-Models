@@ -2,7 +2,11 @@ from pydantic import BaseModel
 
 
 class CodeReviewResponse(BaseModel):
+    filename: str | None = None
+    error_description: str | None = None
+    language: str
     suggestion: str
+    line_nums: list
 
 
 class CodeReviewRequest(BaseModel):
@@ -23,4 +27,4 @@ class Logout(BaseModel):
 class CreateAccount(BaseModel):
     email: str
     password: str
-    uuid: str
+    uuid: str                   # Unique identifier for each account
