@@ -3,7 +3,7 @@ import "../styles/About.css";
 
 const teamMembers = [
     { name: "Lucia Brown", img: "LuciaHeadshot.jpg" },
-    { name: "Tavis Yusuf", img: "TravisHeadshot.jpg" },
+    { name: "Travis Yusuf", img: "TravisHeadshot.jpg" },
     { name: "Cuan Shaffrey", img: "CuanHeadshot.jpg" },
     { name: "Mohamed Ali", img: "MohamedHeadshot.jpg" },
     { name: "Jake Casserly", img: "JakeHeadshot.jpeg" },
