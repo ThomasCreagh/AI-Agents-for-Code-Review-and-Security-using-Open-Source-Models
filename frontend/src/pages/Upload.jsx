@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../styles/Upload.css";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -19,6 +19,9 @@ const Upload = () => {
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
   const [selectedDoctype, setSelectedDoctype] = useState("API_Documentation");
 
+  const codeFileInputRef = useRef(null); 
+  const docFileInputRef = useRef(null);
+  const [inputKey, setInputKey] = useState(Date.now());
 
   const codeUpload = (event) => {
     setCodeFile(event.target.files[0]);
@@ -96,15 +99,19 @@ const Upload = () => {
 
 
   const clearAll = () => {
-    setMessage("");
-    setCodeFile(null);
-    setAPIFiles([]);
-    setSecurityFiles([]);
-    setLibraryFiles([]);
-    setCodeDocumentationFiles([]);
-    setVersionControlFiles([]);
-    setResponse(null);
+    setMessage("");        
+    setCodeFile(null);     
+    setAPIFiles([]);      
+    setSecurityFiles([]); 
+    setResponse(null);     
     setError(null);
+    setSelectedModel("gpt-3.5");
+    setSelectedDoctype("API_Documentation");  
+
+    setInputKey(Date.now());
+
+    if (codeFileInputRef.current) codeFileInputRef.current.value = "";
+    if (docFileInputRef.current) docFileInputRef.current.value = ""
   };
 
   return (
@@ -132,6 +139,7 @@ const Upload = () => {
           />
           <input
             type="file"
+            key={inputKey}
             id="file-upload"
             onChange={codeUpload}
             className="file-input"
@@ -157,6 +165,7 @@ const Upload = () => {
         <div className="input-container">
           <input
             type="file"
+            key={inputKey +1}
             multiple
             onChange={documentationUpload}
             className="chat-input"
