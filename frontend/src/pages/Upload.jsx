@@ -9,6 +9,9 @@ const Upload = () => {
   const [codeFiles, setCodeFiles] = useState([]);
   const [APIFiles, setAPIFiles] = useState([]);
   const [SecurityFiles, setSecurityFiles] = useState([]);
+  const [LibraryFiles, setLibraryFiles] = useState([]);
+  const [CodeDocumentationFiles, setCodeDocumentationFiles] = useState([]);
+  const [versionControlFiles, setVersionControlFiles] = useState([]);
   const [errorDescription, setErrorDescription] = useState("");
   const [language, setLanguage] = useState("");
   const [response, setResponse] = useState(null);
@@ -23,13 +26,17 @@ const Upload = () => {
   };
 
   const documentationUpload = (event) => {
+    const files = Array.from(event.target.files);
     if (selectedDoctype === "API_Documentation") {
-      const selectedFiles = Array.from(event.target.files);
-      setAPIFiles(selectedFiles);
+      setAPIFiles((prev) => [...prev, ...files]);
     } else if (selectedDoctype === "Security_Documentation") {
-      const selectedFiles = Array.from(event.target.files);
-      setSecurityFiles(selectedFiles);
-    } else {
+      setSecurityFiles((prev) => [...prev, ...files]);
+    } else if (selectedDoctype === "Librarys/Dependencies") {
+      setLibraryFiles((prev) => [...prev, ...files]);
+    } else if (selectedDoctype === "Code_Documentation") {
+      setCodeDocumentationFiles((prev) => [...prev, ...files]);
+    } else if (selectedDoctype === "Version_Control") {
+      setVersionControlFiles((prev) => [...prev, ...files]);
     }
   };
 
@@ -47,24 +54,19 @@ const Upload = () => {
         formData.append("code_files", file);
       });
     }
-
-    if (APIFiles.length > 0) {
-      APIFiles.forEach((file) => {
-        formData.append("api_documentation", file);
-      });
-    }
-
-    if (SecurityFiles.length > 0) {
-      SecurityFiles.forEach((file) => {
-        formData.append("security_documentation", file);
-      });
-    }
-
-    // # api_documentation
-    // # security_documentation
-    // # library_dependency
-    // # code_documentation
-    // # version_control
+    APIFiles.forEach((file) => formData.append("API_documentation", file));
+    SecurityFiles.forEach((file) =>
+      formData.append("Security_documentation", file),
+    );
+    LibraryFiles.forEach((file) =>
+      formData.append("Library_dependencies", file),
+    );
+    CodeDocumentationFiles.forEach((file) =>
+      formData.append("Code_documentation", file),
+    );
+    versionControlFiles.forEach((file) =>
+      formData.append("Version_Control", file),
+    );
 
     formData.append("error_description", errorDescription);
     formData.append("model", selectedModel);
@@ -78,19 +80,30 @@ const Upload = () => {
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error("Error processing request.");
-      }
-
+      if (!res.ok) throw new Error("Error processing request.");
       const data = await res.json();
       setResponse(data);
       setError(null);
+      setErrorDescription("");
       setCodeFiles([]);
       setAPIFiles([]);
       setSecurityFiles([]);
+      setVersionControlFiles([]);
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const clearAll = () => {
+    setErrorDescription("");
+    setCodeFiles([]);
+    setAPIFiles([]);
+    setSecurityFiles([]);
+    setLibraryFiles([]);
+    setCodeDocumentationFiles([]);
+    setVersionControlFiles([]);
+    setResponse(null);
+    setError(null);
   };
 
   return (
@@ -147,6 +160,11 @@ const Upload = () => {
               <option value="Security_Documentation">
                 Security Documentation
               </option>
+              <option value="Librarys/Dependencies">
+                Librarys/Dependencies
+              </option>
+              <option value="Code_Documentation">Code Documentation</option>
+              <option value="Version_Control">Version Control</option>
             </select>
           </div>
           <input
@@ -163,43 +181,61 @@ const Upload = () => {
         <button type="submit" className="send-button">
           Send
         </button>
+        <button onClick={clearAll} type="button" className="clear-button">
+          Clear All
+        </button>
       </form>
       {codeFiles.length > 0 && (
         <div className="file-info">
           <p>
-            <strong>Code File:</strong>
+            <strong>Code Files:</strong>{" "}
+            {codeFiles.map((file) => file.name).join(", ")}
           </p>
-          <ul>
-            {codeFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
-            ))}
-          </ul>
         </div>
       )}
 
       {APIFiles.length > 0 && (
         <div className="file-info">
           <p>
-            <strong>API Documentation:</strong>
+            <strong>API Documentation:</strong>{" "}
+            {APIFiles.map((file) => file.name).join(", ")}
           </p>
-          <ul>
-            {APIFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
-            ))}
-          </ul>
         </div>
       )}
 
       {SecurityFiles.length > 0 && (
         <div className="file-info">
           <p>
-            <strong>Security Documentation:</strong>
+            <strong>Security Documentation:</strong>{" "}
+            {SecurityFiles.map((file) => file.name).join(", ")}
           </p>
-          <ul>
-            {SecurityFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
-            ))}
-          </ul>
+        </div>
+      )}
+
+      {LibraryFiles.length > 0 && (
+        <div className="file-info">
+          <p>
+            <strong>Library Dependencies:</strong>{" "}
+            {LibraryFiles.map((file) => file.name).join(", ")}
+          </p>
+        </div>
+      )}
+
+      {CodeDocumentationFiles.length > 0 && (
+        <div className="file-info">
+          <p>
+            <strong>Code Documentation:</strong>{" "}
+            {CodeDocumentationFiles.map((file) => file.name).join(", ")}
+          </p>
+        </div>
+      )}
+
+      {versionControlFiles.length > 0 && (
+        <div className="file-info">
+          <p>
+            <strong>Version Control:</strong>{" "}
+            {versionControlFiles.map((file) => file.name).join(", ")}
+          </p>
         </div>
       )}
 
