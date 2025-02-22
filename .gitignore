@@ -1,10 +1,13 @@
-# Virtual environment
-venv/
-
-# Python cache files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+ENV/
 
 # Environment variables
 .env
@@ -13,13 +16,33 @@ env
 # IDE specific files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Output directory
-output/
+# Database files
+chroma/
+*.sqlite3
+*.bin
 
-# Log files
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Logs
 *.log
-
-# Test cache
-.pytest_cache/
+logs/
 .coverage
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Output directories
+output/
