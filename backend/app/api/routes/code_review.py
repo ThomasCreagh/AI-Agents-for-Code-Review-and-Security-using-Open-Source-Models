@@ -47,25 +47,3 @@ async def review_code_file(
         suggestion=suggestion,
         line_nums=[1, 5]  # placeholder
     )
-
-
-# Note to Jake: you dont have a post request that tells you no security threat.
-# Instead inside of the text uploads or the file upload endpoints you may
-# return that there is no security threat there
-@router.post(
-    "/noSecurityThreat",
-    response_model=CodeReviewResponse,
-    dependencies=[Depends(verify_api_key)],
-)
-def no_vulnerabilities_found(
-    file: UploadFile = File(...),
-    error_description: str | None = Form(None),
-    language: str = Form(...),
-) -> CodeReviewResponse:
-    return CodeReviewResponse(
-        filename=file.filename,
-        language=language,
-        error_description=error_description,
-        suggestion="No threat found",
-        line_nums=[0, 0]     # nothing should be edited if no errors found
-    )

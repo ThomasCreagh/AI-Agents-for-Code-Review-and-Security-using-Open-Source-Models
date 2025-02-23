@@ -12,14 +12,18 @@ import shutil
 
 app = FastAPI()
 
+
 class QueryRequest(BaseModel):
     query: str
+
 
 class QueryResponse(BaseModel):
     response: str
 
+
 class DocumentLoadRequest(BaseModel):
     directory_path: str
+
 
 print("Initializing database manager...")
 db_manager = DatabaseManager(
@@ -40,9 +44,11 @@ if os.path.exists(data_directory):
 print("Initializing agent...")
 agent = BaseAgent(vector_store=db_manager.vector_store)
 
+
 @app.get("/")
 async def root():
     return {"message": "Security RAG API is running"}
+
 
 @app.post("/query")
 async def process_query(request: QueryRequest):
@@ -52,57 +58,62 @@ async def process_query(request: QueryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/documents/load")
 async def load_documents(request: DocumentLoadRequest):
     try:
         docs = load_pdfs_from_directory(request.directory_path)
         if not docs:
             return {"status": "error", "message": "No documents were found"}
-        
+
         splits = process_and_store_documents(db_manager.vector_store, docs)
-        
+
         return {
-            "status": "success", 
+            "status": "success",
             "document_count": len(docs),
             "chunk_count": len(splits)
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/documents/upload")
 async def upload_document(file: UploadFile = File(...)):
     try:
         if not file.filename.lower().endswith('.pdf'):
-            raise HTTPException(status_code=400, detail="Only PDF files are supported")
+            raise HTTPException(
+                status_code=400, detail="Only PDF files are supported")
 
         with NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
             shutil.copyfileobj(file.file, tmp)
             tmp_path = tmp.name
-            
+
         try:
             loader = PyPDFLoader(tmp_path)
             docs = loader.load()
-            
+
             if not docs:
-                raise HTTPException(status_code=400, detail="Could not load document")
-            
+                raise HTTPException(
+                    status_code=400, detail="Could not load document")
+
             splits = process_and_store_documents(db_manager.vector_store, docs)
-            
+
             db_manager._collection.persist()
             db_manager._collection.get()
-            
+
             return {
                 "status": "success",
                 "filename": file.filename,
                 "pages_processed": len(docs),
                 "chunk_count": len(splits)
             }
-            
+
         finally:
             os.unlink(tmp_path)
-            
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/database/stats")
 async def get_database_stats():
@@ -111,6 +122,7 @@ async def get_database_stats():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/database/clear")
 async def clear_database():
     try:
@@ -118,6 +130,7 @@ async def clear_database():
         return {"status": "success", **result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/graph")
 async def visualize_graph():

@@ -8,15 +8,30 @@ class Settings(BaseSettings):
         extra="ignore",
     )
     API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "sweng2025group23"
+
+    # LLM Configuration
+    LLM_MODEL: str
+    LLM_BASE_URL: str
+    LLM_TEMPERATURE: int
+
+    # Vector Store Configuration
+    COLLECTION_NAME: str
+    PERSIST_DIRECTORY: str
+    EMBEDDING_MODEL: str
+    EMBEDDING_BASE_URL: str
+
+    # Document Processing Configuration
+    DOCUMENTS_BASE_DIR: str
+    CHUNK_SIZE: int
+    CHUNK_OVERLAP: int
+
+    # Optional: Debug Configuration
+    DEBUG_MODE: bool
+    LOG_LEVEL: str
+
+    # Frontend and backend config
     REACT_APP_API_KEY: str
-
-    # Test user for paramaters, for testing purposes
-    EMAIL_TEST_USER: str = "exampleEmail@gmail.com"
-    PASSWORD_TEST_USER: str = "123456"
-
-    # Arbitrary value to get frontend host (Need to get from front end team)
-    FRONTEND_HOST: str = "http://localhost:7755"
+    REACT_APP_BACKEND_URL: str
 
 
 settings = Settings()
