@@ -2,18 +2,17 @@ FROM python:3.11-slim AS builder
 
 WORKDIR /code
 
-COPY ./requirements.txt .
+RUN apt-get update && apt-get install -y curl bash libc6 && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://ollama.com/install.sh | bash
+
+ENV PATH="/root/.ollama/bin:$PATH"
+
+RUN ollama serve & sleep 5 && ollama pull nomic-embed-text && ollama pull granite3.1-dense:2b
+
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN curl -fsSL https://ollama.com/install.sh | sh
-ENV PATH="/code/.venv/bin:$PATH"
-
-RUN ollama pull nomic-embed-text
-RUN ollama pull granite3.1-dense:2b
 
 EXPOSE 8000
 

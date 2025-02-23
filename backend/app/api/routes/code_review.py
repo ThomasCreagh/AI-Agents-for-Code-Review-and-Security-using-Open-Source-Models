@@ -14,28 +14,6 @@ from app.models import (
 
 router = APIRouter(prefix="/code-review", tags=["code-review"])
 
-#
-# @router.post(
-#     "/text",
-#     response_model=CodeReviewResponse,
-#     dependencies=[Depends(verify_api_key)],
-# )
-# def review_code_text(request: CodeReviewRequest) -> CodeReviewResponse:
-#     suggestion = str(scan_text(request.code, load_patterns()))
-#     return CodeReviewResponse(
-#         language=request.language,
-#         error_description=request.error_description,
-#         filename=None,
-#         suggestion=suggestion,
-#         line_nums=[1, 5]  # placeholder
-#     )
-#
-
-
-#         api_documentation: List[UploadFile] = File(None),
-#        security_documentation: List[UploadFile] = File(None),
-#        library_dependency: List[UploadFile] = File(None),
-#        code_documentation: List[UploadFile] = File(None),
 
 def compile_code_to_str(
         file_list: List[str],
@@ -60,7 +38,7 @@ def compile_code_to_str(
     response_model=CodeReviewResponse,
     dependencies=[Depends(verify_api_key)],
 )
-async def review_code_file(
+def review_code_file(
         code_files: List[UploadFile] = File(...),
         model: str | None = Form(None),
         error_description: str | None = Form(None),
