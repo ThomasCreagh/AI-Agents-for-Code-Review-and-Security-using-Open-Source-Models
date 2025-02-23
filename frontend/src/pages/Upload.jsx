@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import "../styles/Upload.css";
+import MarkdownDisplay from "../components/MarkdownDisplay";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Upload = () => {
-  const [codeFile, setCodeFile] = useState(null);
+  const [codeFiles, setCodeFiles] = useState([]);
   const [APIFiles, setAPIFiles] = useState([]);
   const [SecurityFiles, setSecurityFiles] = useState([]);
   const [LibraryFiles, setLibraryFiles] = useState([]);
   const [CodeDocumentationFiles, setCodeDocumentationFiles] = useState([]);
   const [versionControlFiles, setVersionControlFiles] = useState([]);
-
-  const [message, setMessage] = useState("");
+  const [errorDescription, setErrorDescription] = useState("");
+  const [language, setLanguage] = useState("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
 
   const [selectedModel, setSelectedModel] = useState("gpt-3.5");
   const [selectedDoctype, setSelectedDoctype] = useState("API_Documentation");
 
-
   const codeUpload = (event) => {
-    setCodeFile(event.target.files[0]);
+    const selectedFiles = Array.from(event.target.files);
+    setCodeFiles(selectedFiles);
   };
 
   const documentationUpload = (event) => {
@@ -39,45 +40,39 @@ const Upload = () => {
     }
   };
 
-
   const handleSendMessage = async (event) => {
     event.preventDefault();
-
-    if (
-      !message.trim() &&
-      !codeFile &&
-      APIFiles.length === 0 &&
-      SecurityFiles.length === 0 &&
-      LibraryFiles.length === 0 &&
-      CodeDocumentationFiles.length === 0 &&
-      versionControlFiles.length === 0
-    ) {
-      setError("Please enter a message or upload a file.");
+    if (!errorDescription.trim() && codeFiles.length === 0) {
+      setError("Please enter a message or upload files.");
       return;
     }
 
     const formData = new FormData();
-    if (codeFile) formData.append("file", codeFile);
-    formData.append("message", message);
 
+    if (codeFiles.length > 0) {
+      codeFiles.forEach((file) => {
+        formData.append("code_files", file);
+      });
+    }
     APIFiles.forEach((file) => formData.append("API_documentation", file));
     SecurityFiles.forEach((file) =>
-      formData.append("Security_documentation", file)
+      formData.append("Security_documentation", file),
     );
     LibraryFiles.forEach((file) =>
-      formData.append("Library_dependencies", file)
+      formData.append("Library_dependencies", file),
     );
     CodeDocumentationFiles.forEach((file) =>
-      formData.append("Code_documentation", file)
+      formData.append("Code_documentation", file),
     );
     versionControlFiles.forEach((file) =>
-      formData.append("Version_Control", file)
+      formData.append("Version_Control", file),
     );
 
+    formData.append("error_description", errorDescription);
     formData.append("model", selectedModel);
 
     try {
-      const res = await fetch(BACKEND_URL + "/api/v1/code-review", {
+      const res = await fetch(BACKEND_URL + "/code-review/file", {
         method: "POST",
         headers: {
           Authorization: API_KEY,
@@ -89,15 +84,19 @@ const Upload = () => {
       const data = await res.json();
       setResponse(data);
       setError(null);
+      setErrorDescription("");
+      setCodeFiles([]);
+      setAPIFiles([]);
+      setSecurityFiles([]);
+      setVersionControlFiles([]);
     } catch (err) {
       setError(err.message);
     }
   };
 
-
   const clearAll = () => {
-    setMessage("");
-    setCodeFile(null);
+    setErrorDescription("");
+    setCodeFiles([]);
     setAPIFiles([]);
     setSecurityFiles([]);
     setLibraryFiles([]);
@@ -125,9 +124,9 @@ const Upload = () => {
         <div className="input-container">
           <input
             type="text"
-            placeholder="Enter your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter the programming language..."
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
             className="chat-input"
           />
           <input
@@ -135,42 +134,62 @@ const Upload = () => {
             id="file-upload"
             onChange={codeUpload}
             className="file-input"
+            multiple
           />
           <label htmlFor="file-upload" className="file-label">
             📎
           </label>
         </div>
-        <div className="model-selector">
-          <select
-            className="model-dropdown"
-            value={selectedDoctype}
-            onChange={(e) => setSelectedDoctype(e.target.value)}
-          >
-            <option value="API_Documentation">API Documentation</option>
-            <option value="Security_Documentation">Security Documentation</option>
-            <option value="Librarys/Dependencies">Librarys/Dependencies</option>
-            <option value="Code_Documentation">Code Documentation</option>
-            <option value="Version_Control">Version Control</option>
-          </select>
-        </div>
-
         <div className="input-container">
           <input
-            type="file"
-            multiple
-            onChange={documentationUpload}
+            type="text"
+            placeholder="Enter your error description..."
+            value={errorDescription}
+            onChange={(e) => setErrorDescription(e.target.value)}
             className="chat-input"
           />
         </div>
-
-        <button type="submit" className="send-button">Send</button>
-        <button onClick={clearAll} type="button" className="clear-button">Clear All</button>
+        <div className="input-container">
+          <div className="model-selector">
+            <select
+              className="model-dropdown"
+              value={selectedDoctype}
+              onChange={(e) => setSelectedDoctype(e.target.value)}
+            >
+              <option value="API_Documentation">API Documentation</option>
+              <option value="Security_Documentation">
+                Security Documentation
+              </option>
+              <option value="Librarys/Dependencies">
+                Librarys/Dependencies
+              </option>
+              <option value="Code_Documentation">Code Documentation</option>
+              <option value="Version_Control">Version Control</option>
+            </select>
+          </div>
+          <input
+            type="file"
+            id="doc-upload"
+            onChange={documentationUpload}
+            className="file-input"
+            multiple
+          />
+          <label htmlFor="doc-upload" className="file-label">
+            📎
+          </label>
+        </div>
+        <button type="submit" className="send-button">
+          Send
+        </button>
+        <button onClick={clearAll} type="button" className="clear-button">
+          Clear All
+        </button>
       </form>
-
-      {codeFile && (
+      {codeFiles.length > 0 && (
         <div className="file-info">
           <p>
-            <strong>File:</strong> {codeFile.name}
+            <strong>Code Files:</strong>{" "}
+            {codeFiles.map((file) => file.name).join(", ")}
           </p>
         </div>
       )}
@@ -225,7 +244,9 @@ const Upload = () => {
       {response && (
         <div className="response-box">
           <h2>Response:</h2>
-          <p>{response.reply}</p>
+          <div style={{ padding: "20px" }}>
+            <MarkdownDisplay content={response.reply} />
+          </div>
         </div>
       )}
     </div>
