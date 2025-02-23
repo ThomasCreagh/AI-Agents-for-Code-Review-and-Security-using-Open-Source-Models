@@ -3,8 +3,9 @@ from langchain_ollama import OllamaEmbeddings
 from typing import List, Dict, Optional, Any, Tuple
 from langchain_core.documents import Document
 
+
 class DatabaseManager:
-    def __init__(self, 
+    def __init__(self,
                  collection_name: str = "general_docs",
                  embedding_model: str = "nomic-embed-text",
                  persist_directory: str = "./chroma",
@@ -12,31 +13,31 @@ class DatabaseManager:
         self.collection_name = collection_name
         self.persist_directory = persist_directory
         self.batch_size = batch_size
-        
+
         self.embeddings = OllamaEmbeddings(
             base_url="http://localhost:11434",
             model=embedding_model
         )
-        
+
         self.vector_store = Chroma(
             collection_name=collection_name,
             embedding_function=self.embeddings,
             persist_directory=persist_directory
         )
-        
+
         self._collection = self.vector_store._collection
 
     def clear_collection(self) -> dict:
         ids = self._collection.get()['ids']
         if not ids:
             return {"deleted_count": 0}
-        
+
         total_deleted = 0
         for i in range(0, len(ids), self.batch_size):
             batch_ids = ids[i:i + self.batch_size]
             self._collection.delete(ids=batch_ids)
             total_deleted += len(batch_ids)
-        
+
         return {"deleted_count": total_deleted}
 
     def get_stats(self) -> dict:
@@ -47,11 +48,11 @@ class DatabaseManager:
             "last_updated": self._collection.get()["metadatas"][-1]["timestamp"] if self._collection.count() > 0 else None
         }
 
-    def search_documents(self, 
-                        query: str, 
-                        k: int = 1, 
-                        filter: Optional[Dict] = None,
-                        with_score: bool = False) -> List[Document]:
+    def search_documents(self,
+                         query: str,
+                         k: int = 1,
+                         filter: Optional[Dict] = None,
+                         with_score: bool = False) -> List[Document]:
         if with_score:
             results = self.vector_store.similarity_search_with_score(
                 query=query,
@@ -87,9 +88,9 @@ class DatabaseManager:
         except Exception as e:
             raise Exception(f"Error deleting documents: {str(e)}")
 
-    def create_retriever(self, 
-                        search_type: str = "mmr",
-                        search_kwargs: Optional[Dict[str, Any]] = None) -> Any:
+    def create_retriever(self,
+                         search_type: str = "mmr",
+                         search_kwargs: Optional[Dict[str, Any]] = None) -> Any:
         if search_kwargs is None:
             search_kwargs = {"k": 1, "fetch_k": 2, "lambda_mult": 0.5}
         return self.vector_store.as_retriever(

@@ -1,10 +1,25 @@
 services:
   backend:
     build: ./backend
-    ports:
-      - "8000:8000"
     env_file:
       - .env
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-net
+    volumes:
+      - ./backend:/app
+  ollama:
+    build: ollama
+    ports:
+      - 11434:11434
+    env_file:
+      - .env
+    volumes:
+      - backend-vol:/ollama
+    networks:
+      - backend-net
+    entrypoint: ["/usr/bin/bash", "/get_models.sh"]
 
   frontend:
     build: ./frontend
@@ -14,3 +29,11 @@ services:
       - .env
     depends_on:
       - backend
+
+networks:
+  backend-net:
+    driver: bridge
+
+volumes:
+  backend-vol:
+    driver: local

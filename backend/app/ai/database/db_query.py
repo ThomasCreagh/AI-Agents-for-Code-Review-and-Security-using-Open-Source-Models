@@ -10,15 +10,18 @@ Question: {question}
 
 Answer in a helpful and detailed way."""
 
+
 def create_rag_prompt(template=DEFAULT_TEMPLATE):
     return ChatPromptTemplate.from_messages([
         ("system", template),
         ("human", "{question}")
     ])
 
+
 def query_database(vector_store, query, k=3):
     results = vector_store.similarity_search(query, k=k)
     return results
+
 
 def rag_query(vector_store, llm, query: str, template=DEFAULT_TEMPLATE, k: int = 3):
     docs = query_database(vector_store, query, k)
