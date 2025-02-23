@@ -9,6 +9,9 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN curl -fsSL https://ollama.com/install.sh | sh
+ENV PATH="/code/.venv/bin:$PATH"
+
 RUN ollama pull nomic-embed-text
 RUN ollama pull granite3.1-dense:2b
 

@@ -7,7 +7,8 @@ import shutil
 from app.ai.doc_loader.web_doc_loader import load_pdfs_from_directory
 from app.ai.doc_loader.doc_chunker import process_and_store_documents
 from app.models import DocumentLoadRequest
-from app.dependancies import get_db_manager
+from app.ai.database.database_manager import DatabaseManager
+from app.dependencies import get_db_manager
 from app.core.security import verify_api_key
 
 
@@ -17,7 +18,7 @@ router = APIRouter(prefix="/documents", tags=["documents"])
 @router.post("/load", dependencies=[Depends(verify_api_key)])
 def load_documents(
         request: DocumentLoadRequest,
-        db_manager: Depends(get_db_manager)
+        db_manager: DatabaseManager = Depends(get_db_manager)
 ):
     try:
         docs = load_pdfs_from_directory(request.directory_path)
@@ -37,8 +38,8 @@ def load_documents(
 
 @router.post("/upload", dependencies=[Depends(verify_api_key)])
 def upload_document(
-        db_manager: Depends(get_db_manager),
-        file: UploadFile = File(...)
+        file: UploadFile = File(...),
+        db_manager: DatabaseManager = Depends(get_db_manager),
 ):
     try:
         if not file.filename.lower().endswith('.pdf'):

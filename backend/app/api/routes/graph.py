@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.dependancies import get_agent
+from app.dependencies import get_agent
 from app.core.security import verify_api_key
+from app.ai.agent.base_agent import BaseAgent
 
 router = APIRouter(prefix="/graph", tags=["graph"])
 
 
 @router.get("/", dependencies=[Depends(verify_api_key)])
-def visualize_graph(agent: Depends(get_agent)):
+def visualize_graph(agent: BaseAgent = Depends(get_agent)):
     try:
         graph = agent.graph
         mermaid_syntax = graph.get_graph().draw_mermaid()
