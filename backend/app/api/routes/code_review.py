@@ -4,9 +4,11 @@ from typing import List
 # from app.ai.security_scanner.plugins.credential_scanner import (
 #     scan_text, load_patterns
 # )
+from app.ai.agent.base_agent import BaseAgent
+from app.dependencies import get_agent
 from app.core.security import verify_api_key
 from app.models import (
-    CodeReviewRequest,
+    # CodeReviewRequest,
     CodeReviewResponse
 )
 
@@ -28,59 +30,53 @@ router = APIRouter(prefix="/code-review", tags=["code-review"])
 #         line_nums=[1, 5]  # placeholder
 #     )
 #
-#
-# @router.post(
-#     "/file",
-#     response_model=CodeReviewResponse,
-#     dependencies=[Depends(verify_api_key)],
-# )
-# async def review_code_file(
-#         code_files: List[UploadFile] = File(...),
+
+
 #         api_documentation: List[UploadFile] = File(None),
-#         security_documentation: List[UploadFile] = File(None),
-#         library_dependency: List[UploadFile] = File(None),
-#         code_documentation: List[UploadFile] = File(None),
-#         model: str | None = Form(None),
-#         error_description: str | None = Form(None),
-#         language: str = Form(None),
-#         ai_agent: RunModel = Depends(get_agent),
-#         db: RunModel = Depends(get_db),
-# ) -> CodeReviewResponse:
-#     print("doing stuff")
-#     names = []
-#     suggestion = ""
-#     prompt = ""
-#     if code_files:
-#         prompt, names = compile_code_to_str(
-#             code_files, names, prompt, language, error_description)
-#
-#     if api_documentation:
-#         for documentation_file in api_documentation:
-#             add_bytes_to_rag_db(documentation_file.filename,
-#                                 documentation_file.file.read(),
-#                                 db)
-#
-#     if security_documentation:
-#         for documentation_file in security_documentation:
-#             add_bytes_to_rag_db(documentation_file.filename,
-#                                 documentation_file.file.read(),
-#                                 db)
-#
-#     if library_dependency:
-#         for documentation_file in library_dependency:
-#             add_bytes_to_rag_db(documentation_file.filename,
-#                                 documentation_file.file.read(),
-#                                 db)
-#
-#     if code_documentation:
-#         for documentation_file in code_documentation:
-#             add_bytes_to_rag_db(documentation_file.filename,
-#                                 documentation_file.file.read(),
-#                                 db)
-#
-#     print("RAG REASONER...")
-#     suggestion = ai_agent.run_rag(prompt)
-#
-#     return CodeReviewResponse(
-#         suggestion=suggestion
-#     )
+#        security_documentation: List[UploadFile] = File(None),
+#        library_dependency: List[UploadFile] = File(None),
+#        code_documentation: List[UploadFile] = File(None),
+
+def compile_code_to_str(
+        file_list: List[str],
+        names: List[str],
+        full_text: str,
+        language: str,
+        error_description: str
+) -> (str, List[str]):
+    full_text += f"LANGUAGE: {language}\n"
+    full_text += f"ERROR DESCRIPTION: {error_description}\n\n"
+    if not file_list:
+        return (full_text, names)
+    for file in file_list:
+        names.append(file.filename)
+        full_text += f"FILE:{file.filename}:\n"
+        full_text += f"{str(file.file.read())}\n\n"
+    return (full_text, names)
+
+
+@router.post(
+    "/file",
+    response_model=CodeReviewResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+async def review_code_file(
+        code_files: List[UploadFile] = File(...),
+        model: str | None = Form(None),
+        error_description: str | None = Form(None),
+        language: str = Form(None),
+        agent: BaseAgent = Depends(get_agent),
+) -> CodeReviewResponse:
+    names = []
+    suggestion = ""
+    prompt = ""
+    if code_files:
+        prompt, names = compile_code_to_str(
+            code_files, names, prompt, language, error_description)
+
+    print("PROCESS QUERY...")
+    suggestion = agent.process_message(prompt)
+
+    return CodeReviewResponse(
+        suggestion=suggestion
+    )

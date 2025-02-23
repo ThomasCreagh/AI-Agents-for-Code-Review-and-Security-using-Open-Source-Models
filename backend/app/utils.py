@@ -1,11 +1,12 @@
 from fastapi import Depends
 
-from app.dependancies import get_agent
+from app.ai.agent.base_agent import BaseAgent
+from app.dependencies import get_agent
 
 
-def process_query(request: str, agent: Depends(get_agent)):
+def process_query(request: str, agent: BaseAgent = Depends(get_agent)):
     try:
-        response = agent.process_message(request.query)
-        return {"response": response}
+        return agent.process_message(request.query)
+        # return {"response": response}
     except Exception as e:
         print("ERROR in functon process_query:", e)
