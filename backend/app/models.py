@@ -18,7 +18,7 @@ class QueryResponse(BaseModel):
 
 
 class DocumentLoadRequest(BaseModel):
-    directory_path: str
+    directory_path: str="app/data"
 
 
 class CodeReviewResponse(BaseModel):
