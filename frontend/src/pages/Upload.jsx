@@ -54,20 +54,20 @@ const Upload = () => {
         formData.append("code_files", file);
       });
     }
-    APIFiles.forEach((file) => formData.append("API_documentation", file));
-    SecurityFiles.forEach((file) =>
-      formData.append("Security_documentation", file),
-    );
-    LibraryFiles.forEach((file) =>
-      formData.append("Library_dependencies", file),
-    );
-    CodeDocumentationFiles.forEach((file) =>
-      formData.append("Code_documentation", file),
-    );
-    versionControlFiles.forEach((file) =>
-      formData.append("Version_Control", file),
-    );
-
+    // APIFiles.forEach((file) => formData.append("API_documentation", file));
+    // SecurityFiles.forEach((file) =>
+    //   formData.append("Security_documentation", file),
+    // );
+    // LibraryFiles.forEach((file) =>
+    //   formData.append("Library_dependencies", file),
+    // );
+    // CodeDocumentationFiles.forEach((file) =>
+    //   formData.append("Code_documentation", file),
+    // );
+    // versionControlFiles.forEach((file) =>
+    //   formData.append("Version_Control", file),
+    // );
+    //
     formData.append("error_description", errorDescription);
     formData.append("model", selectedModel);
 
@@ -245,7 +245,7 @@ const Upload = () => {
         <div className="response-box">
           <h2>Response:</h2>
           <div style={{ padding: "20px" }}>
-            <MarkdownDisplay content={response.reply} />
+            <MarkdownDisplay content={response.suggestion} />
           </div>
         </div>
       )}

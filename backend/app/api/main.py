@@ -1,6 +1,11 @@
 from fastapi import APIRouter
 
-from app.api.routes import code_review
+from app.api.routes import (
+    code_review,
+    database,
+    documents,
+    graph
+)
 
 api_router = APIRouter()
 
@@ -11,3 +16,6 @@ def read_root():
 
 
 api_router.include_router(code_review.router)
+api_router.include_router(database.router)
+api_router.include_router(documents.router)
+api_router.include_router(graph.router)
