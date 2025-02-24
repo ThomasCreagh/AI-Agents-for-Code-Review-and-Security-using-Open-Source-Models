@@ -245,7 +245,7 @@ const Upload = () => {
         <div className="response-box">
           <h2>Response:</h2>
           <div style={{ padding: "20px" }}>
-            <MarkdownDisplay content={response.reply} />
+            <MarkdownDisplay content={response.suggestion} />
           </div>
         </div>
       )}

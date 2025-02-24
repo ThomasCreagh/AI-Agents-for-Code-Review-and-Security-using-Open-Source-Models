@@ -8,7 +8,8 @@ Context: {context}
 
 Question: {question}
 
-Answer in a helpful and detailed way."""
+Answer in a helpful and detailed way.
+Provide the output in a markdown format."""
 
 
 def create_rag_prompt(template=DEFAULT_TEMPLATE):
