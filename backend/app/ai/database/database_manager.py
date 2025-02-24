@@ -15,7 +15,7 @@ class DatabaseManager:
         self.batch_size = batch_size
 
         self.embeddings = OllamaEmbeddings(
-            base_url="http://localhost:11434",
+            base_url="http://ollama:11434",
             model=embedding_model
         )
 
