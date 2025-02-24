@@ -7,9 +7,14 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-left">
         <div className="logo">
-        <a href="https://www.ibm.com" target="_blank" rel="noopener noreferrer" className="logo">
-          <img src="/ibm.png" alt="IBM Logo" />
-        </a>
+          <a
+            href="https://www.ibm.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="logo"
+          >
+            <img src="/ibm.png" alt="IBM Logo" />
+          </a>
         </div>
         <div className="separator"></div>
         <Link
@@ -34,11 +39,11 @@ const Navbar = () => {
           Code Review
         </Link>
         <Link
-          to="/how_to_use"
-          className="how_to_use-link"
+          to="/how-to-use"
+          className="how-to-use-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >
-          How_To_Use
+          How To Use
         </Link>
       </div>
     </nav>

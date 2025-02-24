@@ -37,7 +37,7 @@
 .home-link,
 .about-link,
 .upload-link,
-.how_to_use-link,
+.how-to-use-link,
 .dashboard-link {
   font-weight: bold;
   cursor: pointer;
@@ -46,7 +46,7 @@
 .home-link:hover,
 .about-link:hover,
 .upload-link:hover,
-.how_to_use-link:hover,
+.how-to-use-link:hover,
 .dashboard-link:hover {
   text-decoration: underline !important;
 }
