@@ -7,7 +7,7 @@
 
 FROM python:3.11-slim AS builder
 
-WORKDIR /code
+WORKDIR /backend-code
 
 RUN apt-get update && apt-get install -y curl bash libc6 && rm -rf /var/lib/apt/lists/*
 # RUN curl -fsSL https://ollama.com/install.sh | bash

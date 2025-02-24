@@ -8,11 +8,11 @@ services:
     networks:
       - backend-net
     volumes:
-      - ./backend:/app
+      - ./backend:/backend-code
   ollama:
     build: ollama
     ports:
-      - 11434:11434
+      - "11434:11434"
     env_file:
       - .env
     volumes:
