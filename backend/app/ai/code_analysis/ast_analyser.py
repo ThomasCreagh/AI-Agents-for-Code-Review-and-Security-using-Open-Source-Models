@@ -2,14 +2,12 @@ from typing import Generator
 import os
 from tree_sitter import Language, Parser, Tree, Node
 import tree_sitter_python
-from pprint import pprint  # For prettier output formatting
+from pprint import pprint  
 
-# Keep your existing setup code
 PY_LANGUAGE = Language(tree_sitter_python.language())
 parser = Parser()
 parser.language = PY_LANGUAGE
 
-# Your existing traverse_tree function remains unchanged
 def traverse_tree(tree: Tree) -> Generator[Node, None, None]:
     cursor = tree.walk()
     visited_children = False
@@ -37,10 +35,9 @@ def analyze_python_code(code: str):
                 func_name = name_node.text.decode('utf8')
                 functions[func_name] = {
                     'params': [p.text.decode('utf8') for p in params_node.children if p.type == "identifier"],
-                    'returns': []  # We'll store return values here
+                    'returns': []  
                 }
                 
-                # Analyze the function body for return statements
                 if body_node:
                     for child in traverse_tree(body_node):
                         if child.type == "return_statement":
@@ -68,18 +65,15 @@ def analyze_source_directory(source_dir: str):
     """
     results = {}
     
-    # Walk through the directory and find Python files
     for filename in os.listdir(source_dir):
         if filename.endswith('.py'):
             file_path = os.path.join(source_dir, filename)
             try:
-                # Read the file preserving all whitespace and indentation
                 with open(file_path, 'r', encoding='utf-8') as f:
                     code = f.read()
                 
-                # Analyze the file and store results with filename
                 analysis = analyze_python_code(code)
-                if analysis:  # Only store files that have functions
+                if analysis: 
                     results[filename] = analysis
                     
             except Exception as e:
@@ -88,13 +82,10 @@ def analyze_source_directory(source_dir: str):
     return results
 
 if __name__ == "__main__":
-    # Replace this with your source directory path
     source_directory = "source_code"
     
-    # Analyze all Python files and print results
     results = analyze_source_directory(source_directory)
     
-    # Pretty print the results
     print("\nFunction Analysis Results:")
     print("=" * 50)
     for filename, functions in results.items():

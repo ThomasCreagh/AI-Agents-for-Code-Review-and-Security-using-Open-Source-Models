@@ -25,7 +25,6 @@ def code_analysis_agent(state: AgentState):
         code_blocks = re.findall(r'```python\n(.*?)\n```', query, re.DOTALL)
         
         if not code_blocks:
-            # Try to extract code with other markings
             code_blocks = re.findall(r'```\n(.*?)\n```', query, re.DOTALL)
             
         if not code_blocks:
@@ -33,7 +32,7 @@ def code_analysis_agent(state: AgentState):
             code_blocks = [potential_code]
         
         analysis_results = []
-        full_code = []  # Store the actual code for context
+        full_code = []  
         
         for code in code_blocks:
             full_code.append(code)
@@ -44,16 +43,13 @@ def code_analysis_agent(state: AgentState):
         if analysis_results:
             summary = "# Code Analysis Results\n\n"
             
-            # Add semantic summary of code purpose
             summary += "## Code Purpose Analysis\n\n"
             
-            # Extract sensitive function patterns
             has_http = any("http" in code or "request" in code or "api" in code for code in full_code)
             has_file_ops = any("open(" in code or "file" in code or "read" in code or "write" in code for code in full_code)
             has_db = any("database" in code or "sql" in code or "query" in code for code in full_code)
             has_auth = any("auth" in code or "password" in code or "login" in code or "token" in code for code in full_code)
             
-            # Generate purpose summary
             if has_http:
                 summary += "- Code includes HTTP/API operations that may handle external input\n"
             if has_file_ops:
@@ -63,7 +59,6 @@ def code_analysis_agent(state: AgentState):
             if has_auth:
                 summary += "- Code appears to handle authentication or sensitive credentials\n"
             
-            # Function-level analysis
             summary += "\n## Detected Functions\n\n"
             
             for idx, result in enumerate(analysis_results):
@@ -76,7 +71,6 @@ def code_analysis_agent(state: AgentState):
                     summary += f"Function: `{func_name}`\n"
                     summary += f"Parameters: `{', '.join(details['params'])}`\n"
                     
-                    # Check for dangerous parameter patterns
                     for param in details['params']:
                         param_lower = param.lower()
                         if any(word in param_lower for word in ["user", "input", "data", "request", "file", "path"]):
@@ -88,7 +82,6 @@ def code_analysis_agent(state: AgentState):
                         summary += f"Returns: {returns_str}\n"
                     summary += "\n"
             
-            # Add a message with actual code
             code_content = "## Full Code:\n\n"
             for idx, code_block in enumerate(full_code):
                 code_content += f"### Block {idx+1}:\n```python\n{code_block}\n```\n\n"

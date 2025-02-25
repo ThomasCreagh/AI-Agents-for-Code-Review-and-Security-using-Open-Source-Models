@@ -9,15 +9,12 @@ def integrated_analysis_agent(state: AgentState):
     query = state["latest_user_message"]
     context = state.get("context", {})
     
-    # Check if we have code analysis results
     code_analysis = context.get("code_analysis", [])
     has_code_analysis = len(code_analysis) > 0
     
-    # Check if we have retrieved documents
     retrieved_docs = context.get("retrieved_docs", [])
     has_documents = len(retrieved_docs) > 0
     
-    # Get document sources
     doc_sources = context.get("doc_sources", [])
     
     log_debug(f"Integrated analysis: Code analysis: {has_code_analysis}, Documents: {has_documents}")
@@ -26,11 +23,9 @@ def integrated_analysis_agent(state: AgentState):
         log_debug("No code analysis or documents to integrate")
         return state
     
-    # Create an integration of code analysis and standards
     integration_content = ""
     
     if has_code_analysis:
-        # Extract function details to make them more prominent
         integration_content += "## Code Structure Summary\n\n"
         for analysis_idx, analysis in enumerate(code_analysis):
             for func_name, details in analysis.items():
@@ -45,7 +40,6 @@ def integrated_analysis_agent(state: AgentState):
                 integration_content += f"- Function: `{func_name}({params})` → Returns: {returns_str}\n"
     
     if has_documents:
-        # Extract relevant standards from documents with citation markers
         integration_content += "\n## Relevant Security Standards\n\n"
         
         for i, doc in enumerate(retrieved_docs):
@@ -53,7 +47,6 @@ def integrated_analysis_agent(state: AgentState):
             source = metadata.get('source', 'unknown')
             citation_id = f"[{i+1}]"
             
-            # Add source with citation marker
             integration_content += f"### From {source} {citation_id}\n"
             integration_content += f"{doc.page_content}\n\n"
     
@@ -71,14 +64,11 @@ def integrated_analysis_agent(state: AgentState):
         integration_content += "\n## Source References\n\n"
         for i, source in enumerate(doc_sources):
             if isinstance(source, dict):
-                # New format with detailed source info
                 page_info = f", page {source.get('page', '')}" if source.get('page', '') else ""
                 integration_content += f"[{i+1}] {source.get('source', 'unknown')}{page_info}\n"
             else:
-                # Old format with just source name
                 integration_content += f"[{i+1}] {source}\n"
     
-    # Create a message linking code analysis with documentation
     integration_message = SystemMessage(content=integration_content)
     
     log_debug("Created integrated analysis with combined context and source attribution")

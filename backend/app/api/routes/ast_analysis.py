@@ -109,7 +109,6 @@ async def submit_code_for_review(
     Submit code for security review. This endpoint assumes documents are already uploaded
     to the database using the /documents/upload endpoint.
     """
-    # Read the code from the file
     try:
         content = await code_file.read()
         code = content.decode("utf-8")
@@ -120,7 +119,6 @@ async def submit_code_for_review(
             "message": f"Error reading code file: {str(e)}"
         }
     
-    # Check if we have documents in the database to reference
     try:
         db_stats = db_manager.get_stats()
         doc_count = db_stats.get("total_documents", 0)
@@ -136,7 +134,6 @@ async def submit_code_for_review(
             "message": f"Error checking database statistics: {str(e)}"
         }
     
-    # Setup the agent's prompt with code and security context
     prompt = "Please review this code for security issues"
     
     if security_context:
@@ -144,14 +141,12 @@ async def submit_code_for_review(
     
     prompt += f"\n\n```{language}\n{code}\n```"
     
-    # If reference_docs is true, explicitly instruct the agent to use the security documentation
     if reference_docs and reference_docs.lower() == "true":
         prompt += "\n\nIMPORTANT: You MUST check this code against the security documentation in the knowledge base. "
         prompt += "Look for ANY violations of security standards and explicitly mention them in your analysis. "
         prompt += "If the code violates any security standards or best practices described in the documentation, "
         prompt += "identify each violation specifically and explain why it violates the standard."
     
-    # Process with the agent
     response = agent.process_message(prompt)
     
     return {

@@ -135,7 +135,7 @@ const SecurityCodeAnalysis = () => {
       <div className="analysis-card">
         <h3>Security Code Review</h3>
         <div className="analysis-description">
-          Upload a code file for in-depth security analysis. The system will identify potential security vulnerabilities and best practices.
+          Upload documentation below and a code file for in-depth security analysis. The system will identify potential security vulnerabilities and best practices.
         </div>
         
         <form className="analysis-form" onSubmit={handleSubmit}>

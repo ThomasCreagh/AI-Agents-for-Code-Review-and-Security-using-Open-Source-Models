@@ -5,10 +5,8 @@ import json
 
 def process_code_for_storage(code: str, filename: str, language: str) -> Document:
     """Process code using AST analysis and prepare it for vector store storage."""
-    # Get code analysis
     analysis_results = analyze_python_code(code)
     
-    # Create a readable summary of the analysis
     summary = f"Code Analysis for {filename}\n\n"
     for func_name, details in analysis_results.items():
         summary += f"Function: {func_name}\n"
@@ -17,7 +15,6 @@ def process_code_for_storage(code: str, filename: str, language: str) -> Documen
             summary += f"Returns: {json.dumps(details['returns'], indent=2)}\n"
         summary += "\n"
 
-    # Create document with metadata
     return Document(
         page_content=summary,
         metadata={

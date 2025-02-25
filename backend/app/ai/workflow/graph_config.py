@@ -27,12 +27,10 @@ def rag_agent(state: AgentState, vector_store, llm):
     query = state["latest_user_message"]
     context = state.get("context", {})
     
-    # If we have code analysis, use it to enhance the query
     code_analysis = context.get("code_analysis", [])
     enhanced_query = query
     
     if code_analysis:
-        # Extract function names and purposes for better retrieval
         function_info = []
         for analysis in code_analysis:
             for func_name, details in analysis.items():
@@ -48,7 +46,6 @@ def rag_agent(state: AgentState, vector_store, llm):
         docs = query_database(vector_store, enhanced_query, k=3)
         log_debug(f"Retrieved {len(docs)} documents")
 
-        # Format documents with citation markers
         formatted_docs = []
         doc_sources = []
         
@@ -57,19 +54,15 @@ def rag_agent(state: AgentState, vector_store, llm):
             source = metadata.get('source', 'unknown')
             page = metadata.get('page_number', '')
             
-            # Add citation marker at end of document content
             citation_id = f"[{i+1}]"
             formatted_content = f"{doc.page_content} {citation_id}"
             formatted_docs.append(formatted_content)
             
-            # Store source info for later reference
             doc_sources.append({
                 'id': citation_id,
                 'source': source,
                 'page': page
             })
-            
-            # Log document details
             preview = doc.page_content[:150] + "..." if len(doc.page_content) > 150 else doc.page_content
             log_debug(f"Document {i+1} from '{source}':\n{preview}")
 
