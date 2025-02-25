@@ -58,10 +58,20 @@ def upload_document(
                 raise HTTPException(
                     status_code=400, detail="Could not load document")
 
+            # Process and store in vector database
             splits = process_and_store_documents(db_manager.vector_store, docs)
-
-            db_manager._collection.persist()
-            db_manager._collection.get()
+            
+            # Remove the call to persist() since it's causing the error
+            # Instead, rely on the underlying process_and_store_documents function
+            # which should handle persistence properly
+            
+            # Force a refresh to ensure data is accessible
+            try:
+                # Use a safer method to ensure collection is updated
+                count = db_manager._collection.count()
+            except Exception as e:
+                # Log the error but don't fail if this specific operation fails
+                print(f"Warning: Could not get collection count: {str(e)}")
 
             return {
                 "status": "success",

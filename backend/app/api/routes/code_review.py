@@ -23,7 +23,7 @@ def compile_code_to_str(
         error_description: str
 ) -> (str, List[str]):
     full_text += f"LANGUAGE: {language}\n"
-    full_text += f"ERROR DESCRIPTION: {error_description}\n\n"
+    full_text += f"Question/Analysis: {error_description}\n\n"
     if not file_list:
         return (full_text, names)
     for file in file_list:

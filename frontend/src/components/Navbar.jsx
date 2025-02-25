@@ -39,6 +39,13 @@ const Navbar = () => {
           Code Review
         </Link>
         <Link
+          to="/security-analysis"
+          className="security-analysis-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Security Analysis
+        </Link>
+        <Link
           to="/how-to-use"
           className="how-to-use-link"
           style={{ textDecoration: "none", color: "inherit" }}

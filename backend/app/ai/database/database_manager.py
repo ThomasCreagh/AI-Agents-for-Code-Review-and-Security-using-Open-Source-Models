@@ -45,7 +45,6 @@ class DatabaseManager:
             "total_documents": self._collection.count(),
             "collection_name": self.collection_name,
             "persist_directory": self.persist_directory,
-            "last_updated": self._collection.get()["metadatas"][-1]["timestamp"] if self._collection.count() > 0 else None
         }
 
     def search_documents(self,

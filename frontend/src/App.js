@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Upload from "./pages/Upload";
 import HowToUse from "./pages/HowToUse";
+import SecurityCodeAnalysis from "./pages/SecurityCodeAnalysis";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/how-to-use" element={<HowToUse />} />
+        <Route path="/security-analysis" element={<SecurityCodeAnalysis />} />
       </Routes>
     </Router>
   );
