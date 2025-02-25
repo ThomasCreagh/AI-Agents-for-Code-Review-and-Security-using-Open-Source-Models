@@ -138,3 +138,5 @@ uvicorn==0.34.0
 # zstandard==0.23.0
 tree-sitter
 tree-sitter-python
+anthropic
+langchain-anthropic
