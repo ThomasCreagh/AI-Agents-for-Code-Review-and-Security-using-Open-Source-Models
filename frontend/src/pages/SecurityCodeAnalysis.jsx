@@ -250,7 +250,7 @@ const SecurityCodeAnalysis = () => {
           {dbStats && (
             <div className="db-stats">
               <h4>Database Statistics</h4>
-              <p><strong>Total Documents:</strong> {dbStats.total_documents}</p>
+              <p><strong>Total Chunks:</strong> {dbStats.total_documents}</p>
               {dbStats.collection_name && <p><strong>Collection:</strong> {dbStats.collection_name}</p>}
             </div>
           )}
