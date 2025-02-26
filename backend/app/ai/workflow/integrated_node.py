@@ -23,55 +23,67 @@ def integrated_analysis_agent(state: AgentState):
         log_debug("No code analysis or documents to integrate")
         return state
     
+    # Use minimal content format
     integration_content = ""
     
     if has_code_analysis:
-        integration_content += "## Code Structure Summary\n\n"
+        # Only include essential information about functions
+        integration_content += "Functions: "
+        function_list = []
         for analysis_idx, analysis in enumerate(code_analysis):
+            if analysis_idx >= 2:  # PERFORMANCE: Limit to first 2 analyses
+                break
             for func_name, details in analysis.items():
-                params = ', '.join(details['params'])
-                returns = []
-                for ret in details.get('returns', []):
-                    if isinstance(ret, dict):
-                        returns.append(f"{ret.get('value', 'unknown')} ({ret.get('type', 'unknown')})")
-                
-                returns_str = ", ".join(returns) if returns else "None"
-                
-                integration_content += f"- Function: `{func_name}({params})` → Returns: {returns_str}\n"
+                if len(function_list) >= 5:  # Limit to first 5 functions
+                    break
+                params = ', '.join(details['params'][:3])  # PERFORMANCE: Limit to first 3 params
+                function_list.append(f"{func_name}({params})")
+        
+        integration_content += ", ".join(function_list)
+        integration_content += "\n\n"
     
     if has_documents:
-        integration_content += "\n## Relevant Security Standards\n\n"
+        # Only include document snippets up to a certain length
+        integration_content += "Security standards: "
         
+        total_doc_length = 0
         for i, doc in enumerate(retrieved_docs):
+            if i >= 1:  # Only use first document
+                break
+                
             metadata = getattr(doc, 'metadata', {})
             source = metadata.get('source', 'unknown')
             citation_id = f"[{i+1}]"
             
-            integration_content += f"### From {source} {citation_id}\n"
-            integration_content += f"{doc.page_content}\n\n"
+            # Truncate document content
+            doc_content = doc.page_content
+            if len(doc_content) > 500:
+                doc_content = doc_content[:500] + "..."
+                
+            integration_content += f"{source} {citation_id}: {doc_content}\n\n"
+            total_doc_length += len(doc_content)
+            
+            if total_doc_length > 1000:  # PERFORMANCE: Cap total document content
+                break
     
-    if has_code_analysis and has_documents:
-        # Add specific instructions for analysis
-        integration_content += "\n## Integration Instructions\n\n"
-        integration_content += "Compare the code structure with the security standards to identify:\n"
-        integration_content += "1. Potential security vulnerabilities based on function parameters and returns\n"
-        integration_content += "2. Missing security controls required by the standards\n"
-        integration_content += "3. Compliance violations in the implementation approach\n\n"
-        integration_content += "When referencing security standards in your analysis, please use the citation markers ([1], [2], etc.).\n"
+    # Skip integration instructions to save tokens
     
-    # Add source reference guide
+    # Add minimal source reference
     if has_documents:
-        integration_content += "\n## Source References\n\n"
+        integration_content += "Sources: "
+        sources = []
         for i, source in enumerate(doc_sources):
+            if i >= 2:  # Limit to first 2 sources
+                break
             if isinstance(source, dict):
-                page_info = f", page {source.get('page', '')}" if source.get('page', '') else ""
-                integration_content += f"[{i+1}] {source.get('source', 'unknown')}{page_info}\n"
+                sources.append(f"[{i+1}] {source.get('source', 'unknown')}")
             else:
-                integration_content += f"[{i+1}] {source}\n"
+                sources.append(f"[{i+1}] {source}")
+        integration_content += ", ".join(sources)
     
     integration_message = SystemMessage(content=integration_content)
     
-    log_debug("Created integrated analysis with combined context and source attribution")
+    log_debug("Created integrated analysis with minimal content")
     
     return {
         "messages": messages + [integration_message],

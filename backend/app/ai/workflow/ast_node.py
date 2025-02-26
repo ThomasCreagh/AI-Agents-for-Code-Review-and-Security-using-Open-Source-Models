@@ -22,71 +22,59 @@ def code_analysis_agent(state: AgentState):
     log_debug("Code detected, performing AST analysis")
     
     try:
+        # Extract only the first code block to analyze
         code_blocks = re.findall(r'```python\n(.*?)\n```', query, re.DOTALL)
         
         if not code_blocks:
             code_blocks = re.findall(r'```\n(.*?)\n```', query, re.DOTALL)
             
         if not code_blocks:
-            potential_code = query
+            # Take only first 1000 chars as potential code
+            potential_code = query[:1000] if len(query) > 1000 else query
             code_blocks = [potential_code]
+        else:
+            # Only analyze first code block
+            code_blocks = [code_blocks[0]]
         
         analysis_results = []
         full_code = []  
         
         for code in code_blocks:
+            # Truncate very large code blocks
+            if len(code) > 2000:
+                code = code[:2000]
+                
             full_code.append(code)
             analysis = analyze_python_code(code)
             if analysis:
                 analysis_results.append(analysis)
         
         if analysis_results:
-            summary = "# Code Analysis Results\n\n"
+            #Use minimal summary format
+            summary = "Code Analysis:\n"
             
-            summary += "## Code Purpose Analysis\n\n"
+            # Skip detailed code purpose analysis
             
-            has_http = any("http" in code or "request" in code or "api" in code for code in full_code)
-            has_file_ops = any("open(" in code or "file" in code or "read" in code or "write" in code for code in full_code)
-            has_db = any("database" in code or "sql" in code or "query" in code for code in full_code)
-            has_auth = any("auth" in code or "password" in code or "login" in code or "token" in code for code in full_code)
-            
-            if has_http:
-                summary += "- Code includes HTTP/API operations that may handle external input\n"
-            if has_file_ops:
-                summary += "- Code performs file operations that may involve sensitive data\n"
-            if has_db:
-                summary += "- Code interacts with databases which may require injection protection\n"
-            if has_auth:
-                summary += "- Code appears to handle authentication or sensitive credentials\n"
-            
-            summary += "\n## Detected Functions\n\n"
-            
+            # Only include critical function data
+            function_count = 0
             for idx, result in enumerate(analysis_results):
-                summary += f"### Code Block {idx+1}\n\n"
                 if not result:
-                    summary += "No functions detected in this code block.\n\n"
                     continue
                     
                 for func_name, details in result.items():
-                    summary += f"Function: `{func_name}`\n"
-                    summary += f"Parameters: `{', '.join(details['params'])}`\n"
+                    if function_count >= 5:  # Limit to 5 functions
+                        break
+                        
+                    function_count += 1
+                    summary += f"- {func_name}({', '.join(details['params'][:3])})\n"
                     
-                    for param in details['params']:
+                    # Only check first 3 params
+                    for param in details['params'][:3]:
                         param_lower = param.lower()
                         if any(word in param_lower for word in ["user", "input", "data", "request", "file", "path"]):
-                            summary += f"⚠️ Parameter `{param}` may accept user input and should be validated\n"
-                            
-                    if details['returns']:
-                        returns_str = ", ".join([f"{r.get('value', 'unknown')} ({r.get('type', 'unknown')})" 
-                                              for r in details['returns']])
-                        summary += f"Returns: {returns_str}\n"
-                    summary += "\n"
+                            summary += f"  ⚠️ Parameter `{param}` may accept user input\n"
             
-            code_content = "## Full Code:\n\n"
-            for idx, code_block in enumerate(full_code):
-                code_content += f"### Block {idx+1}:\n```python\n{code_block}\n```\n\n"
-            
-            summary += code_content
+            # Skip including full code in summary
             
             analysis_message = SystemMessage(
                 content=summary

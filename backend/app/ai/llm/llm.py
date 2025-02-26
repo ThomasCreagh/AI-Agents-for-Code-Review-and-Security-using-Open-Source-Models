@@ -1,7 +1,14 @@
 import os
+import time
+import tiktoken
 from langchain_ollama import ChatOllama
 from langchain_anthropic import ChatAnthropic
 from app.core.config import settings
+
+# Utility to count tokens
+def count_tokens(text):
+    encoder = tiktoken.get_encoding("cl100k_base")  # Claude uses cl100k
+    return len(encoder.encode(text))
 
 def initialise_llm(model: str = None):
     """
@@ -15,12 +22,21 @@ def initialise_llm(model: str = None):
         if not api_key:
             raise ValueError("ANTHROPIC_API_KEY environment variable is required when USE_ANTHROPIC is true")
         
-        anthropic_model = model or os.getenv("ANTHROPIC_MODEL", "claude-3-sonnet-20240229")
+        # Default to faster model for most operations
+        default_model = "claude-3-haiku-20240307"
+        anthropic_model = model or os.getenv("ANTHROPIC_MODEL", default_model)
         print(f"Using Anthropic Claude API with model: {anthropic_model}")
+        
+        time.sleep(1)  # Prevent rate limiting
+        
         return ChatAnthropic(
             anthropic_api_key=api_key,
             model=anthropic_model,
-            temperature=0
+            temperature=0,
+            timeout=30,  # timeout
+            max_retries=2,  # basic retry
+            max_tokens=1000,  # Limit output tokens to avoid cutoffs
+            max_tokens_to_sample=1000
         )
     else:
         ollama_model = model or os.getenv("LLM_MODEL", "granite3.1-dense:2b")

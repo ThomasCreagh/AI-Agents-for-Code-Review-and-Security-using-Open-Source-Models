@@ -2,6 +2,7 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langgraph.graph import StateGraph, END, START
 from langgraph.types import interrupt
 import os
+import time
 
 from ..database.db_query import query_database
 from app.models import AgentState
@@ -27,15 +28,31 @@ def rag_agent(state: AgentState, vector_store, llm):
     query = state["latest_user_message"]
     context = state.get("context", {})
     
+    # Limit query length by tokens
+    from ..llm.llm import count_tokens
+    
+    # Strict token limit of 500 for queries
+    if count_tokens(query) > 500:
+        # Truncate to approximately 500 tokens
+        query = query[:1500]  # ~500 tokens for average text
+        log_debug("Query truncated to ~500 tokens for performance")
+    
     code_analysis = context.get("code_analysis", [])
     enhanced_query = query
     
+    # Simplify enhanced query construction
     if code_analysis:
         function_info = []
+        count = 0
         for analysis in code_analysis:
             for func_name, details in analysis.items():
+                if count >= 3:
+                    break
                 params = ', '.join(details['params'])
                 function_info.append(f"{func_name}({params})")
+                count += 1
+            if count >= 3:
+                break
         
         if function_info:
             enhanced_query = f"{query} Functions analyzed: {', '.join(function_info)}"
@@ -43,8 +60,12 @@ def rag_agent(state: AgentState, vector_store, llm):
 
     # Retrieve documents using vector_store
     try:
-        docs = query_database(vector_store, enhanced_query, k=3)
+        # Retrieve fewer documents (k=1)
+        docs = query_database(vector_store, enhanced_query, k=1)
         log_debug(f"Retrieved {len(docs)} documents")
+
+        # Basic throttling
+        time.sleep(0.5)
 
         formatted_docs = []
         doc_sources = []
@@ -63,7 +84,9 @@ def rag_agent(state: AgentState, vector_store, llm):
                 'source': source,
                 'page': page
             })
-            preview = doc.page_content[:150] + "..." if len(doc.page_content) > 150 else doc.page_content
+            # Limit preview size
+            preview_length = min(100, len(doc.page_content))
+            preview = doc.page_content[:preview_length] + "..." if len(doc.page_content) > preview_length else doc.page_content
             log_debug(f"Document {i+1} from '{source}':\n{preview}")
 
         if not docs or len(docs) == 0:
@@ -122,6 +145,9 @@ def security_analysis_agent(state: AgentState, llm):
     query = state["latest_user_message"]
     context = state.get("context", {})
 
+    # Basic throttling
+    time.sleep(0.5)
+
     # Log document sources used for this analysis
     doc_sources = context.get("doc_sources", [])
     if doc_sources:
@@ -143,36 +169,15 @@ def security_analysis_agent(state: AgentState, llm):
 
     # Create a specialized prompt for security analysis
     security_prompt_content = """
-    You are a specialized security analysis agent. Your task is to:
-    1. Identify potential security vulnerabilities in the user's question
-    2. Analyze the security implications 
-    3. Provide a detailed security assessment
-    
-    Analyze the query and any provided context. If you don't have specific information
-    about the topic in the context, clearly state that limitation but still provide 
-    your assessment based on the query itself.
-    
-    IMPORTANT: When referring to information from security standards or documents, use the 
-    citation markers ([1], [2], etc.) that appear in the context to indicate your sources.
+    Identify security vulnerabilities and provide assessment. Use citation markers ([1], [2]) 
+    when referencing documents. Be concise.
     """
     
-    # Add code-specific instructions if code was analyzed
+    # Add minimal code-specific instructions if code was analyzed
     if has_code_analysis:
         security_prompt_content += """
-        The user's query includes code that has been analyzed. Pay special attention to:
-        - Function parameters that might accept user input
-        - Return values that might contain sensitive information
-        - Potential security vulnerabilities in the code structure
-        - Input validation and sanitization
-        - Error handling approaches
-        
-        Use the code analysis provided to offer specific security recommendations.
+        Check code for: user input validation, sensitive data exposure, and security vulnerabilities.
         """
-    
-    security_prompt_content += """
-    At the end of your response, indicate the source of your information 
-    (either from the provided context documents, code analysis, or from general knowledge).
-    """
 
     security_prompt = SystemMessage(content=security_prompt_content)
 
@@ -192,8 +197,10 @@ def security_analysis_agent(state: AgentState, llm):
     if not isinstance(response, AIMessage):
         response = AIMessage(content=str(response))
 
+    # Truncate debug logging
+    preview_length = min(50, len(response.content))
     log_debug(
-        f"Received security analysis response: {response.content[:100]}...")
+        f"Received security analysis response: {response.content[:preview_length]}...")
 
     # Return the updated state
     return {
@@ -209,29 +216,12 @@ def generate_response(state: AgentState, llm):
     query = state["latest_user_message"]
     context = state.get("context", {})
 
-    # Create a prompt for the final response with source verification
+    time.sleep(0.5)
+
+    # Create a minimal prompt for the final response
     response_prompt = SystemMessage(content="""
-    Based on the security analysis and retrieved information, provide a comprehensive
-    response to the user's question. 
-    
-    When referring to information from the documents in your response, use citation 
-    markers like [1], [2], etc. that match the citation markers in the context.
-    
-    If the context doesn't contain specific information about the user's query, acknowledge 
-    this limitation and suggest that the user might want to add relevant documents to 
-    the knowledge base for better responses in the future.
-    
-    At the end of your response, please add a separate section titled "## Sources" that lists all
-    the documents you referenced, with their full citation information as provided in the context.
-    Also indicate which parts of your response were based on these sources versus general knowledge.
-    
-    Format the sources section like this:
-    
-    ## Sources
-    
-    [1] Document Name, Page X - Used for information on <specific topic>
-    [2] Document Name - Used for information on <specific topic>
-    [General Knowledge] - Used for information on <specific topics not covered by documents>
+    Answer the security question concisely. Use references when referencing documents.
+    End with ## Sources listing referenced documents.
     """)
 
     # Create a human message with the original query
@@ -249,7 +239,8 @@ def generate_response(state: AgentState, llm):
     if not isinstance(response, AIMessage):
         response = AIMessage(content=str(response))
 
-    log_debug(f"Final response generated: {response.content[:100]}...")
+    preview_length = min(50, len(response.content))
+    log_debug(f"Final response generated: {response.content[:preview_length]}...")
 
     # Return the updated state with the AI's response added to messages
     return {

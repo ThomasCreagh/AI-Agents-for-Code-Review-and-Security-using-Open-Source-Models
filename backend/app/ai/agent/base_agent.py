@@ -30,6 +30,15 @@ class BaseAgent:
 
     def process_message(self, message: str) -> str:
         try:
+            # Truncate overly long messages by token count
+            from ..llm.llm import count_tokens
+            
+            # Strict token limit of 1500 for input messages
+            if count_tokens(message) > 1500:
+                # Truncate to approximately 1500 tokens
+                message = message[:4500]  # ~1500 tokens for average text
+                print("Message truncated to ~1500 tokens for performance")
+
             if self.state is None:
                 initial_state = {
                     "messages": [],
