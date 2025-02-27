@@ -1,24 +1,22 @@
-from ..workflow.graph_config import create_security_rag_graph
-from ..llm.llm import initialise_llm
-from ..database.init_chroma import initialize_vector_store
-from app.core.config import settings
+from app.ai.dependencies import AIDependencies, get_ai_dependencies
+from app.ai.workflow.graph_config import create_security_rag_graph
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import Command
 
 class BaseAgent:
-    def __init__(self, vector_store=None):
-        self.llm = initialise_llm()
-
-        if vector_store is None:
-            self.vector_store = initialize_vector_store(
-                "nomic-embed-text", "general_docs")
-        else:
-            self.vector_store = vector_store
-
+    def __init__(self, vector_store=None, deps=None):
+        if deps is None:
+            deps = get_ai_dependencies()
+            
+            if vector_store is not None:
+                deps.vector_store = vector_store
+                
+        self.deps = deps
+        
         self.memory = MemorySaver()
 
-        graph = create_security_rag_graph(self.llm, self.vector_store)
+        graph = create_security_rag_graph(self.deps)
         self.graph = graph.compile(checkpointer=self.memory)
 
         self.state = None
@@ -30,13 +28,10 @@ class BaseAgent:
 
     def process_message(self, message: str) -> str:
         try:
-            # Truncate overly long messages by token count
-            from ..llm.llm import count_tokens
+            from app.ai.llm.llm import count_tokens
             
-            # Strict token limit of 1500 for input messages
-            if count_tokens(message) > 1500:
-                # Truncate to approximately 1500 tokens
-                message = message[:4500]  # ~1500 tokens for average text
+            if count_tokens(message) > self.deps.token_limit * 3:
+                message = message[:4500]  
                 print("Message truncated to ~1500 tokens for performance")
 
             if self.state is None:
