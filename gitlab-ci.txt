@@ -1,0 +1,52 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - df
+  - cat /etc/resolv.conf
+  - cat /etc/hosts
+
+backend-tests:
+  image: python:3.11
+  stage: test
+  before_script:
+    - wget -qO- https://astral.sh/uv/install.sh | sh
+    - source $HOME/.local/bin/env
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd backend
+    - uv sync
+    - source .venv/bin/activate
+  script:
+    - pytest
+
+frontend-tests:
+  image: node:18
+  stage: test
+  before_script:
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd frontend
+    - npm install
+  script:
+    - echo "please make tests for frontend..."
+    # - npm test
+
+build:
+  image: docker:latest
+  stage: build
+  before_script:
+    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
+    - cd backend
+    - export COMPOSE_BAKE=true
+  script:
+    - docker compose build
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying app"
+
