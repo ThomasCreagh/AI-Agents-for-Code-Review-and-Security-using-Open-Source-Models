@@ -17,7 +17,7 @@ const Home = () => {
         <button className="cta-button" onClick={routeChange}>Get Started →</button>
         </div>
         <div className="image-section">
-          <img src="Chatbot.jpg" alt="Chatbot" />
+          <img src="Chatbot.webp" alt="Chatbot" />
         </div>
       </div>
     </div>

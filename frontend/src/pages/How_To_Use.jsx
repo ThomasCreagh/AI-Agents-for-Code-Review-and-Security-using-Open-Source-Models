@@ -15,7 +15,7 @@ const How_To_Use = () => {
         <p>6. Finally click on "Upload" and the AI will respond to your request</p>
         </div>
         <div className="info-image">
-          <img src="infoSign.jpg" alt="info-sign"/>
+          <img src="infoSign.webp" alt="info-sign"/>
         </div>
       </div>
     </div>
