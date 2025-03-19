@@ -1,0 +1,52 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  font-size: 18px;
+  height: 60px;
+  background-color: white;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.separator {
+  width: 2px;
+  height: 30px;
+  background-color: gray;
+}
+
+.home-link,
+.about-link,
+.upload-link,
+.how-to-use-link,
+.dashboard-link {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.home-link:hover,
+.about-link:hover,
+.upload-link:hover,
+.how-to-use-link:hover,
+.dashboard-link:hover {
+  text-decoration: underline !important;
+}
