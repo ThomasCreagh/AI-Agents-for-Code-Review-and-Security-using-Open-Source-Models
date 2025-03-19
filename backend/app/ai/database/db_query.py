@@ -19,12 +19,12 @@ def create_rag_prompt(template=DEFAULT_TEMPLATE):
     ])
 
 
-def query_database(vector_store, query, k=3):
+def query_database(vector_store, query, k=1):  # Reduced from 3 to 1
     results = vector_store.similarity_search(query, k=k)
     return results
 
 
-def rag_query(vector_store, llm, query: str, template=DEFAULT_TEMPLATE, k: int = 3):
+def rag_query(vector_store, llm, query: str, template=DEFAULT_TEMPLATE, k: int = 1): # Reduced from 3 to 1
     docs = query_database(vector_store, query, k)
     context = "\n".join(doc.page_content for doc in docs)
     prompt = create_rag_prompt(template)

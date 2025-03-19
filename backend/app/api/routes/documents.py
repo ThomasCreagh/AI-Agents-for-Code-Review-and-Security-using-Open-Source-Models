@@ -59,9 +59,11 @@ def upload_document(
                     status_code=400, detail="Could not load document")
 
             splits = process_and_store_documents(db_manager.vector_store, docs)
-
-            db_manager._collection.persist()
-            db_manager._collection.get()
+            
+            try:
+                count = db_manager._collection.count()
+            except Exception as e:
+                print(f"Warning: Could not get collection count: {str(e)}")
 
             return {
                 "status": "success",

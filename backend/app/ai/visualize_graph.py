@@ -1,7 +1,7 @@
 # visualize_graph.py
-from app.workflow.graph_config import create_security_rag_graph
-from app.llm.llm import initialise_llm
-from app.database.init_chroma import initialize_vector_store
+from app.ai.workflow.graph_config import create_security_rag_graph
+from app.ai.llm.llm import initialise_llm
+from app.ai.database.init_chroma import initialize_vector_store
 
 def visualize_workflow():
     """Generate a visualization of the security RAG workflow."""

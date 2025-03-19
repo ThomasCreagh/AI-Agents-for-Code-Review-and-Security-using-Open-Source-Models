@@ -9,7 +9,6 @@ services:
       - backend-net
     volumes:
       - ./backend:/backend-code
-    # Add depends_on to ensure Ollama is running before the backend starts
     depends_on:
       - ollama
 
@@ -24,23 +23,7 @@ services:
     networks:
       - backend-net
     entrypoint: ["/usr/bin/bash", "/get_models.sh"]
-    # Add GPU support configuration
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1 # Use 1 GPU. Change if you want to use more
-    #           capabilities: [gpu, utility, compute]
-    # environment:
-    #   - NVIDIA_VISIBLE_DEVICES=all
-    #   - CUDA_VISIBLE_DEVICES=0
-    #   - OLLAMA_GPU_LAYERS=35 # Determines how many layers run on GPU
-    #   # Add host IPC mode for better GPU memory management
-    # ipc: host
-    # # Optional but recommended for GPU workloads
-    # runtime: nvidia
-    #
+
   frontend:
     build: ./frontend
     ports:
