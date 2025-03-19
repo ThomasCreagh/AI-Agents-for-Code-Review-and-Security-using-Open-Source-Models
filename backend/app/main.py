@@ -14,12 +14,15 @@ app = FastAPI(
     version="0.1.0",
 )
 
+
 @app.on_event("startup")
 async def validate_environment():
     use_anthropic = os.getenv("USE_ANTHROPIC", "false").lower() == "true"
     if use_anthropic and not os.getenv("ANTHROPIC_API_KEY"):
-        logging.error("USE_ANTHROPIC is set to true but ANTHROPIC_API_KEY is not provided")
-        raise ValueError("Invalid API configuration: ANTHROPIC_API_KEY missing")
+        logging.error(
+            "USE_ANTHROPIC is set to true but ANTHROPIC_API_KEY is not provided")
+        raise ValueError(
+            "Invalid API configuration: ANTHROPIC_API_KEY missing")
 
 # Configure CORS
 origins = ["*"]
@@ -32,7 +35,7 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,9 +43,11 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api/v1")
 
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

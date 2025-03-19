@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import "../styles/Navbar.css";
 
 const Navbar = () => {
@@ -18,35 +18,35 @@ const Navbar = () => {
         </div>
         <div className="separator"></div>
         <Link
-          to="/"
+          href="/"
           className="home-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >
           Home
         </Link>
         <Link
-          to="/about"
+          href="/about"
           className="about-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >
           About
         </Link>
         <Link
-          to="/upload"
+          href="/upload"
           className="upload-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >
           Code Review
         </Link>
         <Link
-          to="/security-analysis"
+          href="/security-analysis"
           className="security-analysis-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >
           Security Analysis
         </Link>
         <Link
-          to="/how-to-use"
+          href="/how-to-use"
           className="how-to-use-link"
           style={{ textDecoration: "none", color: "inherit" }}
         >

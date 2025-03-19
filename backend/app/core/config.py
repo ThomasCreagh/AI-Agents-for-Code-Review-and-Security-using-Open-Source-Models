@@ -5,15 +5,15 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # API Configuration
-    REACT_APP_API_KEY: str = "t"
-    REACT_APP_BACKEND_URL: str = "http://localhost:8000/api/v1"
+    NEXT_PUBLIC_API_KEY: str = "t"
+    NEXT_PUBLIC_BACKEND_URL: str = "http://localhost:8000/api/v1"
     FRONTEND_HOST: str = "http://localhost:3000"
 
     # LLM Configuration
     LLM_MODEL: str = "granite3.1-dense:2b"
     LLM_BASE_URL: str = "http://ollama:11434"
     LLM_TEMPERATURE: float = 0.0
-    
+
     # Anthropic Configuration
     USE_ANTHROPIC: bool = False
     ANTHROPIC_API_KEY: Optional[str] = None
