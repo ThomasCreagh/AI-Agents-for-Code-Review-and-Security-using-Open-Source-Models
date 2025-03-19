@@ -2,6 +2,7 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
 from typing import List, Dict, Optional, Any, Tuple
 from langchain_core.documents import Document
+from app.core.config import settings
 
 
 class DatabaseManager:
@@ -14,8 +15,9 @@ class DatabaseManager:
         self.persist_directory = persist_directory
         self.batch_size = batch_size
 
+        # Always use Ollama for embeddings even if using Claude for LLM
         self.embeddings = OllamaEmbeddings(
-            base_url="http://ollama:11434",
+            base_url=settings.EMBEDDING_BASE_URL,
             model=embedding_model
         )
 
@@ -45,7 +47,6 @@ class DatabaseManager:
             "total_documents": self._collection.count(),
             "collection_name": self.collection_name,
             "persist_directory": self.persist_directory,
-            "last_updated": self._collection.get()["metadatas"][-1]["timestamp"] if self._collection.count() > 0 else None
         }
 
     def search_documents(self,
