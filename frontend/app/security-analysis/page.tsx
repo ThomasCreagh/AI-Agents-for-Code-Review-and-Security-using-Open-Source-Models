@@ -2,10 +2,23 @@
 import React, { useState } from "react";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
-import { submitCodeForReview, getDatabaseStats, clearDatabase, uploadDocument } from "../../services/apiService";
+import {
+  submitCodeForReview,
+  getDatabaseStats,
+  clearDatabase,
+  uploadDocument,
+} from "../../services/apiService";
+
+interface Response {
+  response: string;
+}
+
+interface DBResponse {
+  collection_name: string | undefined;
+  total_documents: number;
+}
 
 export default function SecurityCodeAnalysis() {
-
   const [codeFile, setCodeFile] = useState<File | null>(null);
   const [securityContext, setSecurityContext] = useState("");
   const [language, setLanguage] = useState("python");
@@ -15,7 +28,7 @@ export default function SecurityCodeAnalysis() {
   const [error, setError] = useState<String | null>(null);
 
   const [documentFile, setDocumentFile] = useState<File | null>(null);
-  const [dbStats, setDbStats] = useState<DbStats | null>(null);
+  const [dbStats, setDbStats] = useState<DBResponse | null>(null);
   const [dbLoading, setDbLoading] = useState(false);
   const [dbError, setDbError] = useState<String | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<String | null>(null);
@@ -32,30 +45,30 @@ export default function SecurityCodeAnalysis() {
     }
   };
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!codeFile) {
       setError("Please select a file to analyze");
       return;
     }
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
-      const result = await submitCodeForReview( // Issue Here: why are we initializing securityContext to null as paramater, need to replace with SecurityContext
+      const result = await submitCodeForReview(
+        // Issue Here: why are we initializing securityContext to null as paramater, need to replace with SecurityContext
         codeFile,
         null,
         language,
-        referenceDocuments ? "true" : "false"
+        referenceDocuments ? "true" : "false",
       );
       setResponse(result);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
-      }
-      else {
-        setError("An unknown error has occured")
+      } else {
+        setError("An unknown error has occured");
       }
     } finally {
       setLoading(false);
@@ -65,16 +78,15 @@ export default function SecurityCodeAnalysis() {
   const handleFetchStats = async () => {
     setDbLoading(true);
     setDbError(null);
-    
+
     try {
       const stats = await getDatabaseStats();
       setDbStats(stats);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setDbError(error.message);
-      }
-      else {
-        setDbError("An unknown error has occured with the database")
+      } else {
+        setDbError("An unknown error has occured with the database");
       }
     } finally {
       setDbLoading(false);
@@ -82,23 +94,29 @@ export default function SecurityCodeAnalysis() {
   };
 
   const handleClearDatabase = async () => {
-    if (!window.confirm("Are you sure you want to clear the database? This will remove all stored documents.")) {
+    if (
+      !window.confirm(
+        "Are you sure you want to clear the database? This will remove all stored documents.",
+      )
+    ) {
       return;
     }
-    
+
     setDbLoading(true);
     setDbError(null);
-    
+
     try {
       const result = await clearDatabase();
-      setDbStats({ total_documents: 0 });
+      setDbStats({
+        collection_name: dbStats?.collection_name,
+        total_documents: 0,
+      });
       setUploadSuccess("Database cleared successfully");
       setTimeout(() => setUploadSuccess(null), 3000);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setDbError(error.message);
-      }
-      else {
+      } else {
         setDbError("An unknown error has occurred with the database");
       }
     } finally {
@@ -106,31 +124,38 @@ export default function SecurityCodeAnalysis() {
     }
   };
 
-  const handleUploadDocument = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadDocument = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!documentFile) {
       setDbError("Please select a document to upload");
       return;
     }
-    
-    if (!documentFile.name.toLowerCase().endsWith('.pdf')) {
+
+    if (!documentFile.name.toLowerCase().endsWith(".pdf")) {
       setDbError("Only PDF files are supported");
       return;
     }
-    
+
     setDbLoading(true);
     setDbError(null);
-    
+
     try {
       const result = await uploadDocument(documentFile);
       setUploadSuccess(`Document "${documentFile.name}" uploaded successfully`);
       setTimeout(() => setUploadSuccess(null), 3000);
       setDocumentFile(null);
-      document.getElementById("document-file").value = "";
-      
+      const fileInputElement = document.getElementById(
+        "document-file",
+      ) as HTMLInputElement;
+      fileInputElement.value = "";
+
       handleFetchStats();
     } catch (error) {
-      setDbError(error.message);
+      if (error instanceof Error) {
+        setDbError(error.message);
+      } else {
+        setDbError("An unknown error occurred");
+      }
     } finally {
       setDbLoading(false);
     }
@@ -143,7 +168,10 @@ export default function SecurityCodeAnalysis() {
     setReferenceDocuments(false);
     setResponse(null);
     setError(null);
-    document.getElementById("code-file").value = "";
+    const fileInputElement = document.getElementById(
+      "document-file",
+    ) as HTMLInputElement;
+    fileInputElement.value = "";
   };
 
   return (
@@ -156,24 +184,20 @@ export default function SecurityCodeAnalysis() {
       <div className="analysis-card">
         <h3>Security Code Review</h3>
         <div className="analysis-description">
-          Upload documentation below and a code file for in-depth security analysis. The system will identify potential security vulnerabilities and best practices.
+          Upload documentation below and a code file for in-depth security
+          analysis. The system will identify potential security vulnerabilities
+          and best practices.
         </div>
-        
+
         <form className="analysis-form" onSubmit={handleSubmit}>
           <div className="file-input-container">
             <label htmlFor="code-file">Upload Code File:</label>
-            <input
-              type="file"
-              id="code-file"
-              onChange={handleFileChange}
-            />
+            <input type="file" id="code-file" onChange={handleFileChange} />
             {codeFile && (
-              <div className="file-list">
-                Selected: {codeFile.name}
-              </div>
+              <div className="file-list">Selected: {codeFile.name}</div>
             )}
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="security-context">Security Focus (Optional):</label>
             <textarea
@@ -183,7 +207,7 @@ export default function SecurityCodeAnalysis() {
               placeholder="Specify security concerns or requirements..."
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="language">Programming Language:</label>
             <select
@@ -198,7 +222,7 @@ export default function SecurityCodeAnalysis() {
               <option value="cpp">C++</option>
             </select>
           </div>
-          
+
           <div className="form-group checkbox-group">
             <label>
               <input
@@ -209,7 +233,7 @@ export default function SecurityCodeAnalysis() {
               Reference security documentation in analysis
             </label>
           </div>
-          
+
           <div className="button-group">
             <button
               type="submit"
@@ -218,19 +242,15 @@ export default function SecurityCodeAnalysis() {
             >
               {loading ? <span className="loader"></span> : "Analyze Code"}
             </button>
-            
-            <button
-              type="button"
-              className="reset-button"
-              onClick={resetForm}
-            >
+
+            <button type="button" className="reset-button" onClick={resetForm}>
               Reset
             </button>
           </div>
         </form>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         {response && (
           <div className="response-container">
             <h4>Security Analysis Results</h4>
@@ -244,9 +264,10 @@ export default function SecurityCodeAnalysis() {
       <div className="analysis-card">
         <h3>Database Management</h3>
         <div className="analysis-description">
-          Manage security documentation used for code analysis. Upload security guidelines, standards, or best practices.
+          Manage security documentation used for code analysis. Upload security
+          guidelines, standards, or best practices.
         </div>
-        
+
         <div className="db-controls">
           <div className="button-group">
             <button
@@ -255,9 +276,13 @@ export default function SecurityCodeAnalysis() {
               onClick={handleFetchStats}
               disabled={dbLoading}
             >
-              {dbLoading ? <span className="loader"></span> : "Get Database Stats"}
+              {dbLoading ? (
+                <span className="loader"></span>
+              ) : (
+                "Get Database Stats"
+              )}
             </button>
-            
+
             <button
               type="button"
               className="db-button danger"
@@ -267,15 +292,21 @@ export default function SecurityCodeAnalysis() {
               {dbLoading ? <span className="loader"></span> : "Clear Database"}
             </button>
           </div>
-          
+
           {dbStats && (
             <div className="db-stats">
               <h4>Database Statistics</h4>
-              <p><strong>Total Chunks:</strong> {dbStats.total_documents}</p>
-              {dbStats.collection_name && <p><strong>Collection:</strong> {dbStats.collection_name}</p>}
+              <p>
+                <strong>Total Chunks:</strong> {dbStats.total_documents}
+              </p>
+              {dbStats.collection_name && (
+                <p>
+                  <strong>Collection:</strong> {dbStats.collection_name}
+                </p>
+              )}
             </div>
           )}
-          
+
           <form className="upload-form" onSubmit={handleUploadDocument}>
             <h4>Upload Security Document</h4>
             <div className="file-input-container">
@@ -287,12 +318,10 @@ export default function SecurityCodeAnalysis() {
                 accept=".pdf"
               />
               {documentFile && (
-                <div className="file-list">
-                  Selected: {documentFile.name}
-                </div>
+                <div className="file-list">Selected: {documentFile.name}</div>
               )}
             </div>
-            
+
             <button
               type="submit"
               className="submit-button"
@@ -301,9 +330,11 @@ export default function SecurityCodeAnalysis() {
               {dbLoading ? <span className="loader"></span> : "Upload Document"}
             </button>
           </form>
-          
+
           {dbError && <div className="error-message">{dbError}</div>}
-          {uploadSuccess && <div className="success-message">{uploadSuccess}</div>}
+          {uploadSuccess && (
+            <div className="success-message">{uploadSuccess}</div>
+          )}
         </div>
       </div>
     </div>
