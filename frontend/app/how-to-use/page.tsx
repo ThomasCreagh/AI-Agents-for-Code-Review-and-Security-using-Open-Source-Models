@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
-import "../styles/HowToUse.css";
+import "../../styles/HowToUse.css";
+import Image from "next/image";
 
-const How_To_Use = () => {
+export default function How_To_Use() {
   return (
     <div className="container">
       <div className="content">
@@ -23,12 +25,16 @@ const How_To_Use = () => {
             5. Finally click on "Upload" and the AI will respond to your request
           </p>
         </div>
-        <div className="info-image">
-          <img src="infoSign.jpg" alt="info-sign" />
+        <div className="flex justify-center">
+          <Image 
+            src="/infoSign.jpg" 
+            alt="Example"
+            width={300} 
+            height={200}
+            className="rounded-lg shadow-lg"
+          />
         </div>
       </div>
     </div>
   );
-};
-
-export default How_To_Use;
+}

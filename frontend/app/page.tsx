@@ -1,12 +1,13 @@
-import React from "react";
+"use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import "../styles/Home.css";
-import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  let navigate = useNavigate();
+export default function Home() {
+  let router = useRouter();
   const routeChange = () => {
     let path = `/how-to-use`;
-    navigate(path);
+    router.push(path);
   };
   return (
     <div className="container">
@@ -24,6 +25,4 @@ const Home = () => {
       </div>
     </div>
   );
-};
-
-export default Home;
+}

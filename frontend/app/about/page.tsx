@@ -1,5 +1,7 @@
+"use client";
+import Image from "next/image";
 import React, { useState } from "react";
-import "../styles/About.css";
+import "../../styles/About.css";
 
 const teamMembers = [
   { name: "Lucia Brown", img: "LuciaHeadshot.jpg" },
@@ -12,7 +14,7 @@ const teamMembers = [
   { name: "Anna Xue", img: "AnnaHeadshot.jpg" },
 ];
 
-const About = () => {
+export default function About() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDescription, setShowDescription] = useState(9); // 0 = Lucia, 1 = Travis, 2 = Cuan, 3 = Mohamad, 4 = ... , 9 = Nothing
 
@@ -77,7 +79,7 @@ const About = () => {
             {teamMembers.map((member, index) => (
               <div key={index} className="team-member">
                 <img
-                  src={`${process.env.PUBLIC_URL}/${member.img}`}
+                  src={`/${member.img}`}
                   alt={member.name}
                   className="team-photo"
                   onClick={() =>
@@ -193,6 +195,4 @@ const About = () => {
       </div>
     </div>
   );
-};
-
-export default About;
+}
