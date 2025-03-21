@@ -32,13 +32,6 @@ const Navbar = () => {
           About
         </Link>
         <Link
-          href="/upload"
-          className="upload-link"
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          Code Review
-        </Link>
-        <Link
           href="/security-analysis"
           className="security-analysis-link"
           style={{ textDecoration: "none", color: "inherit" }}

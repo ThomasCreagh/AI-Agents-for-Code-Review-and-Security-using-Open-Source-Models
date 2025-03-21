@@ -38,6 +38,7 @@
 .about-link,
 .upload-link,
 .how-to-use-link,
+.security-analysis-link,
 .dashboard-link {
   font-weight: bold;
   cursor: pointer;
@@ -47,6 +48,7 @@
 .about-link:hover,
 .upload-link:hover,
 .how-to-use-link:hover,
+.security-analysis-link:hover,
 .dashboard-link:hover {
   text-decoration: underline !important;
 }
