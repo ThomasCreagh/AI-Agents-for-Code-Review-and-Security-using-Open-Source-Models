@@ -1,0 +1,11 @@
+{
+    "name": "my-nextjs-app",
+    "version": "1.0.0",
+    "scripts": {
+        "heroku-postbuild": "cd frontend && npm install && npm run build",
+        "start": "cd frontend && npm run start"
+    },
+    "dependencies": {
+        "my-nextjs-app": "file:"
+    }
+}
