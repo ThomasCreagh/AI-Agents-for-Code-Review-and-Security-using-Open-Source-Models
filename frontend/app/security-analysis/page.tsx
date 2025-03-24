@@ -10,7 +10,8 @@ export default function SecurityCodeAnalysis() {
   const [codeFile, setCodeFile] = useState<File | null>(null);
   const [securityContext, setSecurityContext] = useState("");
   const [language, setLanguage] = useState("python");
-  const [referenceDocuments, setReferenceDocuments] = useState<boolean>(false);
+  const [referenceDocuments, setReferenceDocuments] = useState<string>("");
+
   const [response, setResponse] = useState<Response | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<String | null>(null);
@@ -48,7 +49,7 @@ export default function SecurityCodeAnalysis() {
         codeFile,
         null,
         language,
-        referenceDocuments ? "true" : "false"
+        referenceDocuments 
       );
       setResponse(result);
     } catch (error) {
@@ -141,11 +142,16 @@ export default function SecurityCodeAnalysis() {
     setCodeFile(null);
     setSecurityContext("");
     setLanguage("python");
-    setReferenceDocuments(false);
+    setReferenceDocuments("");
     setResponse(null);
     setError(null);
-    document.getElementById("code-file").value = "";
+  
+    const fileInput = document.getElementById("code-file") as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = "";
+    }
   };
+  
 
   return (
     <>
@@ -162,19 +168,47 @@ export default function SecurityCodeAnalysis() {
         </div>
         
         <form className="analysis-form" onSubmit={handleSubmit}>
-          <div className="file-input-container">
-            <label htmlFor="code-file">Upload Code File:</label>
-            <input
-              type="file"
-              id="code-file"
-              onChange={handleFileChange}
-            />
-            {codeFile && (
-              <div className="file-list">
-                Selected: {codeFile.name}
-              </div>
-            )}
-          </div>
+          
+      <div className="form-group">
+        <label htmlFor="security-doc">Select Security Document:</label>
+        <div className="flex flex-col gap-3 mt-2">
+          {[
+            "OWASP",
+            "NIST",
+            "CERT Secure Coding Standards",
+            "NASA Rules",
+            "ISO/IEC 27001 & 27002",
+            "Custom",
+          ].map((doc) => (
+            <label key={doc} className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="security-doc"
+                value={doc}
+                checked={referenceDocuments === doc}
+                onChange={(e) => setReferenceDocuments(e.target.value)}
+              />
+              {doc}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {referenceDocuments === "Custom" && (
+        <div className="file-input-container">
+          <label htmlFor="code-file">Upload Code File:</label>
+          <input
+            type="file"
+            id="code-file"
+            onChange={handleFileChange}
+          />
+          {codeFile && (
+            <div className="file-list">
+              Selected: {codeFile.name}
+            </div>
+          )}
+        </div>
+      )}
           
           <div className="form-group">
             <label htmlFor="security-context">Security Focus (Optional):</label>
@@ -199,17 +233,6 @@ export default function SecurityCodeAnalysis() {
               <option value="csharp">C#</option>
               <option value="cpp">C++</option>
             </select>
-          </div>
-          
-          <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                checked={referenceDocuments}
-                onChange={(e) => setReferenceDocuments(e.target.checked)}
-              />
-              Reference security documentation in analysis
-            </label>
           </div>
           
           <div className="button-group">
