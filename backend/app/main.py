@@ -1,23 +1,61 @@
-from fastapi import FastAPI
+import os
+import logging
+from fastapi import FastAPI, Depends, Request, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
 from app.api.main import api_router
-from fastapi.routing import APIRoute
 from app.core.config import settings
 
-# def custom_generate_unique_id(route: APIRoute) -> str:  # Generates unique ID for API instantiation
-#     return f"{route.tags[0]}-{route.name}"
+app = FastAPI(
+    title="Security Code Analyzer",
+    description="API for analyzing code for security vulnerabilities",
+    version="0.1.0",
+)
 
-app = FastAPI()
-# title=settings.PROJECT_NAME,                        # Uses config.py
-# openapi_url=f"{settings.API_V1_STR}/openapi.json",
-# generate_unique_id_function=custom_generate_unique_id,)
-app.include_router(api_router, prefix=settings.API_V1_STR)
+
+@app.on_event("startup")
+async def validate_environment():
+    use_anthropic = os.getenv("USE_ANTHROPIC", "false").lower() == "true"
+    if use_anthropic and not os.getenv("ANTHROPIC_API_KEY"):
+        logging.error(
+            "USE_ANTHROPIC is set to true but ANTHROPIC_API_KEY is not provided")
+        raise ValueError(
+            "Invalid API configuration: ANTHROPIC_API_KEY missing")
+
+# Configure CORS
+origins = ["*"]
+if isinstance(settings.BACKEND_CORS_ORIGINS, list):
+    origins = [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
+elif settings.BACKEND_CORS_ORIGINS == "*":
+    origins = ["*"]
+else:
+    origins = [settings.BACKEND_CORS_ORIGINS]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React frontend
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": str(exc)},
+    )
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

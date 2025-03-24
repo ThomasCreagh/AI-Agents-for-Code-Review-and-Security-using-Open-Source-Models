@@ -1,12 +1,28 @@
 from pydantic import BaseModel
+from langchain_core.messages import BaseMessage
+from typing import TypedDict, List, Dict, Any
+
+
+class AgentState(TypedDict):
+    messages: List[BaseMessage]  # All conversation messages
+    latest_user_message: str     # The most recent user message
+    context: Dict[str, Any]      # Holds retrieved context and other data
+
+
+class QueryRequest(BaseModel):
+    query: str
+
+
+class QueryResponse(BaseModel):
+    response: str
+
+
+class DocumentLoadRequest(BaseModel):
+    directory_path: str="app/data"
 
 
 class CodeReviewResponse(BaseModel):
-    filename: str | None = None
-    error_description: str | None = None
-    language: str
     suggestion: str
-    line_nums: list
 
 
 class CodeReviewRequest(BaseModel):
