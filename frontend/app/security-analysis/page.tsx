@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
 import { submitCodeForReview, getDatabaseStats, clearDatabase, uploadDocument } from "../../services/apiService";
+import Footer from "../../components/Footer";
 
 export default function SecurityCodeAnalysis() {
 
@@ -147,6 +148,7 @@ export default function SecurityCodeAnalysis() {
   };
 
   return (
+    <>
     <div className="security-analysis-container">
       <div className="security-analysis-header">
         <h1>Code Security Analysis</h1>
@@ -307,5 +309,8 @@ export default function SecurityCodeAnalysis() {
         </div>
       </div>
     </div>
+    <div className="container"> ... </div>
+    <Footer />
+  </>
   );
 }

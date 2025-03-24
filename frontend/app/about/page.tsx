@@ -1,5 +1,6 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
+import Footer from "../../components/Footer";
 
 const teamMembers = [
   { name: "Lucia Brown", img: "LuciaHeadshot.jpg", role: "Backend Developer" },
@@ -44,6 +45,7 @@ export default function About() {
   }, [showDescription])
 
   return (
+    <>
     <div className="min-h-screen bg-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* About Section */}
@@ -64,87 +66,69 @@ export default function About() {
           <p className="text-lg text-[#393939] mb-8">
             If you're interested in learning more about us or our project, feel free to reach out!
           </p>
-
-          {/* Contact Us Button */}
-          <div className="relative">
-            <button
-              className="bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-6 py-3 rounded-md transition-all flex items-center justify-center mx-auto group"
-              onClick={() => setShowDropdown(!showDropdown)}
+          
+        {/* Connect With Us Section */}
+        <div className="mt-12 animate-fade-in-delayed">
+          <p className="text-base md:text-lg text-[#393939] mb-3 font-medium flex items-center justify-center">
+            <span className="w-5 h-0.5 bg-[#0f62fe] mr-2"></span>
+            CONNECT WITH US
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {/* Email */}
+            <a
+              href="mailto:tcdsweng2025group23@gmail.com"
+              className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
             >
-              Contact Us
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={`ml-2 h-5 w-5 transition-transform duration-300 ${showDropdown ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {/* Dropdown Email List */}
-            {showDropdown && (
-              <div className="absolute mt-2 w-64 bg-white rounded-md shadow-lg py-2 px-4 z-10 left-1/2 transform -translate-x-1/2 border border-gray-200 transition-all duration-300 ease-in-out">
-                <ul className="space-y-3">
-                  <li className="flex items-center text-[#393939]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-2 text-[#0f62fe]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <a href="mailto:tcdsweng2025group23@gmail.com" className="hover:text-[#0f62fe] transition-colors">
-                      tcdsweng2025group23@gmail.com
-                    </a>
-                  </li>
-                  <li className="flex items-center text-[#393939]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-2 text-[#0f62fe]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" strokeWidth={2} />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"
-                      />
-                      <line
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        x1="17.5"
-                        y1="6.5"
-                        x2="17.51"
-                        y2="6.5"
-                      />
-                    </svg>
-                    <a
-                      href="https://www.instagram.com/keysentinel"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-[#0f62fe] transition-colors"
-                    >
-                      @keysentinel
-                    </a>
-                  </li>
-                </ul>
+              <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 8l9 6 9-6M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                </svg>
               </div>
-            )}
+              <span className="text-lg text-[#161616] group-hover:text-[#0f62fe] transition-colors">
+                tcdsweng2025group23@gmail.com
+              </span>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/keysentinel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
+            >
+              <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </div>
+              <span className="text-lg text-[#161616] group-hover:text-[#0f62fe] transition-colors">
+                @keysentinel
+              </span>
+            </a>
+
+            {/* LinkedIn */}
+            <a
+              href="https://www.linkedin.com/company/tcd-scss-sweng/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
+            >
+              <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+              </div>
+              <span className="text-lg text-[#161616] group-hover:text-[#0f62fe] transition-colors">
+                LinkedIn
+              </span>
+            </a>
           </div>
         </div>
+      </div>
 
         {/* Team Members Section with Description */}
         <div className="mb-16 relative">
@@ -234,6 +218,9 @@ export default function About() {
         </div>
       </div>
     </div>
+        <div className="container"> ... </div>
+    <Footer />
+  </>
   )
 }
 

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import "../styles/Home.css"
 import { useEffect, useRef } from "react"
+import Footer from "../components/Footer";
 
 export default function Home() {
   const router = useRouter()
@@ -95,6 +96,7 @@ export default function Home() {
   }
 
   return (
+    <>
     <div className="min-h-screen bg-white">
       <div className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
@@ -250,5 +252,8 @@ export default function Home() {
         </div>
       </div>
     </div>
+        <div className="container"> ... </div>
+        <Footer />
+      </>
   )
 }
