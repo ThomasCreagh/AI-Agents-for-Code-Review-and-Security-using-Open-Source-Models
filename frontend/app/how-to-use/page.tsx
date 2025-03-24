@@ -2,9 +2,11 @@
 import React from "react";
 import "../../styles/HowToUse.css";
 import Image from "next/image";
+import Footer from "../../components/Footer";
 
 export default function How_To_Use() {
   return (
+    <>
     <div className="container">
       <div className="content">
         <div className="text-section">
@@ -36,5 +38,8 @@ export default function How_To_Use() {
         </div>
       </div>
     </div>
+    <div className="container"> ... </div>
+    <Footer />
+  </>
   );
 }
