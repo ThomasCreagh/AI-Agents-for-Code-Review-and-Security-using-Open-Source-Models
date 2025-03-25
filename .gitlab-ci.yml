@@ -5,6 +5,9 @@ stages:
 build:
   stage: build
   script:
+
+    #- ls -la backend/ # Debugging statement for the requirements.txt issue
+
     # Build Docker image for frontend with the correct Dockerfile path
     - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile frontend
     
