@@ -12,10 +12,6 @@
     "cra-template": "1.2.0",
     "group23-ai-agent-app": "file:",
     "next": "15.1.7",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.1.3",
     "remark-gfm": "^4.0.1",
     "web-vitals": "^4.2.4"
   },
