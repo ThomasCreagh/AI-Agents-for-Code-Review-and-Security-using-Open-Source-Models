@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
+import Footer from "../../components/Footer";
 import {
   submitCodeForReview,
   getDatabaseStats,
@@ -22,7 +23,8 @@ export default function SecurityCodeAnalysis() {
   const [codeFile, setCodeFile] = useState<File | null>(null);
   const [securityContext, setSecurityContext] = useState("");
   const [language, setLanguage] = useState("python");
-  const [referenceDocuments, setReferenceDocuments] = useState<boolean>(false);
+  const [referenceDocuments, setReferenceDocuments] = useState<string>("");
+
   const [response, setResponse] = useState<Response | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<String | null>(null);
@@ -165,178 +167,232 @@ export default function SecurityCodeAnalysis() {
     setCodeFile(null);
     setSecurityContext("");
     setLanguage("python");
-    setReferenceDocuments(false);
+    setReferenceDocuments("");
     setResponse(null);
     setError(null);
+
+    const fileInput = document.getElementById("code-file") as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = "";
+    }
     const fileInputElement = document.getElementById(
       "document-file",
     ) as HTMLInputElement;
     fileInputElement.value = "";
   };
 
-  return (
-    <div className="security-analysis-container">
-      <div className="security-analysis-header">
-        <h1>Code Security Analysis</h1>
-        <p>Submit your code for security analysis and review</p>
-      </div>
 
-      <div className="analysis-card">
-        <h3>Security Code Review</h3>
-        <div className="analysis-description">
-          Upload documentation below and a code file for in-depth security
-          analysis. The system will identify potential security vulnerabilities
-          and best practices.
+  return (
+    <>
+      <div className="security-analysis-container">
+        <div className="security-analysis-header">
+          <h1>Code Security Analysis</h1>
+          <p>Submit your code for security analysis and review</p>
         </div>
 
-        <form className="analysis-form" onSubmit={handleSubmit}>
-          <div className="file-input-container">
-            <label htmlFor="code-file">Upload Code File:</label>
-            <input type="file" id="code-file" onChange={handleFileChange} />
-            {codeFile && (
-              <div className="file-list">Selected: {codeFile.name}</div>
+        <div className="analysis-card">
+          <h3>Security Code Review</h3>
+          <div className="analysis-description">
+            Upload documentation below and a code file for in-depth security
+            analysis. The system will identify potential security vulnerabilities
+            and best practices.
+          </div>
+
+          <form className="analysis-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="security-doc">Select Security Document:</label>
+              <div className="flex flex-col gap-3 mt-2">
+                {[
+                  "OWASP",
+                  "NIST",
+                  "CERT Secure Coding Standards",
+                  "NASA Rules",
+                  "ISO/IEC 27001 & 27002",
+                  "Custom",
+                ].map((doc) => (
+                  <label key={doc} className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="security-doc"
+                      value={doc}
+                      checked={referenceDocuments === doc}
+                      onChange={(e) => setReferenceDocuments(e.target.value)}
+                    />
+                    {doc}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {referenceDocuments === "Custom" && (
+              <div className="file-input-container">
+                <label htmlFor="code-file">Upload Code File:</label>
+                <input
+                  type="file"
+                  id="code-file"
+                  onChange={handleFileChange}
+                />
+                {codeFile && (
+                  <div className="file-list">
+                    Selected: {codeFile.name}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="file-input-container">
+              <label htmlFor="code-file">Upload Code File:</label>
+              <input type="file" id="code-file" onChange={handleFileChange} />
+              {codeFile && (
+                <div className="file-list">Selected: {codeFile.name}</div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="security-context">Security Focus (Optional):</label>
+              <textarea
+                id="security-context"
+                value={securityContext}
+                onChange={(e) => setSecurityContext(e.target.value)}
+                placeholder="Specify security concerns or requirements..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="language">Programming Language:</label>
+              <select
+                id="language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="csharp">C#</option>
+                <option value="cpp">C++</option>
+              </select>
+            </div>
+
+            <div className="form-group checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={referenceDocuments}
+                  onChange={(e) => setReferenceDocuments(e.target.checked)}
+                />
+                Reference security documentation in analysis
+              </label>
+            </div>
+
+            <div className="button-group">
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={loading || !codeFile}
+              >
+                {loading ? <span className="loader"></span> : "Analyze Code"}
+              </button>
+
+              <button type="button" className="reset-button" onClick={resetForm}>
+                Reset
+              </button>
+            </div>
+          </form >
+
+          {error && <div className="error-message">{error}</div>
+          }
+
+          {
+            response && (
+              <div className="response-container">
+                <h4>Security Analysis Results</h4>
+                <div className="response-content">
+                  <MarkdownDisplay content={response.response} />
+                </div>
+              </div>
+            )
+          }
+        </div >
+
+        <div className="analysis-card">
+          <h3>Database Management</h3>
+          <div className="analysis-description">
+            Manage security documentation used for code analysis. Upload security
+            guidelines, standards, or best practices.
+          </div>
+
+          <div className="db-controls">
+            <div className="button-group">
+              <button
+                type="button"
+                className="db-button"
+                onClick={handleFetchStats}
+                disabled={dbLoading}
+              >
+                {dbLoading ? (
+                  <span className="loader"></span>
+                ) : (
+                  "Get Database Stats"
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="db-button danger"
+                onClick={handleClearDatabase}
+                disabled={dbLoading}
+              >
+                {dbLoading ? <span className="loader"></span> : "Clear Database"}
+              </button>
+            </div>
+
+            {dbStats && (
+              <div className="db-stats">
+                <h4>Database Statistics</h4>
+                <p>
+                  <strong>Total Chunks:</strong> {dbStats.total_documents}
+                </p>
+                {dbStats.collection_name && (
+                  <p>
+                    <strong>Collection:</strong> {dbStats.collection_name}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <form className="upload-form" onSubmit={handleUploadDocument}>
+              <h4>Upload Security Document</h4>
+              <div className="file-input-container">
+                <label htmlFor="document-file">Upload PDF Document:</label>
+                <input
+                  type="file"
+                  id="document-file"
+                  onChange={handleDocumentFileChange}
+                  accept=".pdf"
+                />
+                {documentFile && (
+                  <div className="file-list">Selected: {documentFile.name}</div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={dbLoading || !documentFile}
+              >
+                {dbLoading ? <span className="loader"></span> : "Upload Document"}
+              </button>
+            </form>
+
+            {dbError && <div className="error-message">{dbError}</div>}
+            {uploadSuccess && (
+              <div className="success-message">{uploadSuccess}</div>
             )}
           </div>
-
-          <div className="form-group">
-            <label htmlFor="security-context">Security Focus (Optional):</label>
-            <textarea
-              id="security-context"
-              value={securityContext}
-              onChange={(e) => setSecurityContext(e.target.value)}
-              placeholder="Specify security concerns or requirements..."
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="language">Programming Language:</label>
-            <select
-              id="language"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-            >
-              <option value="python">Python</option>
-              <option value="javascript">JavaScript</option>
-              <option value="java">Java</option>
-              <option value="csharp">C#</option>
-              <option value="cpp">C++</option>
-            </select>
-          </div>
-
-          <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                checked={referenceDocuments}
-                onChange={(e) => setReferenceDocuments(e.target.checked)}
-              />
-              Reference security documentation in analysis
-            </label>
-          </div>
-
-          <div className="button-group">
-            <button
-              type="submit"
-              className="submit-button"
-              disabled={loading || !codeFile}
-            >
-              {loading ? <span className="loader"></span> : "Analyze Code"}
-            </button>
-
-            <button type="button" className="reset-button" onClick={resetForm}>
-              Reset
-            </button>
-          </div>
-        </form>
-
-        {error && <div className="error-message">{error}</div>}
-
-        {response && (
-          <div className="response-container">
-            <h4>Security Analysis Results</h4>
-            <div className="response-content">
-              <MarkdownDisplay content={response.response} />
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="analysis-card">
-        <h3>Database Management</h3>
-        <div className="analysis-description">
-          Manage security documentation used for code analysis. Upload security
-          guidelines, standards, or best practices.
         </div>
-
-        <div className="db-controls">
-          <div className="button-group">
-            <button
-              type="button"
-              className="db-button"
-              onClick={handleFetchStats}
-              disabled={dbLoading}
-            >
-              {dbLoading ? (
-                <span className="loader"></span>
-              ) : (
-                "Get Database Stats"
-              )}
-            </button>
-
-            <button
-              type="button"
-              className="db-button danger"
-              onClick={handleClearDatabase}
-              disabled={dbLoading}
-            >
-              {dbLoading ? <span className="loader"></span> : "Clear Database"}
-            </button>
-          </div>
-
-          {dbStats && (
-            <div className="db-stats">
-              <h4>Database Statistics</h4>
-              <p>
-                <strong>Total Chunks:</strong> {dbStats.total_documents}
-              </p>
-              {dbStats.collection_name && (
-                <p>
-                  <strong>Collection:</strong> {dbStats.collection_name}
-                </p>
-              )}
-            </div>
-          )}
-
-          <form className="upload-form" onSubmit={handleUploadDocument}>
-            <h4>Upload Security Document</h4>
-            <div className="file-input-container">
-              <label htmlFor="document-file">Upload PDF Document:</label>
-              <input
-                type="file"
-                id="document-file"
-                onChange={handleDocumentFileChange}
-                accept=".pdf"
-              />
-              {documentFile && (
-                <div className="file-list">Selected: {documentFile.name}</div>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="submit-button"
-              disabled={dbLoading || !documentFile}
-            >
-              {dbLoading ? <span className="loader"></span> : "Upload Document"}
-            </button>
-          </form>
-
-          {dbError && <div className="error-message">{dbError}</div>}
-          {uploadSuccess && (
-            <div className="success-message">{uploadSuccess}</div>
-          )}
-        </div>
-      </div>
-    </div>
+      </div >
+      <div className="container"> ... </div>
+      <Footer />
+    </>
   );
 }
