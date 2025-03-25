@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
 import Footer from "../../components/Footer";
@@ -21,7 +21,7 @@ interface DBResponse {
 
 export default function SecurityCodeAnalysis() {
   const [codeFile, setCodeFile] = useState<File | null>(null);
-  const [securityContext, setSecurityContext] = useState("");
+  const [securityContext, setSecurityContext] = useState<String | null>("");
   const [language, setLanguage] = useState("python");
   const [referenceDocuments, setReferenceDocuments] = useState<string>("");
 
@@ -34,6 +34,106 @@ export default function SecurityCodeAnalysis() {
   const [dbLoading, setDbLoading] = useState(false);
   const [dbError, setDbError] = useState<String | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<String | null>(null);
+
+  const [gravity, setGravity] = useState<boolean | null>(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  class Particle {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+    color: string;
+    gravity: number;
+    isGravity: boolean;
+  
+    constructor(canvasWidth, canvasHeight) {
+      this.x = Math.random() * canvasWidth;
+      this.y = Math.random() * canvasHeight;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+      this.color = "#0f62fe";
+      this.gravity = 0.98;
+      this.isGravity = false;
+    }
+  
+    update(canvasWidth, canvasHeight) {
+      if (!this.isGravity) {
+        if (this.speedX > 4 || this.speedX < -4) { // reinitialize speed
+          this.speedX = (Math.random() - 0.5) * 0.5;
+        }
+        this.x += this.speedX;
+        this.y += this.speedY;
+      } else {
+        this.x += this.gravity * this.speedX;
+        this.y += this.speedY;
+        this.speedY *= 0.99;
+        if (this.speedX < 4 && this.speedX > -4) {
+          this.speedX *= 1.01;
+        }
+      }
+  
+      // Keep particles within bounds
+      if (this.x > canvasWidth) this.x = 0;
+      else if (this.x < 0) this.x = canvasWidth;
+      if (this.y > canvasHeight) this.y = canvasHeight; // Let it fall down
+      else if (this.y < 0) this.y = canvasHeight;
+    }
+  
+    draw(ctx) {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  
+  const particlesRef = useRef<Particle[]>([]);
+  
+  useEffect(() => {
+    particlesRef.current.forEach((p) => {
+      p.isGravity = gravity; // Correctly apply gravity toggle
+    });
+  }, [gravity]);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+  
+    const setCanvasDimensions = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+  
+    setCanvasDimensions();
+    window.addEventListener("resize", setCanvasDimensions);
+  
+    // Initialize particles only once
+    if (particlesRef.current.length === 0) {
+      for (let i = 0; i < 50; i++) {
+        particlesRef.current.push(new Particle(canvas.width, canvas.height));
+      }
+    }
+  
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesRef.current.forEach((p) => {
+        p.update(canvas.width, canvas.height);
+        p.draw(ctx);
+      });
+      requestAnimationFrame(animate);
+    }
+  
+    animate();
+  
+    return () => {
+      window.removeEventListener("resize", setCanvasDimensions);
+    };
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -61,7 +161,7 @@ export default function SecurityCodeAnalysis() {
       const result = await submitCodeForReview(
         // Issue Here: why are we initializing securityContext to null as paramater, need to replace with SecurityContext
         codeFile,
-        null,
+        securityContext,
         language,
         referenceDocuments ? "true" : "false",
       );
@@ -164,6 +264,7 @@ export default function SecurityCodeAnalysis() {
   };
 
   const resetForm = () => {
+    setGravity(true);
     setCodeFile(null);
     setSecurityContext("");
     setLanguage("python");
@@ -185,6 +286,9 @@ export default function SecurityCodeAnalysis() {
   return (
     <>
       <div className="security-analysis-container">
+
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
+
         <div className="security-analysis-header">
           <h1>Code Security Analysis</h1>
           <p>Submit your code for security analysis and review</p>
@@ -199,47 +303,6 @@ export default function SecurityCodeAnalysis() {
           </div>
 
           <form className="analysis-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="security-doc">Select Security Document:</label>
-              <div className="flex flex-col gap-3 mt-2">
-                {[
-                  "OWASP",
-                  "NIST",
-                  "CERT Secure Coding Standards",
-                  "NASA Rules",
-                  "ISO/IEC 27001 & 27002",
-                  "Custom",
-                ].map((doc) => (
-                  <label key={doc} className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="security-doc"
-                      value={doc}
-                      checked={referenceDocuments === doc}
-                      onChange={(e) => setReferenceDocuments(e.target.value)}
-                    />
-                    {doc}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {referenceDocuments === "Custom" && (
-              <div className="file-input-container">
-                <label htmlFor="code-file">Upload Code File:</label>
-                <input
-                  type="file"
-                  id="code-file"
-                  onChange={handleFileChange}
-                />
-                {codeFile && (
-                  <div className="file-list">
-                    Selected: {codeFile.name}
-                  </div>
-                )}
-              </div>
-            )}
-
             <div className="file-input-container">
               <label htmlFor="code-file">Upload Code File:</label>
               <input type="file" id="code-file" onChange={handleFileChange} />
@@ -362,6 +425,32 @@ export default function SecurityCodeAnalysis() {
 
             <form className="upload-form" onSubmit={handleUploadDocument}>
               <h4>Upload Security Document</h4>
+
+              <div className="form-group">
+                <label htmlFor="security-doc">Select Security Document:</label>
+                <div className="flex flex-col gap-3 mt-2">
+                  {[
+                    "OWASP",
+                    "NIST",
+                    "CERT Secure Coding Standards",
+                    "NASA Rules",
+                    "ISO/IEC 27001 & 27002",
+                    "Custom",
+                  ].map((doc) => (
+                    <label key={doc} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="security-doc"
+                        value={doc}
+                        checked={referenceDocuments === doc}
+                        onChange={(e) => setReferenceDocuments(e.target.value)}
+                      />
+                      {doc}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               <div className="file-input-container">
                 <label htmlFor="document-file">Upload PDF Document:</label>
                 <input
