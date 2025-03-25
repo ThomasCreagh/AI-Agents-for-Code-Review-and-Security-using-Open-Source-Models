@@ -5,8 +5,8 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t registry.heroku.com/keysentinel-frontend/web -f Dockerfile.frontend .
-    - docker build -t registry.heroku.com/keysentinel-backend/web -f Dockerfile.backend .
+    - docker build -t registry.heroku.com/keysentinel-frontend/web -f Dockerfile 
+    - docker build -t registry.heroku.com/keysentinel-backend/web -f Dockerfile
   only:
     - deployment
 
