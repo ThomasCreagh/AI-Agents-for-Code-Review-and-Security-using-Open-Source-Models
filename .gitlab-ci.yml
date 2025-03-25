@@ -18,9 +18,11 @@ build:
 
 deploy:
   stage: deploy
-  image: debian:latest  # Use a base image that supports installing Heroku CLI
+  image: docker:latest  # Use a base image that supports installing Heroku CLI
+  services:
+    - docker:dind
   before_script:
-    - apt-get update && apt-get install -y curl
+    - apk add --no-cache curl
     - curl https://cli-assets.heroku.com/install.sh | sh  # Install Heroku CLI
     - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
   script:
