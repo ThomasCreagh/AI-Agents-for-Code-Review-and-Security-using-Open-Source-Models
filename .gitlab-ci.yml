@@ -5,18 +5,26 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t registry.heroku.com/keysentinel-frontend/web -f Dockerfile 
-    - docker build -t registry.heroku.com/keysentinel-backend/web -f Dockerfile
+    # Build Docker image for frontend with the correct Dockerfile path
+    - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile frontend
+    
+    # Build Docker image for backend with the correct Dockerfile path
+    - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile backend
   only:
-    - deployment
+    - main  # or 'deployment' if you're deploying from that branch
 
 deploy:
   stage: deploy
   script:
+    # Log in to Heroku with the API key from GitLab CI/CD variables
     - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+    
+    # Push the Docker images to Heroku
     - docker push registry.heroku.com/keysentinel-frontend/web
     - docker push registry.heroku.com/keysentinel-backend/web
+    
+    # Release the new container images on Heroku
     - heroku container:release web --app keysentinel-frontend
     - heroku container:release web --app keysentinel-backend
   only:
-    - deployment
+    - main  # or 'deployment' if you're deploying from that branch
