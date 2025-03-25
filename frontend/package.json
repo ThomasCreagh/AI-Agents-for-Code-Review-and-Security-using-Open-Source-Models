@@ -11,7 +11,7 @@
   "dependencies": {
     "cra-template": "1.2.0",
     "group23-ai-agent-app": "file:",
-    "next": "15.1.7",
+    "next": "15.2.3",
     "remark-gfm": "^4.0.1",
     "web-vitals": "^4.2.4"
   },
