@@ -3,10 +3,9 @@
     "version": "1.0.0",
     "scripts": {
         "heroku-postbuild": "cd frontend && npm install && npm run build",
-        "start": "cd frontend && npm run start"
+        "start": "cd frontend && npm run build && npm run start"
     },
     "dependencies": {
-        "deployment-first-attempt": "file:",
         "group23-ai-agent-app": "file:"
     }
 }
