@@ -1,0 +1,22 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t registry.heroku.com/keysentinel-frontend/web -f Dockerfile.frontend .
+    - docker build -t registry.heroku.com/keysentinel-backend/web -f Dockerfile.backend .
+  only:
+    - deployment
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+    - docker push registry.heroku.com/keysentinel-frontend/web
+    - docker push registry.heroku.com/keysentinel-backend/web
+    - heroku container:release web --app keysentinel-frontend
+    - heroku container:release web --app keysentinel-backend
+  only:
+    - deployment
