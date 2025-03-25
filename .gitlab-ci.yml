@@ -18,7 +18,7 @@ build:
 
 deploy:
   stage: deploy
-  image: debian:latest
+  image: debian:latest  # Use a base image that supports installing Heroku CLI
   before_script:
     - apt-get update && apt-get install -y curl
     - curl https://cli-assets.heroku.com/install.sh | sh  # Install Heroku CLI
