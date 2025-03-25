@@ -11,7 +11,7 @@ build:
     # Build Docker image for backend with the correct Dockerfile path
     - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile .
   only:
-    - main  # or 'deployment' if you're deploying from that branch
+    - deployment  # or 'deployment' if you're deploying from that branch
 
 deploy:
   stage: deploy
@@ -27,4 +27,4 @@ deploy:
     - heroku container:release web --app keysentinel-frontend
     - heroku container:release web --app keysentinel-backend
   only:
-    - main  # or 'deployment' if you're deploying from that branch
+    - deployment  # or 'deployment' if you're deploying from that branch
