@@ -30,7 +30,7 @@ deploy:
     - docker push registry.heroku.com/keysentinel-frontend/web
     - docker push registry.heroku.com/keysentinel-backend/web
 
-      heroku stack:set container --app keysentinel-frontend
+    - heroku stack:set container --app keysentinel-frontend
     - heroku stack:set container --app keysentinel-backend 
     
     # Release the new container images on Heroku
