@@ -6,10 +6,10 @@ build:
   stage: build
   script:
     # Build Docker image for frontend with the correct Dockerfile path
-    - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile frontend
+    - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile .
     
     # Build Docker image for backend with the correct Dockerfile path
-    - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile backend
+    - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile .
   only:
     - deployment  # or 'deployment' if you're deploying from that branch
 
