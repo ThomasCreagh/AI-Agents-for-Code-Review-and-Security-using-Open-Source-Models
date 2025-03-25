@@ -18,10 +18,12 @@ build:
 
 deploy:
   stage: deploy
-  script:
-    # Log in to Heroku with the API key from GitLab CI/CD variables
+  image: debian:latest
+  before_script:
+    - apt-get update && apt-get install -y curl
+    - curl https://cli-assets.heroku.com/install.sh | sh  # Install Heroku CLI
     - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
-    
+  script:
     # Push the Docker images to Heroku
     - docker push registry.heroku.com/keysentinel-frontend/web
     - docker push registry.heroku.com/keysentinel-backend/web
