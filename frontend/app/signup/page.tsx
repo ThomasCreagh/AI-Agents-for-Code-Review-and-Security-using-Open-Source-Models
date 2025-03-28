@@ -7,6 +7,7 @@ import { supabase } from "../../src/services/supabaseClient.js";
 
 export default function SignUp() {
   const router = useRouter()
+  const [name, setName] = useState("") // New state for full name
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -90,6 +91,11 @@ export default function SignUp() {
     e.preventDefault()
     setError("")
 
+    if (!name.trim()) {
+      setError("Name is required.")
+      return
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.")
       return
@@ -98,31 +104,35 @@ export default function SignUp() {
     setIsLoading(true)
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      const { data, error } = await supabase.auth.signUp(
+        {
+          email,
+          password,
+          options: {
+            data: { full_name: name },
+          },
+        }
+      );
 
       if (error) {
-        setError(error.message);
+        setError(error.message)
       } else {
-        router.push("/security-analysis");
+        router.push("/security-analysis")
       }
     } catch (err) {
-      setError("Signup failed. Please try again.");
+      setError("Signup failed. Please try again.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center">
       <div className="relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
+      <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#edf5ff] opacity-20 blur-3xl -z-10 animate-float"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-[#0f62fe] opacity-10 blur-3xl -z-10 animate-float-reverse"></div>
-
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
+         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
 
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="max-w-md mx-auto bg-white p-8 border border-[#e0e0e0] shadow-lg animate-fade-in">
@@ -138,6 +148,21 @@ export default function SignUp() {
             )}
 
             <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label htmlFor="name" className="block text-sm font-medium text-[#393939] mb-2">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 border border-[#e0e0e0] focus:border-[#0f62fe] focus:outline-none transition-colors"
+                  placeholder="Enter your name"
+                  required
+                />
+              </div>
+
               <div className="mb-6">
                 <label htmlFor="email" className="block text-sm font-medium text-[#393939] mb-2">
                   Email
@@ -188,7 +213,7 @@ export default function SignUp() {
                 disabled={isLoading}
                 className="w-full bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-6 py-4 transition-all flex items-center justify-center group text-lg disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {isLoading ? (
+               {isLoading ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -214,7 +239,6 @@ export default function SignUp() {
               </p>
             </div>
           </div>
-
           <div className="mt-8 text-center animate-fade-in-delayed">
             <Link href="/" className="inline-flex items-center text-[#0f62fe] font-medium hover:underline group">
               <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
