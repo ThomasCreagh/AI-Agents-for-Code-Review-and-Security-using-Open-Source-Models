@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { supabase } from "../../src/services/supabaseClient.js";
 
 export default function SignUp() {
   const router = useRouter()
@@ -97,13 +98,20 @@ export default function SignUp() {
     setIsLoading(true)
 
     try {
-      // Placeholder: implement actual sign-up logic here
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      router.push("/dashboard")
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        router.push("/security-analysis");
+      }
     } catch (err) {
-      setError("Signup failed. Please try again.")
+      setError("Signup failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 

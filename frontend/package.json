@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "lucide-react": "^0.483.0",
+    "@supabase/supabase-js": "^2.49.3",
     "cra-template": "1.2.0",
+    "lucide-react": "^0.483.0",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
