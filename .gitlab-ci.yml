@@ -1,0 +1,40 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+
+    #- ls -la backend/ # Debugging statement for the requirements.txt issue
+
+    # Build Docker image for frontend with the correct Dockerfile path
+    - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile frontend
+    
+    # Build Docker image for backend with the correct Dockerfile path
+    - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile backend
+  only:
+    - deployment  # or 'deployment' if you're deploying from that branch
+
+deploy:
+  stage: deploy
+  image: docker:latest  # Use a base image that supports installing Heroku CLI
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache bash curl nodejs npm
+    - curl https://cli-assets.heroku.com/install.sh | sh  # Install Heroku CLI
+    - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+  script:
+    # Push the Docker images to Heroku
+    - docker push registry.heroku.com/keysentinel-frontend/web
+    - docker push registry.heroku.com/keysentinel-backend/web
+
+    - heroku stack:set container --app keysentinel-frontend
+    - heroku stack:set container --app keysentinel-backend 
+    
+    # Release the new container images on Heroku
+    - heroku container:release web --app keysentinel-frontend
+    - heroku container:release web --app keysentinel-backend
+  only:
+    - deployment  # or 'deployment' if you're deploying from that branch
