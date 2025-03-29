@@ -11,9 +11,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.49.3",
     "cra-template": "1.2.0",
+    "group23-ai-agent-app": "file:",
     "next": "15.2.3",
     "remark-gfm": "^4.0.1",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "lucide-react": "^0.324.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
