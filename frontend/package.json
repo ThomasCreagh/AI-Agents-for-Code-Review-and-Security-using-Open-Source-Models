@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.3",
     "cra-template": "1.2.0",
     "group23-ai-agent-app": "file:",
     "lucide-react": "^0.483.0",
