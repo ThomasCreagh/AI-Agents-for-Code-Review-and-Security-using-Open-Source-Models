@@ -23,7 +23,7 @@ test:
   script:
     # Install dependencies and run tests for both frontend and backend
     - cd frontend && npm install && npm test  
-    - cd ../backend && npm install && npm test  
+    - cd ../backend && pytest tests/
   only:
     - deployment  
 
