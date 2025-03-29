@@ -19,7 +19,7 @@ build:
 
 test:
   stage: test
-  image: node:16  # Node.js for the tests
+  image: node:20  # Node.js for the tests
   script:
     # Install dependencies and run tests for both frontend and backend
     - cd frontend && npm install --legacy-peer-deps && npm test
