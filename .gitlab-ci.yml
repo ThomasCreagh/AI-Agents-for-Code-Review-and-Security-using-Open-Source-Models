@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - deploy
 
 build:
@@ -15,6 +16,16 @@ build:
     - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile backend
   only:
     - deployment  # or 'deployment' if you're deploying from that branch
+
+test:
+  stage: test
+  image: node:16  # Node.js for the tests
+  script:
+    # Install dependencies and run tests for both frontend and backend
+    - cd frontend && npm install && npm test  
+    - cd ../backend && npm install && npm test  
+  only:
+    - deployment  
 
 deploy:
   stage: deploy
