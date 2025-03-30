@@ -12,6 +12,8 @@ before_script:
   - cat /etc/hosts
 
 test:
+  tags:
+    - hetzner
   stage: test
   image: node:20 # Node.js for the tests
   script:
@@ -24,6 +26,8 @@ test:
     - deployment
 
 build:
+  tags:
+    - hetzner
   image: docker:latest
   stage: build
   before_script:
@@ -34,6 +38,8 @@ build:
     - deployment
 
 deploy:
+  tags:
+    - hetzner
   stage: deploy
   script:
     - echo "Test Deploying app"
