@@ -35,6 +35,8 @@ services:
     entrypoint: ["/usr/bin/bash", "/get_models.sh"]
 
   frontend:
+    labels:
+      - "traefik.http.routers.frontend.rule=Host(`keysentinel.xyz`)"
     build: ./frontend
     # ports:
     #   - "3000:3000"
