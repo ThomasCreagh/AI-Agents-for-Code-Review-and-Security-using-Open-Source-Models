@@ -1,10 +1,20 @@
 services:
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   backend:
     build: ./backend
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     networks:
       - backend-net
     volumes:
@@ -14,8 +24,8 @@ services:
 
   ollama:
     build: ollama
-    ports:
-      - "11434:11434"
+    # ports:
+    #   - "11434:11434"
     env_file:
       - .env
     volumes:
@@ -26,8 +36,8 @@ services:
 
   frontend:
     build: ./frontend
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     env_file:
       - .env
     depends_on:
