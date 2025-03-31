@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
+import Image from "next/image";
 import Footer from "../../components/Footer";
 import {
   submitCodeForReview,
@@ -62,7 +63,14 @@ export default function SecurityCodeAnalysis() {
     update(canvasWidth, canvasHeight) {
       if (!this.isGravity) {
         if (this.speedX > 4 || this.speedX < -4) { // reinitialize speed
-          this.speedX = (Math.random() - 0.5) * 0.5;
+          if (this.speedX > 2 || this.speedX < -2) {
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+          }
+          else {
+            this.speedX = this.speedX * 0.95;      // take down by factor of 0.95 for smoother transistion
+            this.speedY *= 1.01;
+          }
         }
         this.x += this.speedX;
         this.y += this.speedY;
@@ -94,7 +102,7 @@ export default function SecurityCodeAnalysis() {
   
   useEffect(() => {
     particlesRef.current.forEach((p) => {
-      p.isGravity = gravity; // Correctly apply gravity toggle
+      p.isGravity = gravity;
     });
   }, [gravity]);
   
@@ -114,7 +122,7 @@ export default function SecurityCodeAnalysis() {
   
     // Initialize particles only once
     if (particlesRef.current.length === 0) {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 60; i++) {
         particlesRef.current.push(new Particle(canvas.width, canvas.height));
       }
     }
@@ -153,7 +161,7 @@ export default function SecurityCodeAnalysis() {
       setError("Please select a file to analyze");
       return;
     }
-
+    setGravity(true);
     setLoading(true);
     setError(null);
 
@@ -173,6 +181,7 @@ export default function SecurityCodeAnalysis() {
         setError("An unknown error has occured");
       }
     } finally {
+      setGravity(false);
       setLoading(false);
     }
   };
@@ -264,7 +273,6 @@ export default function SecurityCodeAnalysis() {
   };
 
   const resetForm = () => {
-    setGravity(true);
     setCodeFile(null);
     setSecurityContext("");
     setLanguage("python");
@@ -289,30 +297,36 @@ export default function SecurityCodeAnalysis() {
 
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
 
-        <div className="security-analysis-header">
-          <h1>Code Security Analysis</h1>
-          <p>Submit your code for security analysis and review</p>
+        <div className="security-analysis-header relative z-20">
+          <h1 className="-mt-25 text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-[#161616] leading-tight mb-10">Code Security Analysis</h1>
+          <p className="text-1xl md:text-2xl text-[#393939] max-w-2xl mx-auto mb-12">Submit your code for security analysis and review</p>
         </div>
 
-        <div className="analysis-card">
-          <h3>Security Code Review</h3>
-          <div className="analysis-description">
+        <div className="analysis-card relative z-20">
+          <h3 className="text-1xl md:text-2xl text-[#393939] mb-5">Security Code Review</h3>
+          <div className="analysis-description text-m md:text-l text-[#393939] mb-10">
             Upload documentation below and a code file for in-depth security
             analysis. The system will identify potential security vulnerabilities
             and best practices.
           </div>
 
           <form className="analysis-form" onSubmit={handleSubmit}>
-            <div className="file-input-container">
-              <label htmlFor="code-file">Upload Code File:</label>
-              <input type="file" id="code-file" onChange={handleFileChange} />
-              {codeFile && (
-                <div className="file-list">Selected: {codeFile.name}</div>
-              )}
+
+            <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
+              <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
+                <span className="text-lg font-medium">Drag and Drop your code file here: </span>
+                <input type="file" className="hidden" onChange={handleFileChange}/>
+                <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
+                  Or click to browse...
+                </button>
+                {codeFile && (
+                <div className="file-list text-lg font-medium">Selected: {codeFile.name}</div>
+                )}
+              </label>
             </div>
 
             <div className="form-group">
-              <label htmlFor="security-context">Security Focus (Optional):</label>
+              <label htmlFor="security-context" className="text-l md:text-1xl text-[#393939] mb-2">Security Focus (Optional):</label>
               <textarea
                 id="security-context"
                 value={securityContext}
@@ -322,8 +336,9 @@ export default function SecurityCodeAnalysis() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="language">Programming Language:</label>
+              <label htmlFor="language" className="text-l md:text-1xl text-[#393939] mb-2">Programming Language:</label>
               <select
+                className="bg-white border border-[#0f62fe] text-[#393939] rounded-lg px-4 py-2 appearance-none focus:outline-none focus:ring-3 focus:ring-[#0f62fe] transition-all hover:bg-[#f1f9ff] cursor-pointer"
                 id="language"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
@@ -342,21 +357,31 @@ export default function SecurityCodeAnalysis() {
                   type="checkbox"
                   checked={referenceDocuments}
                   onChange={(e) => setReferenceDocuments(e.target.checked)}
+                  className="text-lg font-medium"
                 />
                 Reference security documentation in analysis
               </label>
             </div>
 
-            <div className="button-group">
+            <div className="button-group justify-center mx-auto">
               <button
                 type="submit"
-                className="submit-button"
+                className="submit-button flex border-2 border-dashed border-[#0f62fe] rounded-lg"
                 disabled={loading || !codeFile}
               >
-                {loading ? <span className="loader"></span> : "Analyze Code"}
+                {loading ? (<span className="loader"></span>) :
+                    (<>
+                      <span className="mr-4">Analyze Code</span>
+                      <Image 
+                        src="/magnifying-glass.png" 
+                        alt="magnifying-glass"
+                        width={25} 
+                        height={22}
+                      />
+                    </>)}
               </button>
 
-              <button type="button" className="reset-button" onClick={resetForm}>
+              <button type="button" className="reset-button mx-auto" onClick={resetForm}>
                 Reset
               </button>
             </div>
@@ -377,9 +402,9 @@ export default function SecurityCodeAnalysis() {
           }
         </div >
 
-        <div className="analysis-card">
-          <h3>Database Management</h3>
-          <div className="analysis-description">
+        <div className="analysis-card relative z-20">
+          <h3 className="text-1xl md:text-2xl text-[#393939] mb-5">Database Management</h3>
+          <div className="analysis-description text-m md:text-l text-[#393939] mb-10">
             Manage security documentation used for code analysis. Upload security
             guidelines, standards, or best practices.
           </div>
@@ -388,7 +413,7 @@ export default function SecurityCodeAnalysis() {
             <div className="button-group">
               <button
                 type="button"
-                className="db-button"
+                className="db-button bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-10 py-5 transition-all flex items-center justify-center group text-lg"
                 onClick={handleFetchStats}
                 disabled={dbLoading}
               >
@@ -401,7 +426,7 @@ export default function SecurityCodeAnalysis() {
 
               <button
                 type="button"
-                className="db-button danger"
+                className="db-button danger bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-10 py-5 transition-all flex items-center justify-center group text-lg"
                 onClick={handleClearDatabase}
                 disabled={dbLoading}
               >

@@ -8,10 +8,10 @@ import Link from "next/link"
 
 export default function Login() {
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState<String | null>("")
+  const [password, setPassword] = useState<String | null>("")
   const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean | null>(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
