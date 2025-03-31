@@ -44,12 +44,12 @@ build:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
     - docker images
-    - docker tag backend-1:latest ${DOCKER_USER}/backend-1:latest
-    - docker tag ollama-1:latest ${DOCKER_USER}/ollama-1:latest
-    - docker tag frontend-1:latest ${DOCKER_USER}/frontend-1:latest
-    - docker push ${DOCKER_USER}/backend-1:latest
-    - docker push ${DOCKER_USER}/ollama-1:latest
-    - docker push ${DOCKER_USER}/frontend-1:latest
+    - docker tag sweng25_group_23_ibm-backend:latest ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker tag sweng25_group_23_ibm-ollama:latest ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker tag sweng25_group_23_ibm-frontend:latest ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
   only:
     - deployment
 
@@ -59,9 +59,9 @@ deploy:
   stage: deploy
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin    
-    - docker pull ${DOCKER_USERE}/backend-1:latest
-    - docker pull ${DOCKER_USERE}/ollama-1:latest
-    - docker pull ${DOCKER_USER}/frontend-1:latest
+    - docker pull ${DOCKER_USERE}/sweng25_group_23_ibm-backend:latest
+    - docker pull ${DOCKER_USERE}/sweng25_group_23_ibm-ollama:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
     - docker compose up
   only:
     - deployment
