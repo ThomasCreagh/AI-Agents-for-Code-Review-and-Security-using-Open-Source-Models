@@ -3,29 +3,33 @@ services:
     image: traefik:v3.1
     command:
       - "--api.insecure=true"
-      - "--providers.docker"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backend-net
+
   backend:
     build: ./backend
     env_file:
       - .env
-    # ports:
-    #   - "8000:8000"
     networks:
       - backend-net
     volumes:
       - ./backend:/backend-code
     depends_on:
       - ollama
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.keysentinel.xyz`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   ollama:
     build: ollama
-    # ports:
-    #   - "11434:11434"
     env_file:
       - .env
     volumes:
@@ -35,17 +39,17 @@ services:
     entrypoint: ["/usr/bin/bash", "/get_models.sh"]
 
   frontend:
-    labels:
-      - "traefik.http.routers.frontend.rule=Host(`keysentinel.xyz`)"
     build: ./frontend
-    # ports:
-    #   - "3000:3000"
     env_file:
       - .env
     depends_on:
       - backend
     networks:
       - backend-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`keysentinel.xyz`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
 networks:
   backend-net:
