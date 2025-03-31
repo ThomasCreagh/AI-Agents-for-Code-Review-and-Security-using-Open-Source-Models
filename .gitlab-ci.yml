@@ -40,10 +40,8 @@ build:
   before_script:
     - export COMPOSE_BAKE=true
   script:
-    - echo "$DOCKER_USER"
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
-    - docker images
     - docker tag sweng25_group_23_ibm-backend:latest ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
     - docker tag sweng25_group_23_ibm-ollama:latest ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
     - docker tag sweng25_group_23_ibm-frontend:latest ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
@@ -57,6 +55,8 @@ deploy:
   tags:
     - hetzner
   stage: deploy
+  before_script:
+    - cp $ENV_PATH .env
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
