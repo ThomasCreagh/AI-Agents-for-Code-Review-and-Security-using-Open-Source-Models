@@ -59,8 +59,8 @@ deploy:
   stage: deploy
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin    
-    - docker pull ${DOCKER_USERE}/sweng25_group_23_ibm-backend:latest
-    - docker pull ${DOCKER_USERE}/sweng25_group_23_ibm-ollama:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
     - docker compose up
   only:
