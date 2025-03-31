@@ -43,6 +43,7 @@ build:
     - echo "$DOCKER_USER"
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
+    - docker images
     - docker tag backend-1:latest ${DOCKER_USER}/backend-1:latest
     - docker tag ollama-1:latest ${DOCKER_USER}/ollama-1:latest
     - docker tag frontend-1:latest ${DOCKER_USER}/frontend-1:latest
