@@ -56,6 +56,10 @@ deploy:
     - hetzner
   stage: deploy
   before_script:
+    - ls -la /root  # Check if .env exists in /root
+    - ls -la ~      # Check if it's in the home directory
+    - pwd           # See the working directory
+    - find / -name ".env" 2>/dev/null  # Search for .env in the entire file system
     - cp $ENV_PATH .env
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
