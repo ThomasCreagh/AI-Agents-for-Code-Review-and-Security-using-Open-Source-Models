@@ -40,7 +40,7 @@ build:
   before_script:
     - export COMPOSE_BAKE=true
   script:
-    - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
     - docker tag backend:latest ${DOCKER_USER}/backend:latest
     - docker tag ollama:latest ${DOCKER_USER}/ollama:latest
@@ -56,7 +56,7 @@ deploy:
     - hetzner
   stage: deploy
   script:
-    - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker pull ${DOCKER_USERE}/backend:latest
     - docker pull ${DOCKER_USERE}/ollama:latest
     - docker pull ${DOCKER_USER}/frontend:latest
