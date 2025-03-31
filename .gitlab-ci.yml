@@ -33,7 +33,14 @@ build:
   before_script:
     - export COMPOSE_BAKE=true
   script:
+    - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
     - docker compose build
+    - docker tag backend:latest ${DOCKER_USER}/backend:latest
+    - docker tag ollama:latest ${DOCKER_USER}/ollama:latest
+    - docker tag frontend:latest ${DOCKER_USER}/frontend:latest
+    - docker push ${DOCKER_USER}/backend:latest
+    - docker push ${DOCKER_USER}/ollama:latest
+    - docker push ${DOCKER_USER}/frontend:latest
   only:
     - deployment
 
@@ -42,7 +49,10 @@ deploy:
     - hetzner
   stage: deploy
   script:
-    - echo "Test Deploying app"
-    - deployment # or 'deployment' if you're deploying from that branch
+    - echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USER --password-stdin
+    - docker pull ${DOCKER_USERE}/backend:latest
+    - docker pull ${DOCKER_USERE}/ollama:latest
+    - docker pull ${DOCKER_USER}/frontend:latest
+    - docker compose up
   only:
     - deployment

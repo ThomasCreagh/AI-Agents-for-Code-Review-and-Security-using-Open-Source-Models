@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     env_file:
-      - .env
+      - ${ENV_PATH:-.env}
     ports:
       - "8000:8000"
     networks:
@@ -17,7 +17,7 @@ services:
     ports:
       - "11434:11434"
     env_file:
-      - .env
+      - ${ENV_PATH:-.env}
     volumes:
       - backend-vol:/ollama
     networks:
@@ -29,7 +29,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - ${ENV_PATH:-.env}
     depends_on:
       - backend
     networks:
