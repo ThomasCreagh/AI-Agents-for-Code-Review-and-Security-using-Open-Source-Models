@@ -49,7 +49,6 @@ deploy:
     - hetzner
   stage: deploy
   script:
-    - echo "Test Deploying app"
-    - deployment
+    - docker compose up --build
   only:
     - deployment
