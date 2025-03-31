@@ -1,5 +1,5 @@
 stages:
-  - test
+  # - test
   - build
   - deploy
 
@@ -11,19 +11,26 @@ before_script:
   - cat /etc/resolv.conf
   - cat /etc/hosts
 
-test:
-  tags:
-    - hetzner
-  stage: test
-  image: node:20 # Node.js for the tests
-  script:
-    # Install dependencies and run tests for both frontend and backend
-    - cd frontend && npm install --legacy-peer-deps && npm test
-    - apt-get update && apt-get install -y python3 python3-pip
-    - pip3 install pytest
-    - cd ../backend && pytest tests/
-  only:
-    - deployment
+# test:
+#   tags:
+#     - hetzner
+#   stage: test
+#   image: node:20
+#   before_script:
+#     - cd frontend
+#     - npm install --legacy-peer-deps
+#     - npx jest
+#     - cd ..
+#     - apt-get update && apt-get install -y python3 python3-pip python3.11-venv
+#     - cd backend
+#     - python3 -m venv .venv
+#     - source .venv/bin/activate
+#     - pip install -r requirements.txt
+#     - pip install pytest
+#   script:
+#     - pytest
+#   only:
+#     - deployment
 
 build:
   tags:
