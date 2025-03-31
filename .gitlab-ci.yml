@@ -16,7 +16,7 @@ test:
     - hetzner
   stage: test
   image: node:20
-  script:
+  before_script:
     - cd frontend
     - npm install --legacy-peer-deps
     - npx jest
@@ -27,7 +27,8 @@ test:
     - source .venv/bin/activate
     - pip install -r requirements.txt
     - pip install pytest
-    - pytest tests/
+  script:
+    - pytest
   only:
     - deployment
 
