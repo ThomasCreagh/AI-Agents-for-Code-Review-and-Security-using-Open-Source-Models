@@ -20,7 +20,7 @@ services:
     networks:
       - backend-net
     volumes:
-      - ./backend:/backend-code
+      # - ./backend:/backend-code
     depends_on:
       - ollama
     labels:
@@ -54,7 +54,6 @@ services:
 networks:
   backend-net:
     driver: bridge
-
-volumes:
-  backend-vol:
-    driver: local
+# volumes:
+#   backend-vol:
+#     driver: local
