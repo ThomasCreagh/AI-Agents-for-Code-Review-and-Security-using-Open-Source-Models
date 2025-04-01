@@ -35,7 +35,8 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://keysentinel-frontend.herokuapp.com"],
+    allow_origins=["http://http://api.keysentinel.xyz",
+                   "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

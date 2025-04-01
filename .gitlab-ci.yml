@@ -62,8 +62,6 @@ deploy:
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
-    - docker builder prune -af
-    - docker compose build --no-cache backend
-    - docker compose up
+    - docker compose up --build
   only:
     - deployment
