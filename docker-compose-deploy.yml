@@ -1,0 +1,59 @@
+services:
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backend-net
+
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    networks:
+      - backend-net
+    # volumes:
+    # - ./backend:/backend-code
+    depends_on:
+      - ollama
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.keysentinel.xyz`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+
+  ollama:
+    build: ollama
+    env_file:
+      - .env
+    # volumes:
+    #   - backend-vol:/ollama
+    networks:
+      - backend-net
+    entrypoint: ["/usr/bin/bash", "/get_models.sh"]
+
+  frontend:
+    build: ./frontend
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - backend-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`keysentinel.xyz`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+networks:
+  backend-net:
+    driver: bridge
+# volumes:
+#   backend-vol:
+#     driver: local
