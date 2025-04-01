@@ -19,8 +19,8 @@ services:
       - .env
     networks:
       - backend-net
-    volumes:
-      # - ./backend:/backend-code
+    # volumes:
+    # - ./backend:/backend-code
     depends_on:
       - ollama
     labels:
@@ -32,8 +32,8 @@ services:
     build: ollama
     env_file:
       - .env
-    volumes:
-      - backend-vol:/ollama
+    # volumes:
+    #   - backend-vol:/ollama
     networks:
       - backend-net
     entrypoint: ["/usr/bin/bash", "/get_models.sh"]
