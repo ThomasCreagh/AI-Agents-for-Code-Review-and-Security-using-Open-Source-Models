@@ -30,6 +30,7 @@ before_script:
 #   script:
 #     - pytest
 #   only:
+#     - main
 #     - deployment
 
 build:
@@ -49,6 +50,7 @@ build:
     - docker push ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
     - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
   only:
+    - main
     - deployment
 
 deploy:
@@ -64,4 +66,5 @@ deploy:
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
     - docker compose -f docker-compose-deploy.yml up --build -d
   only:
+    - main
     - deployment
