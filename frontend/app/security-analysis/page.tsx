@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import "../../styles/SecurityCodeAnalysis.css";
 import MarkdownDisplay from "../../components/MarkdownDisplay";
 import Footer from "../../components/Footer";
@@ -9,6 +11,7 @@ import {
   clearDatabase,
   uploadDocument,
 } from "../../services/apiService";
+import { supabase } from "@/src/services/supabaseClient";
 
 interface Response {
   response: string;
@@ -34,6 +37,31 @@ export default function SecurityCodeAnalysis() {
   const [dbLoading, setDbLoading] = useState(false);
   const [dbError, setDbError] = useState<String | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<String | null>(null);
+
+  const router = useRouter();
+  const [loadingAuth, setLoadingAuth] = useState(true);
+    
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        router.replace("/login");
+      } else {
+        setLoadingAuth(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (loadingAuth) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-xl">
+        Checking authentication...
+      </div>
+    );
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
