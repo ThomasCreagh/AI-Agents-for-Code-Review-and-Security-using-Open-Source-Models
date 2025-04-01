@@ -7,7 +7,7 @@ import { supabase } from "../../src/services/supabaseClient.js";
 
 export default function SignUp() {
   const router = useRouter()
-  const [name, setName] = useState("") // New state for full name
+  const [name, setName] = useState("") 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
