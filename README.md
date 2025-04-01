@@ -1,5 +1,11 @@
 # SwEng25_Group_23_IBM
 
+## Welcome to Group 23's Project. We have developed Open Source AI Agents for Code Review & Security. Here's how you can run our application!
+
+## Option 1:
+### Visit keysentinel.xyz
+
+## Option 2:
 ### Docker 
 
 Run and Build:
@@ -14,7 +20,7 @@ Example, for Windows, "$ sudo command" becomes simply "command".
 
 Additionally, Windows users should also ensure that Docker Desktop is running on their machine. Docker can be downloaded here: https://www.docker.com/products/docker-desktop/
 
-After executing the command, please navigate to http://localhost:3000/upload in your browser
+After executing the command, please navigate to http://localhost:3000 in your browser
 
 ```console
 $ sudo docker compose up -d --build
@@ -32,10 +38,4 @@ Run with errors:
 $ sudo docker compose up
 ```
 
-Stop:
-
-```console
-$ sudo docker compose down
-```
-
-tes
+Tests are Automatically Run in the CI/CD Pipeline here on GitLab!! (not currently on the main branch!)

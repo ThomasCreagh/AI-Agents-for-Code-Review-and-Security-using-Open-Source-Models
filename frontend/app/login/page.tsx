@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { supabase } from "../../src/services/supabaseClient.js";
 
 export default function Login() {
   const router = useRouter()
@@ -15,98 +14,99 @@ export default function Login() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
-    }
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
 
-    setCanvasDimensions()
-    window.addEventListener("resize", setCanvasDimensions)
+    setCanvasDimensions();
+    window.addEventListener("resize", setCanvasDimensions);
 
-    const particles: Particle[] = []
-    const particleCount = 50
+    const particles: Particle[] = [];
+    const particleCount = 50;
 
     class Particle {
-      x: number
-      y: number
-      size: number
-      speedX: number
-      speedY: number
-      color: string
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
 
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height
-        this.size = Math.random() * 3 + 1
-        this.speedX = (Math.random() - 0.5) * 0.5
-        this.speedY = (Math.random() - 0.5) * 0.5
-        this.color = "#0f62fe"
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.color = "#0f62fe";
       }
 
       update() {
-        this.x += this.speedX
-        this.y += this.speedY
-
-        if (this.x > canvas.width) this.x = 0
-        else if (this.x < 0) this.x = canvas.width
-        if (this.y > canvas.height) this.y = 0
-        else if (this.y < 0) this.y = canvas.height
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
       }
 
       draw() {
-        ctx.fillStyle = this.color
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-        ctx.fill()
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
     for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle())
+      particles.push(new Particle());
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < particles.length; i++) {
-        particles[i].update()
-        particles[i].draw()
+        particles[i].update();
+        particles[i].draw();
       }
-
-      requestAnimationFrame(animate)
+      requestAnimationFrame(animate);
     }
 
-    animate()
+    animate();
 
     return () => {
-      window.removeEventListener("resize", setCanvasDimensions)
-    }
-  }, [])
+      window.removeEventListener("resize", setCanvasDimensions);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
-      // Here you would implement your actual authentication logic
-      // This is a placeholder for demonstration
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      // Simulate successful login
-      router.push("/dashboard")
+      if (error) {
+        setError(error.message);
+      } else {
+        router.push("/security-analysis");
+      }
     } catch (err) {
-      setError("Invalid email or password")
+      setError("Login failed. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center">
@@ -114,7 +114,6 @@ export default function Login() {
         <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#edf5ff] opacity-20 blur-3xl -z-10 animate-float"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-[#0f62fe] opacity-10 blur-3xl -z-10 animate-float-reverse"></div>
-
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
 
         <div className="container mx-auto px-4 py-16 relative z-10">
@@ -167,7 +166,7 @@ export default function Login() {
                 className="w-full bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-6 py-4 transition-all flex items-center justify-center group text-lg disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
-                  <span className="flex items-center">
+                  <>
                     <svg
                       className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                       xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +188,7 @@ export default function Login() {
                       ></path>
                     </svg>
                     Signing in...
-                  </span>
+                  </>
                 ) : (
                   <span className="flex items-center">
                     Sign In
@@ -218,6 +217,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

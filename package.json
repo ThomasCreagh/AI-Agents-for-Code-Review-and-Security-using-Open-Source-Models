@@ -1,0 +1,13 @@
+{
+    "name": "group23-ai-agent-app",
+    "version": "1.0.0",
+    "scripts": {
+        "heroku-postbuild": "cd frontend && npm install && npm run build",
+        "start": "cd frontend && npm run start",
+        "build": "cd frontend && next build",
+        "dev": "cd frontend && next dev"
+    },
+    "dependencies": {
+        "group23-ai-agent-app": "file:"
+    }
+}
