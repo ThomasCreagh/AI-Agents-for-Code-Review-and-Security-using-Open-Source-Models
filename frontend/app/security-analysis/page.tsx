@@ -274,6 +274,7 @@ export default function SecurityCodeAnalysis() {
 
   const resetForm = () => {
     setCodeFile(null);
+    //setGravity(!gravity);
     setSecurityContext("");
     setLanguage("python");
     setReferenceDocuments("");
@@ -332,6 +333,7 @@ export default function SecurityCodeAnalysis() {
                 value={securityContext}
                 onChange={(e) => setSecurityContext(e.target.value)}
                 placeholder="Specify security concerns or requirements..."
+                className=""
               />
             </div>
 
@@ -357,9 +359,28 @@ export default function SecurityCodeAnalysis() {
                   type="checkbox"
                   checked={referenceDocuments}
                   onChange={(e) => setReferenceDocuments(e.target.checked)}
-                  className="text-lg font-medium"
+                  className="hidden"
                 />
-                Reference security documentation in analysis
+                <span className = {`w-5 h-5 border-2 border-gray-400 rounded-lg flex items-center justify-center transition-all duration-125 ${
+                referenceDocuments ? 'bg-blue-600 border-blue-600' : 'bg-white'}`}>
+                  {referenceDocuments && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-3 h-3 text-white"
+                      fill="none"
+                      viewBox="0 0 25 25"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </span>
+                <span className="text-gray-600">Reference security documentation in analysis</span>
               </label>
             </div>
 
@@ -410,7 +431,7 @@ export default function SecurityCodeAnalysis() {
           </div>
 
           <div className="db-controls">
-            <div className="button-group">
+            <div className="button-group justify-center mx-auto">
               <button
                 type="button"
                 className="db-button bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-10 py-5 transition-all flex items-center justify-center group text-lg"
@@ -449,11 +470,11 @@ export default function SecurityCodeAnalysis() {
             )}
 
             <form className="upload-form" onSubmit={handleUploadDocument}>
-              <h4>Upload Security Document</h4>
+              <h4 className="text-l md:text-1xl text-[#393938] mb-2">Upload Security Document</h4>
 
               <div className="form-group">
-                <label htmlFor="security-doc">Select Security Document:</label>
-                <div className="flex flex-col gap-3 mt-2">
+                <label htmlFor="security-doc" className="block text-lg font-semibold text-gray-800 mb-2">Select Security Document:</label>
+                <div className="flex flex-col gap-4 mt-2 bg-blue-50 p-4 rounded-lg">
                   {[
                     "OWASP",
                     "NIST",
@@ -462,31 +483,39 @@ export default function SecurityCodeAnalysis() {
                     "ISO/IEC 27001 & 27002",
                     "Custom",
                   ].map((doc) => (
-                    <label key={doc} className="flex items-center gap-2">
+                    <label key={doc} className="flex items-center gap-2 cursor-pointer hover:bg-[#f1f9ff] p-3 rounded-lg transition duration-175">
                       <input
                         type="radio"
+                        className="hidden"
                         name="security-doc"
                         value={doc}
                         checked={referenceDocuments === doc}
                         onChange={(e) => setReferenceDocuments(e.target.value)}
                       />
-                      {doc}
+                      <span className="w-4 h-4 rounded-full border-1 border-gray-400 flex items-center justify-center relative">
+                        <span
+                          className={`w-2.5 h-2.5 rounded-full bg-blue-600 transition-all duration-200 ${
+                            referenceDocuments === doc ? "opacity-100" : "opacity-0"
+                          }`}
+                        />
+                        </span>
+                      <span className="text-lg text-gray-700">{doc}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div className="file-input-container">
-                <label htmlFor="document-file">Upload PDF Document:</label>
-                <input
-                  type="file"
-                  id="document-file"
-                  onChange={handleDocumentFileChange}
-                  accept=".pdf"
-                />
-                {documentFile && (
-                  <div className="file-list">Selected: {documentFile.name}</div>
-                )}
+              <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
+                <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
+                  <span className="text-lg font-medium">Drag and Drop your Security Documentation here: </span>
+                    <input type="file" className="hidden" onChange={handleFileChange}/>
+                    <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
+                      Or click to browse...
+                    </button>
+                  {documentFile && (
+                    <div className="file-list text-lg font-medium">Selected: {documentFile.name}</div>
+                  )}
+                </label>
               </div>
 
               <button
