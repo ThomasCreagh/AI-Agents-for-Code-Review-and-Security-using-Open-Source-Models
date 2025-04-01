@@ -4,11 +4,17 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=tcdsweng2025group23@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
+      - "443:443"
       - "80:80"
       - "8080:8080"
     volumes:
+      - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backend-net
@@ -26,6 +32,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.keysentinel.xyz`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   ollama:
@@ -52,11 +60,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`keysentinel.xyz`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
 
 networks:
   backend-net:
     driver: bridge
+volumes:
+  letsencrypt:
 # volumes:
 #   backend-vol:
 #     driver: local
