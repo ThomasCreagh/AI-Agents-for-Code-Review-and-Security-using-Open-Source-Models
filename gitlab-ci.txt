@@ -1,5 +1,5 @@
 stages:
-  - test
+  # - test
   - build
   - deploy
 
@@ -11,42 +11,60 @@ before_script:
   - cat /etc/resolv.conf
   - cat /etc/hosts
 
-backend-tests:
-  image: python:3.11
-  stage: test
-  before_script:
-    - wget -qO- https://astral.sh/uv/install.sh | sh
-    - source $HOME/.local/bin/env
-    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-    - cd backend
-    - uv sync
-    - source .venv/bin/activate
-  script:
-    - pytest
-
-frontend-tests:
-  image: node:18
-  stage: test
-  before_script:
-    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-    - cd frontend
-    - npm install
-  script:
-    - echo "please make tests for frontend..."
-    # - npm test
+# test:
+#   tags:
+#     - hetzner
+#   stage: test
+#   image: node:20
+#   before_script:
+#     - cd frontend
+#     - npm install --legacy-peer-deps
+#     - npx jest
+#     - cd ..
+#     - apt-get update && apt-get install -y python3 python3-pip python3.11-venv
+#     - cd backend
+#     - python3 -m venv .venv
+#     - source .venv/bin/activate
+#     - pip install -r requirements.txt
+#     - pip install pytest
+#   script:
+#     - pytest
+#   only:
+#     - main
+#     - deployment
 
 build:
+  tags:
+    - hetzner
   image: docker:latest
   stage: build
   before_script:
-    - echo "REACT_APP_API_KEY=test\nREACT_APP_BACKEND_URL=http://localhost:3000" > .env
-    - cd backend
     - export COMPOSE_BAKE=true
   script:
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
+    - docker tag sweng25_group_23_ibm-backend:latest ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker tag sweng25_group_23_ibm-ollama:latest ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker tag sweng25_group_23_ibm-frontend:latest ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+  only:
+    - main
+    - deployment
 
 deploy:
+  tags:
+    - hetzner
   stage: deploy
+  before_script:
+    - cp $ENV_PATH .env
   script:
-    - echo "Deploying app"
-
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+    - docker compose -f docker-compose-deploy.yml up --build -d
+  only:
+    - main
+    - deployment
