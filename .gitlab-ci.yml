@@ -63,6 +63,7 @@ deploy:
     - export COMPOSE_BAKE=true
     - cp $ENV_PATH .env
     - cp $ENV_PATH frontend/.env
+    - rm -rf backend/chroma
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest

@@ -7,6 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class DatabaseManager:
     def __init__(self,
                  collection_name: str = "general_docs",
@@ -29,9 +30,11 @@ class DatabaseManager:
             persist_directory=persist_directory,
             collection_metadata={
                 "hnsw:space": "cosine",  # Similarity metric
-                "hnsw:M": 32,            # Higher values create more connections (addresses "M is too small" error)
-                "hnsw:ef_construction": 400,  # Higher values create more accurate indexes
-                "hnsw:ef": 120            # Higher values improve search recall (addresses "ef is too small" error)
+                # Higher values create more connections (addresses "M is too small" error)
+                "hnsw:M": 64,
+                "hnsw:ef_construction": 800,  # Higher values create more accurate indexes
+                # Higher values improve search recall (addresses "ef is too small" error)
+                "hnsw:ef": 240
             }
         )
 
@@ -64,13 +67,13 @@ class DatabaseManager:
                          with_score: bool = False) -> List[Document]:
         """
         Search for documents similar to the query with robust error handling.
-        
+
         Args:
             query: The query string
             k: Number of documents to retrieve
             filter: Optional metadata filter
             with_score: Whether to include similarity scores
-            
+
         Returns:
             List of retrieved documents or empty list if retrieval fails
         """
@@ -98,12 +101,13 @@ class DatabaseManager:
                 )
             logger.info(f"Successfully retrieved {len(results)} documents")
             return results
-            
+
         except Exception as e:
             logger.error(f"Error in vector search: {str(e)}")
-            
+
             try:
-                logger.info("Attempting fallback retrieval with direct collection access...")
+                logger.info(
+                    "Attempting fallback retrieval with direct collection access...")
                 query_embedding = self.embeddings.embed_query(query)
                 collection_results = self._collection.query(
                     query_embeddings=[query_embedding],
@@ -117,24 +121,28 @@ class DatabaseManager:
                         if text:  # Only add non-empty documents
                             metadata = {}
                             if 'metadatas' in collection_results and collection_results['metadatas'][0]:
-                                metadata = collection_results['metadatas'][0][i] or {}
-                            doc = Document(page_content=text, metadata=metadata)
+                                metadata = collection_results['metadatas'][0][i] or {
+                                }
+                            doc = Document(page_content=text,
+                                           metadata=metadata)
                             if with_score and 'distances' in collection_results:
                                 distance = collection_results['distances'][0][i]
                                 similarity = 1.0 - distance
                                 docs.append((doc, similarity))
                             else:
                                 docs.append(doc)
-                    
-                    logger.info(f"Fallback retrieval successful, found {len(docs)} documents")
+
+                    logger.info(
+                        f"Fallback retrieval successful, found {len(docs)} documents")
                     return docs
-                
+
                 logger.warning("Fallback retrieval returned no documents")
                 return []
-                
+
             except Exception as fallback_error:
                 # If all attempts fail, log and return empty list
-                logger.error(f"Fallback retrieval also failed: {str(fallback_error)}")
+                logger.error(
+                    f"Fallback retrieval also failed: {str(fallback_error)}")
                 return []
 
     def add_documents(self, documents: List[Document], ids: Optional[List[str]] = None) -> dict:
@@ -169,7 +177,7 @@ class DatabaseManager:
             error_msg = f"Error deleting documents: {str(e)}"
             logger.error(error_msg)
             raise Exception(error_msg)
-        
+
     def create_retriever(self,
                          search_type: str = "mmr",
                          search_kwargs: Optional[Dict[str, Any]] = None) -> Any:
@@ -178,13 +186,14 @@ class DatabaseManager:
         """
         if search_kwargs is None:
             search_kwargs = {
-                "k": 1, 
-                "fetch_k": 4,  
+                "k": 1,
+                "fetch_k": 4,
                 "lambda_mult": 0.5,
-                "ef": 100  
+                "ef": 100
             }
-        
-        logger.info(f"Creating retriever with search_type={search_type}, params={search_kwargs}")
+
+        logger.info(
+            f"Creating retriever with search_type={search_type}, params={search_kwargs}")
         return self.vector_store.as_retriever(
             search_type=search_type,
             search_kwargs=search_kwargs
