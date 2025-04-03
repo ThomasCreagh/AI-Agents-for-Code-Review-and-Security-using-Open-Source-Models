@@ -25,9 +25,13 @@ class BaseAgent:
                 "thread_id": "default_thread"
             }
         }
-
     def process_message(self, message: str) -> str:
         try:
+            # Add a longer throttling delay to prevent overload errors
+            import time
+            print("Adding safety delay to prevent overload errors...")
+            time.sleep(2.0)  # Wait 2 seconds before processing to avoid API overload
+            
             from app.ai.llm.llm import count_tokens
             
             if count_tokens(message) > self.deps.token_limit * 3:
@@ -35,6 +39,9 @@ class BaseAgent:
                 print("Message truncated to ~1500 tokens for performance")
 
             if self.state is None:
+                # For the initial state, add extra delay as it's most resource-intensive
+                time.sleep(1.0)
+                
                 initial_state = {
                     "messages": [],
                     "latest_user_message": message,
@@ -57,6 +64,19 @@ class BaseAgent:
                 return ai_messages[-1].content
             else:
                 return "No response generated."
+
+        except Exception as e:
+            import traceback
+            error_trace = traceback.format_exc()
+            print(f"Error processing message: {str(e)}")
+            print(error_trace)
+            
+            # Handle overload errors specifically
+            if "overloaded" in str(e).lower() or "529" in str(e):
+                print("API overload detected, returning friendly message")
+                return "I'm currently experiencing high demand. Please try again in a few moments while I optimize resources."
+            
+            return f"Error processing message: {str(e)}"
 
         except Exception as e:
             import traceback
