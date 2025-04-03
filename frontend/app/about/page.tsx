@@ -31,7 +31,7 @@ const mentors = [
 ];
 
 const mentorsDescriptions = [
-  "Senior Technical Staff Member for Cloud-Native and Red Hat Solutions at IBM Cloud Solutioning Center, responsible for EMEA, Canada and LATAM customers > $1M. Builds and designs hybrid, multi-cloud Solutions based on Red Hat OpenShift, IBM Cloud Paks, Ansible, Red Hat Runtimes and middleware for key customers and shapes the IBM / Red Hat solutions portfolio and skills strategy. Red Hat Technical Council Leader. Part of Ireland Technical Leadership team.",
+  "Distinguished Engineer at IBM, leading AI Agents, Tools, Integrations, Extensions, and Standards for IBM Advantage—an AI Services Platform supporting 160,000 users. Leads IBM’s Agentic AI strategy to scale GenAI and hybrid cloud solutions globally. Focused on automation, open standards, and delivering real business value through innovation and reusability.",
   "Advisory Software Engineer at IBM. Co-organiser of Dublin Open Source Meetup. Highly motivated Frontend Engineer with a DevSecOps mindset. Strong advocate for Agile software development methodologies, clean code and measurable code quality.",
   "Java developer at IBM and Computer Science Graduate from Vrije Universiteit Amsterdam (VU Amsterdam)."
 ];
@@ -224,8 +224,8 @@ export default function About() {
             </div>
           </div>
 
-          {/* Team Members Section */}
-          <div className="mb-16 relative">
+           {/* Team Members Section */}
+           <div className="mb-16 relative">
             <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">Meet Our Team</h2>
 
             {showDescription !== 9 && (
@@ -285,13 +285,11 @@ export default function About() {
                     }`}
                     onClick={() => toggleDescription(index)}
                   >
-                    <div className="aspect-square w-full">
-                      <img
-                        src={`/${member.img}`}
-                        alt={member.name}
-                        className="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-110"
-                      />
-                    </div>
+                    <img
+                      src={`/${member.img}`}
+                      alt={member.name}
+                      className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-110"
+                    />
                     <div
                       className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${
                         showDescription === index ? "opacity-100" : "opacity-0 hover:opacity-100"
