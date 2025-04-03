@@ -40,6 +40,8 @@ build:
   stage: build
   before_script:
     - export COMPOSE_BAKE=true
+    - cp $ENV_PATH .env
+    - cp $ENV_PATH frontend/.env
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
@@ -58,6 +60,7 @@ deploy:
     - hetzner
   stage: deploy
   before_script:
+    - export COMPOSE_BAKE=true
     - cp $ENV_PATH .env
     - cp $ENV_PATH frontend/.env
   script:
