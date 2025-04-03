@@ -14,6 +14,7 @@ export default function SignUp() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [confirmationMessage, setConfirmationMessage] = useState("")
+  const [passwordStrength, setPasswordStrength] = useState("")
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -87,6 +88,21 @@ export default function SignUp() {
       window.removeEventListener("resize", setCanvasDimensions)
     }
   }, [])
+
+  const checkPasswordStrength = (password) => {
+    let strength = "Weak";
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    if (password.length > 8 && hasUpper && hasLower && hasNumber && hasSpecial) {
+      strength = "Strong";
+    } else if (password.length >= 6 && (hasUpper || hasLower) && (hasNumber || hasSpecial)) {
+      strength = "Medium";
+    }
+    setPasswordStrength(strength);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -208,7 +224,9 @@ export default function SignUp() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value);
+                    checkPasswordStrength(e.target.value);
+                  }
                   className="w-full px-4 py-3 border border-[#e0e0e0] focus:border-[#0f62fe] focus:outline-none transition-colors"
                   placeholder="Create a password"
                   required
