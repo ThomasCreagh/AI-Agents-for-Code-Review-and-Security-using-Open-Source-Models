@@ -27,15 +27,7 @@ class DatabaseManager:
         self.vector_store = Chroma(
             collection_name=collection_name,
             embedding_function=self.embeddings,
-            persist_directory=persist_directory,
-            collection_metadata={
-                "hnsw:space": "cosine",  # Similarity metric
-                # Higher values create more connections (addresses "M is too small" error)
-                "hnsw:M": 64,
-                "hnsw:ef_construction": 800,  # Higher values create more accurate indexes
-                # Higher values improve search recall (addresses "ef is too small" error)
-                "hnsw:ef": 240
-            }
+            persist_directory=persist_directory
         )
 
         self._collection = self.vector_store._collection
