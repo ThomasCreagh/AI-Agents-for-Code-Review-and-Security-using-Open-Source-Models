@@ -20,7 +20,7 @@ const apiRequest = async <T>({
   files = null,
 }: ApiRequestOptions): Promise<T> => {
   const headers: HeadersInit = {
-    Authorization: API_KEY || "",
+    Authorization: API_KEY || "hello",
   };
 
   let requestOptions: RequestInit = {

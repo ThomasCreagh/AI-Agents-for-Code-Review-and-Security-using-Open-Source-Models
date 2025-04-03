@@ -14,80 +14,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  //
-  // useEffect(() => {
-  //   const canvas = canvasRef.current;
-  //   if (!canvas) return;
-  //
-  //   const ctx = canvas.getContext("2d");
-  //   if (!ctx) return;
-  //
-  //   const setCanvasDimensions = () => {
-  //     canvas.width = canvas.offsetWidth;
-  //     canvas.height = canvas.offsetHeight;
-  //   };
-  //
-  //   setCanvasDimensions();
-  //   window.addEventListener("resize", setCanvasDimensions);
-  //
-  //   const particles: Particle[] = [];
-  //   const particleCount = 50;
-  //
-  //   class Particle {
-  //     x: number;
-  //     y: number;
-  //     size: number;
-  //     speedX: number;
-  //     speedY: number;
-  //     color: string;
-  //
-  //     constructor() {
-  //       this.x = Math.random() * canvas.width;
-  //       this.y = Math.random() * canvas.height;
-  //       this.size = Math.random() * 3 + 1;
-  //       this.speedX = (Math.random() - 0.5) * 0.5;
-  //       this.speedY = (Math.random() - 0.5) * 0.5;
-  //       this.color = "#0f62fe";
-  //     }
-  //
-  //     update() {
-  //       this.x += this.speedX;
-  //       this.y += this.speedY;
-  //       if (this.x > canvas.width) this.x = 0;
-  //       else if (this.x < 0) this.x = canvas.width;
-  //       if (this.y > canvas.height) this.y = 0;
-  //       else if (this.y < 0) this.y = canvas.height;
-  //     }
-  //
-  //     draw() {
-  //       ctx.fillStyle = this.color;
-  //       ctx.beginPath();
-  //       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-  //       ctx.fill();
-  //     }
-  //   }
-  //
-  //   for (let i = 0; i < particleCount; i++) {
-  //     particles.push(new Particle());
-  //   }
-  //
-  //   function animate() {
-  //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //     for (let i = 0; i < particles.length; i++) {
-  //       particles[i].update();
-  //       particles[i].draw();
-  //     }
-  //     requestAnimationFrame(animate);
-  //   }
-  //
-  //   animate();
-  //
-  //   return () => {
-  //     window.removeEventListener("resize", setCanvasDimensions);
-  //   };
-  // }, []);
-  //
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -105,19 +32,6 @@ export default function SignUp() {
     setIsLoading(true);
 
     try {
-      // const { data, error } = await supabase.auth.signUp(
-      //   {
-      //     email,
-      //     password,
-      //     options: {
-      //       data: { full_name: name },
-      //     },
-      //   }
-      // );
-
-      // if (error) {
-      //   setError(error.message);
-      // } else {
       if (!error) {
         router.push("/security-analysis");
       }

@@ -42,9 +42,7 @@ const teamDescriptions = [
 ];
 
 export default function About() {
-  // const [showDropdown, setShowDropdown] = useState(false)
   const [showDescription, setShowDescription] = useState(9); // 0 = Lucia, 1 = Travis, 2 = Cuan, 3 = Mohamad, 4 = ... , 9 = Nothing
-  // const [scrolled, setScrolled] = useState(false)
   const descriptionRef = useRef<HTMLDivElement>(null);
 
   // Scroll to description when it changes

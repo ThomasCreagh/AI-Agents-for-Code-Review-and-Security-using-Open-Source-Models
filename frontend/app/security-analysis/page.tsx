@@ -22,67 +22,7 @@ interface DBResponse {
   collection_name: string | undefined;
   total_documents: number;
 }
-//
-// class Particle {
-//   x: number;
-//   y: number;
-//   size: number;
-//   speedX: number;
-//   speedY: number;
-//   color: string;
-//   gravity: number;
-//   isGravity: boolean;
-//
-//   constructor(canvasWidth, canvasHeight) {
-//     this.x = Math.random() * canvasWidth;
-//     this.y = Math.random() * canvasHeight;
-//     this.size = Math.random() * 3 + 1;
-//     this.speedX = (Math.random() - 0.5) * 0.5;
-//     this.speedY = (Math.random() - 0.5) * 0.5;
-//     this.color = "#0f62fe";
-//     this.gravity = 0.98;
-//     this.isGravity = false;
-//   }
-//
-//   update(canvasWidth, canvasHeight) {
-//     if (!this.isGravity) {
-//       if (this.speedX > 4 || this.speedX < -4) {
-//         // reinitialize speed
-//         if (this.speedX > 2 || this.speedX < -2) {
-//           this.speedX = (Math.random() - 0.5) * 0.5;
-//           this.speedY = (Math.random() - 0.5) * 0.5;
-//         } else {
-//           this.speedX = this.speedX * 0.95; // take down by factor of 0.95 for smoother transistion
-//           this.speedY *= 1.01;
-//         }
-//       }
-//       this.x += this.speedX;
-//       this.y += this.speedY;
-//     } else {
-//       this.x += this.gravity * this.speedX;
-//       this.y += this.speedY;
-//       this.speedY *= 0.99;
-//       if (this.speedX < 4 && this.speedX > -4) {
-//         this.speedX *= 1.01;
-//       }
-//     }
-//
-//     // Keep particles within bounds
-//     if (this.x > canvasWidth) this.x = 0;
-//     else if (this.x < 0) this.x = canvasWidth;
-//     if (this.y > canvasHeight)
-//       this.y = canvasHeight; // Let it fall down
-//     else if (this.y < 0) this.y = canvasHeight;
-//   }
-//
-//   draw(ctx) {
-//     ctx.fillStyle = this.color;
-//     ctx.beginPath();
-//     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-//     ctx.fill();
-//   }
-// }
-//
+
 export default function SecurityCodeAnalysis() {
   const [codeFile, setCodeFile] = useState<File | null>(null);
   const [securityContext, setSecurityContext] = useState<string | null>(null);
@@ -101,53 +41,6 @@ export default function SecurityCodeAnalysis() {
   const [dbError, setDbError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
 
-  // const [gravity, setGravity] = useState<boolean | null>(false);
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const particlesRef = useRef<Particle[]>([]);
-  //
-  // useEffect(() => {
-  //   particlesRef.current.forEach((p) => {
-  //     p.isGravity = gravity;
-  //   });
-  // }, [gravity]);
-  //
-  // useEffect(() => {
-  //   const canvas = canvasRef.current;
-  //   if (!canvas) return;
-  //   const ctx = canvas.getContext("2d");
-  //   if (!ctx) return;
-  //
-  //   const setCanvasDimensions = () => {
-  //     canvas.width = canvas.offsetWidth;
-  //     canvas.height = canvas.offsetHeight;
-  //   };
-  //
-  //   setCanvasDimensions();
-  //   window.addEventListener("resize", setCanvasDimensions);
-  //
-  //   // Initialize particles only once
-  //   if (particlesRef.current.length === 0) {
-  //     for (let i = 0; i < 60; i++) {
-  //       particlesRef.current.push(new Particle(canvas.width, canvas.height));
-  //     }
-  //   }
-  //
-  //   function animate() {
-  //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //     particlesRef.current.forEach((p) => {
-  //       p.update(canvas.width, canvas.height);
-  //       p.draw(ctx);
-  //     });
-  //     requestAnimationFrame(animate);
-  //   }
-  //
-  //   animate();
-  //
-  //   return () => {
-  //     window.removeEventListener("resize", setCanvasDimensions);
-  //   };
-  // }, []);
-  //
   const router = useRouter();
   const [loadingAuth, setLoadingAuth] = useState(true);
 
@@ -213,37 +106,7 @@ export default function SecurityCodeAnalysis() {
       setLoading(false);
     }
   };
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (!codeFile) {
-  //     setError("Please select a file to analyze");
-  //     return;
-  //   }
-  //   // setGravity(true);
-  //   setLoading(true);
-  //   setError(null);
-  //
-  //   try {
-  //     const result = await submitCodeForReview(
-  //       // Issue Here: why are we initializing securityContext to null as paramater, need to replace with SecurityContext
-  //       codeFile,
-  //       securityContext,
-  //       language,
-  //       referenceDocuments ? "true" : "false",
-  //     );
-  //     setResponse(result);
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       setError(error.message);
-  //     } else {
-  //       setError("An unknown error has occured");
-  //     }
-  //   } finally {
-  //     // setGravity(false);
-  //     setLoading(false);
-  //   }
-  // };
-  //
+
   const handleFetchStats = async () => {
     setDbLoading(true);
     setDbError(null);
