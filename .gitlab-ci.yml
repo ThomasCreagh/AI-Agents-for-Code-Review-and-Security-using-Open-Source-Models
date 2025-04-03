@@ -1,40 +1,70 @@
 stages:
+  # - test
   - build
   - deploy
 
+variables:
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - df
+  - cat /etc/resolv.conf
+  - cat /etc/hosts
+
+# test:
+#   tags:
+#     - hetzner
+#   stage: test
+#   image: node:20
+#   before_script:
+#     - cd frontend
+#     - npm install --legacy-peer-deps
+#     - npx jest
+#     - cd ..
+#     - apt-get update && apt-get install -y python3 python3-pip python3.11-venv
+#     - cd backend
+#     - python3 -m venv .venv
+#     - source .venv/bin/activate
+#     - pip install -r requirements.txt
+#     - pip install pytest
+#   script:
+#     - pytest
+#   only:
+#     - main
+#     - deployment
+
 build:
+  tags:
+    - hetzner
+  image: docker:latest
   stage: build
+  before_script:
+    - export COMPOSE_BAKE=true
   script:
-
-    #- ls -la backend/ # Debugging statement for the requirements.txt issue
-
-    # Build Docker image for frontend with the correct Dockerfile path
-    - docker build -t registry.heroku.com/keysentinel-frontend/web -f frontend/Dockerfile frontend
-    
-    # Build Docker image for backend with the correct Dockerfile path
-    - docker build -t registry.heroku.com/keysentinel-backend/web -f backend/Dockerfile backend
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+    - docker compose build
+    - docker tag sweng25_group_23_ibm-backend:latest ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker tag sweng25_group_23_ibm-ollama:latest ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker tag sweng25_group_23_ibm-frontend:latest ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
   only:
-    - deployment  # or 'deployment' if you're deploying from that branch
+    - main
+#    - deployment
 
 deploy:
+  tags:
+    - hetzner
   stage: deploy
-  image: docker:latest  # Use a base image that supports installing Heroku CLI
-  services:
-    - docker:dind
   before_script:
-    - apk add --no-cache bash curl nodejs npm
-    - curl https://cli-assets.heroku.com/install.sh | sh  # Install Heroku CLI
-    - echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+    - cp $ENV_PATH .env
   script:
-    # Push the Docker images to Heroku
-    - docker push registry.heroku.com/keysentinel-frontend/web
-    - docker push registry.heroku.com/keysentinel-backend/web
-
-    - heroku stack:set container --app keysentinel-frontend
-    - heroku stack:set container --app keysentinel-backend 
-    
-    # Release the new container images on Heroku
-    - heroku container:release web --app keysentinel-frontend
-    - heroku container:release web --app keysentinel-backend
+    - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
+    - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
+    - docker compose -f docker-compose-deploy.yml up --build -d
   only:
-    - deployment  # or 'deployment' if you're deploying from that branch
+    - main
+ #   - deployment
