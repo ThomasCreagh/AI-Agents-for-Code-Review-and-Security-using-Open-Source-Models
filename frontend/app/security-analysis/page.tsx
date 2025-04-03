@@ -6,6 +6,7 @@ import MarkdownDisplay from "../../components/MarkdownDisplay";
 import Image from "next/image";
 import Footer from "../../components/Footer";
 import ParticleCanvas from "../../components/ParticleCanvas";
+import Head from "next/head";
 import {
   submitCodeForReview,
   getDatabaseStats,
@@ -216,6 +217,10 @@ export default function SecurityCodeAnalysis() {
 
   return (
     <>
+      <Head>
+        <title>Keysentinel Security Analysis</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
       <div className="security-analysis-container">
         <ParticleCanvas />
 

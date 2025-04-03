@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Footer from "../../components/Footer";
 import Image from "next/image";
+import Head from "next/head";
 
 const teamMembers = [
   { name: "Lucia Brown", img: "LuciaHeadshot.jpg", role: "Backend Developer" },
@@ -62,6 +63,10 @@ export default function About() {
 
   return (
     <>
+      <Head>
+        <title>Keysentinel About</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
       <div className="min-h-screen bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* About Section */}
@@ -241,10 +246,11 @@ export default function About() {
                   className={`text-center transition-all duration-300 transform ${showDescription === index ? "scale-105" : "hover:scale-105"}`}
                 >
                   <div
-                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${showDescription === index
+                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${
+                      showDescription === index
                         ? "ring-4 ring-[#0f62fe] shadow-lg shadow-[#0f62fe]/20"
                         : "hover:shadow-lg"
-                      }`}
+                    }`}
                     onClick={() =>
                       showDescription !== index
                         ? setShowDescription(index)
@@ -259,10 +265,11 @@ export default function About() {
                       className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-110"
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${showDescription === index
+                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${
+                        showDescription === index
                           ? "opacity-100"
                           : "opacity-0 hover:opacity-100"
-                        }`}
+                      }`}
                     >
                       <p className="text-white font-medium">
                         {showDescription === index

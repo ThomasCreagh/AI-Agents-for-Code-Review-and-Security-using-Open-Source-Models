@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import "../styles/Home.css";
 import Footer from "../components/Footer";
 import ParticleCanvas from "../components/ParticleCanvas";
+import Head from "next/head";
 
 export default function Home() {
   const router = useRouter();
@@ -17,6 +18,10 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Keysentinel Home</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
       <div className="min-h-screen bg-white">
         <div className="relative overflow-hidden">
           <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
