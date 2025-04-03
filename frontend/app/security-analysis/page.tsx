@@ -345,7 +345,7 @@ export default function SecurityCodeAnalysis() {
             <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
               <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
                 <span className="text-lg font-medium">Drag and Drop your code file here: </span>
-                <input type="file" className="hidden" onChange={handleFileChange}/>
+                <input type="file" className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer" onChange={handleFileChange}/>
                 <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
                   Or click to browse...
                 </button>
@@ -537,7 +537,7 @@ export default function SecurityCodeAnalysis() {
               <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
                 <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
                   <span className="text-lg font-medium">Drag and Drop your Security Documentation here: </span>
-                    <input type="file" id="document-file" className="hidden" onChange={handleDocumentFileChange}/>
+                    <input type="file" id="document-file" className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer" onChange={handleDocumentFileChange}/>
                     <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
                       Or click to browse...
                     </button>
