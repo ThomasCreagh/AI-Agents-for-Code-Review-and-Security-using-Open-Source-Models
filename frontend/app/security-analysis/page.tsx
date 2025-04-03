@@ -60,6 +60,7 @@ export default function SecurityCodeAnalysis() {
       this.color = "#0f62fe";
       this.gravity = 0.98;
       this.isGravity = false;
+      console.log("created particles")
     }
   
     update(canvasWidth, canvasHeight) {
@@ -85,10 +86,9 @@ export default function SecurityCodeAnalysis() {
         }
       }
   
-      // Keep particles within bounds
       if (this.x > canvasWidth) this.x = 0;
       else if (this.x < 0) this.x = canvasWidth;
-      if (this.y > canvasHeight) this.y = canvasHeight; // Let it fall down
+      if (this.y > canvasHeight) this.y = 0;
       else if (this.y < 0) this.y = canvasHeight;
     }
   
@@ -109,46 +109,48 @@ export default function SecurityCodeAnalysis() {
   }, [gravity]);
   
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    setTimeout(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
   
-    const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-  
-    setCanvasDimensions();
-    window.addEventListener("resize", setCanvasDimensions);
-  
-    // Initialize particles only once
-    if (particlesRef.current.length === 0) {
-      for (let i = 0; i < 60; i++) {
-        particlesRef.current.push(new Particle(canvas.width, canvas.height));
+      const setCanvasDimensions = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+    
+      setCanvasDimensions();
+      window.addEventListener("resize", setCanvasDimensions);
+
+      // Initialize particles only once
+      if (particlesRef.current.length === 0) {
+        for (let i = 0; i < 60; i++) {
+          particlesRef.current.push(new Particle(canvas.width, canvas.height));
+        }
       }
-    }
-  
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesRef.current.forEach((p) => {
-        p.update(canvas.width, canvas.height);
-        p.draw(ctx);
-      });
-      requestAnimationFrame(animate);
-    }
-  
-    animate();
-  
-    return () => {
-      window.removeEventListener("resize", setCanvasDimensions);
-    };
+    
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesRef.current.forEach((p) => {
+          p.update(canvas.width, canvas.height);
+          p.draw(ctx);
+        });
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    
+      return () => {
+        window.removeEventListener("resize", setCanvasDimensions);
+      };
+
+    }, 100);
   }, []);
 
   const router = useRouter();
   const [loadingAuth, setLoadingAuth] = useState(true);
     
-
   useEffect(() => {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
