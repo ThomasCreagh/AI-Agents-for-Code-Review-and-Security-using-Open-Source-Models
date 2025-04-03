@@ -9,6 +9,8 @@ FROM python:3.11-slim AS builder
 
 WORKDIR /backend-code
 
+COPY . .
+
 RUN apt-get update && apt-get install -y curl bash libc6 && rm -rf /var/lib/apt/lists/*
 # RUN curl -fsSL https://ollama.com/install.sh | bash
 
@@ -18,7 +20,6 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # RUN ollama pull nomic-embed-text && ollama pull granite3.1-dense:2b
 
-COPY . .
 
 EXPOSE 8000
 
