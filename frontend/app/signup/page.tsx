@@ -224,9 +224,10 @@ export default function SignUp() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value);
+                  onChange={(e) => {
+                    setPassword(e.target.value);
                     checkPasswordStrength(e.target.value);
-                  }
+                  }}
                   className="w-full px-4 py-3 border border-[#e0e0e0] focus:border-[#0f62fe] focus:outline-none transition-colors"
                   placeholder="Create a password"
                   required
