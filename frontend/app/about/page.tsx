@@ -22,7 +22,7 @@ const teamDescriptions = [
   "Previously when he worked at DLT Capital he made a location based house price index application for the Irish housing market, using Goland, Next.JS, MongoDB and python for analysing 20+ million lines of data. This was then used my MyHome.ie.",
   "Last year he worked with a group of students to create an application exploring commercial flight data, within the Programming Project module at Trinity. He worked on both frontend and backend aspects, creating a interactive experience through Processing.",
   "Last year, as part of the Programming Project module, she worked on a team developing an application that analyzed and filtered flight data. She mainly worked on the frontend development, using Processing to implement interactive visualizations.",
-]
+];
 
 const mentors = [
   { name: "Mihai Criveti", img: "MihaiHeadshot.jpg" },
@@ -31,7 +31,7 @@ const mentors = [
 ];
 
 const mentorsDescriptions = [
-  "Distinguished Engineer at IBM, leading AI Agents, Tools, Integrations, Extensions, and Standards for IBM Advantage—an AI Services Platform supporting 160,000 users. Leads IBM’s Agentic AI strategy to scale GenAI and hybrid cloud solutions globally. Focused on automation, open standards, and delivering real business value through innovation and reusability.",
+  "Senior Technical Staff Member for Cloud-Native and Red Hat Solutions at IBM Cloud Solutioning Center, responsible for EMEA, Canada and LATAM customers > $1M. Builds and designs hybrid, multi-cloud Solutions based on Red Hat OpenShift, IBM Cloud Paks, Ansible, Red Hat Runtimes and middleware for key customers and shapes the IBM / Red Hat solutions portfolio and skills strategy. Red Hat Technical Council Leader. Part of Ireland Technical Leadership team.",
   "Advisory Software Engineer at IBM. Co-organiser of Dublin Open Source Meetup. Highly motivated Frontend Engineer with a DevSecOps mindset. Strong advocate for Agile software development methodologies, clean code and measurable code quality.",
   "Java developer at IBM and Computer Science Graduate from Vrije Universiteit Amsterdam (VU Amsterdam)."
 ];
