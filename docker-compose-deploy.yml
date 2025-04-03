@@ -38,6 +38,10 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
 
   ollama:
     build: ollama

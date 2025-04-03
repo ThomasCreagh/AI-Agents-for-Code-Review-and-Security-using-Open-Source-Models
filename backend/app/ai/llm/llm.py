@@ -33,10 +33,10 @@ def initialise_llm(model: str = None):
             anthropic_api_key=api_key,
             model=anthropic_model,
             temperature=0,
-            timeout=30,  # timeout
+            timeout=120,  # timeout
             max_retries=2,  # basic retry
-            max_tokens=1000,  # Limit output tokens to avoid cutoffs
-            max_tokens_to_sample=1000
+            max_tokens=2000,  # Limit output tokens to avoid cutoffs
+            max_tokens_to_sample=2000
         )
     else:
         ollama_model = model or os.getenv("LLM_MODEL", "granite3.1-dense:2b")
