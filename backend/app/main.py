@@ -35,14 +35,11 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-<<<<<<< HEAD
     allow_origins=["http://api.keysentinel.xyz",
                    "http://keysentinel.xyz",
                    "https://keysentinel.xyz",
                    "http://localhost:3000"],
-=======
-    allow_origins=["*"],
->>>>>>> origin/merge-ai-folder-fix
+    #     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
