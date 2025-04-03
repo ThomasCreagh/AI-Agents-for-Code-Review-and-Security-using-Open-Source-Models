@@ -59,7 +59,7 @@ const apiRequest = async (endpoint, method = 'GET', body = null, files = null) =
   }
 };
 
-export const submitCodeForReview = async (codeFile, securityContext = null, language = 'python', referenceDocuments = "false") => {
+export const submitCodeForReview = async (codeFile, securityContext, language = 'python', referenceDocuments = "false") => {
   const formData = {
     language,
     security_context: securityContext || "",
