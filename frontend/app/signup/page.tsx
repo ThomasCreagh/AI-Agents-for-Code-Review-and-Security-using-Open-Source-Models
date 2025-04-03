@@ -13,6 +13,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [confirmationMessage, setConfirmationMessage] = useState("")
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function SignUp() {
     }
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
 
@@ -106,18 +107,18 @@ export default function SignUp() {
     try {
       const { data, error } = await supabase.auth.signUp(
         {
-          email,
-          password,
-          options: {
-            data: { full_name: name },
-          },
-        }
+        email,
+        password,
+        options: {
+          data: { full_name: name },
+        },
+      }
       );
-
+    
       if (error) {
         setError(error.message)
       } else {
-        router.push("/security-analysis")
+        setConfirmationMessage("Signup successful! Please check your email to confirm your account.")
       }
     } catch (err) {
       setError("Signup failed. Please try again.")
@@ -126,13 +127,34 @@ export default function SignUp() {
     }
   }
 
+  if (confirmationMessage) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col justify-center">
+        <div className="container mx-auto px-4 py-16 relative z-10">
+          <div className="max-w-md mx-auto bg-white p-8 border border-[#e0e0e0] shadow-lg animate-fade-in">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-semibold text-[#161616] mb-2">Confirm Your Email</h1>
+              <p className="text-[#393939]">{confirmationMessage}</p>
+            </div>
+            <div className="mt-8 text-center animate-fade-in-delayed">
+              <Link href="/" className="inline-flex items-center text-[#0f62fe] font-medium hover:underline group">
+                <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
+                Back to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center">
       <div className="relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
+        <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#edf5ff] opacity-20 blur-3xl -z-10 animate-float"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-[#0f62fe] opacity-10 blur-3xl -z-10 animate-float-reverse"></div>
-         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
 
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="max-w-md mx-auto bg-white p-8 border border-[#e0e0e0] shadow-lg animate-fade-in">
@@ -213,7 +235,7 @@ export default function SignUp() {
                 disabled={isLoading}
                 className="w-full bg-[#0f62fe] hover:bg-[#0353e9] text-white font-medium px-6 py-4 transition-all flex items-center justify-center group text-lg disabled:opacity-70 disabled:cursor-not-allowed"
               >
-               {isLoading ? (
+                {isLoading ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
