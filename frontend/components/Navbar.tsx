@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/src/services/supabaseClient";
 import "../styles/Navbar.css";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -19,7 +20,6 @@ const Navbar = () => {
         setIsLoggedIn(true);
         const fullName = data.session.user.user_metadata?.full_name || "";
         setUserEmail(fullName);
-
       } else {
         setIsLoggedIn(false);
         setUserEmail("");
@@ -28,17 +28,18 @@ const Navbar = () => {
 
     checkSession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setIsLoggedIn(true);
-        const fullName = session.user.user_metadata?.full_name || "";
-        setUserEmail(fullName);
-
-      } else {
-        setIsLoggedIn(false);
-        setUserEmail("");
-      }
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session) {
+          setIsLoggedIn(true);
+          const fullName = session.user.user_metadata?.full_name || "";
+          setUserEmail(fullName);
+        } else {
+          setIsLoggedIn(false);
+          setUserEmail("");
+        }
+      },
+    );
 
     return () => {
       listener?.subscription.unsubscribe();
@@ -60,7 +61,7 @@ const Navbar = () => {
             rel="noopener noreferrer"
             className="logo"
           >
-            <img src="/ibm.png" alt="IBM Logo" />
+            <Image src="/ibm.png" alt="IBM Logo" />
           </a>
         </div>
         <div className="separator"></div>
@@ -96,7 +97,10 @@ const Navbar = () => {
       <div className="nav-right">
         {isLoggedIn ? (
           <>
-            <div className="user-info" style={{ marginRight: "1rem", color: "#393939" }}>
+            <div
+              className="user-info"
+              style={{ marginRight: "1rem", color: "#393939" }}
+            >
               Logged in as: <strong>{userEmail}</strong>
             </div>
             <button className="login-button" onClick={handleLogout}>

@@ -5,85 +5,145 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "../../src/services/supabaseClient.js";
 
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  color: string;
+
+  update(canvas: HTMLCanvasElement): void;
+  draw(ctx: CanvasRenderingContext2D): void;
+}
+
+class ParticleImpl implements Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedX: number;
+  speedY: number;
+  color: string;
+
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.speedY = (Math.random() - 0.5) * 0.5;
+    this.color = "#0f62fe";
+  }
+
+  update(canvas: HTMLCanvasElement) {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x > canvas.width) this.x = 0;
+    else if (this.x < 0) this.x = canvas.width;
+    if (this.y > canvas.height) this.y = 0;
+    else if (this.y < 0) this.y = canvas.height;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 export default function Login() {
-  const router = useRouter()
-  const [email, setEmail] = useState<String | null>("")
-  const [password, setPassword] = useState<String | null>("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState<boolean | null>(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const router = useRouter();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const setCanvasDimensions = () => {
+          canvas.width = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+        };
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+        setCanvasDimensions();
+        window.addEventListener("resize", setCanvasDimensions);
 
-    const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
+        const particles: Particle[] = [];
+        const particleCount = 50;
 
-    setCanvasDimensions();
-    window.addEventListener("resize", setCanvasDimensions);
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new ParticleImpl());
+        }
 
-    const particles: Particle[] = [];
-    const particleCount = 50;
+        const initializeParticles = () => {
+          for (const particle of particles) {
+            particle.x = Math.random() * canvas.width;
+            particle.y = Math.random() * canvas.height;
+          }
+        };
 
-    class Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      color: string;
+        initializeParticles();
 
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.5;
-        this.speedY = (Math.random() - 0.5) * 0.5;
-        this.color = "#0f62fe";
-      }
+        function animate() {
+          if (ctx && canvas) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+              particles[i].update(canvas);
+              particles[i].draw(ctx);
+            }
+            requestAnimationFrame(animate);
+          }
+        }
 
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x > canvas.width) this.x = 0;
-        else if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        else if (this.y < 0) this.y = canvas.height;
-      }
+        animate();
 
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+        return () => {
+          window.removeEventListener("resize", setCanvasDimensions);
+        };
       }
     }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-      }
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", setCanvasDimensions);
-    };
   }, []);
+  // useEffect(() => {
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return;
+  //
+  //   const ctx = canvas.getContext("2d");
+  //   if (!ctx) return;
+  //
+  //   const setCanvasDimensions = () => {
+  //     canvas.width = canvas.offsetWidth;
+  //     canvas.height = canvas.offsetHeight;
+  //   };
+  //
+  //   setCanvasDimensions();
+  //   window.addEventListener("resize", setCanvasDimensions);
+  //
+  //   const particles: Particle[] = [];
+  //   const particleCount = 50;
+  //
+  //   for (let i = 0; i < particleCount; i++) {
+  //     particles.push(new ParticleImpl());
+  //   }
+  //
+  //   function animate() {
+  //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //     for (let i = 0; i < particles.length; i++) {
+  //       particles[i].update();
+  //       particles[i].draw();
+  //     }
+  //     requestAnimationFrame(animate);
+  //   }
+  //
+  //   animate();
+  //
+  //   return () => {
+  //     window.removeEventListener("resize", setCanvasDimensions);
+  //   };
+  // }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,7 +161,7 @@ export default function Login() {
       } else {
         router.push("/security-analysis");
       }
-    } catch (err) {
+    } catch {
       setError("Login failed. Please try again.");
     } finally {
       setIsLoading(false);
@@ -114,12 +174,17 @@ export default function Login() {
         <div className="absolute top-0 right-0 w-full h-full bg-[#f4f4f4] skew-y-6 transform origin-top-right -translate-y-1/2 -z-10 animate-pulse-slow"></div>
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#edf5ff] opacity-20 blur-3xl -z-10 animate-float"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-[#0f62fe] opacity-10 blur-3xl -z-10 animate-float-reverse"></div>
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"></canvas>
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full -z-5 opacity-70 pointer-events-none"
+        ></canvas>
 
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="max-w-md mx-auto bg-white p-8 border border-[#e0e0e0] shadow-lg animate-fade-in">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-semibold text-[#161616] mb-2">Welcome Back</h1>
+              <h1 className="text-3xl font-semibold text-[#161616] mb-2">
+                Welcome Back
+              </h1>
               <p className="text-[#393939]">Sign in to your account</p>
             </div>
 
@@ -131,7 +196,10 @@ export default function Login() {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
-                <label htmlFor="email" className="block text-sm font-medium text-[#393939] mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-[#393939] mb-2"
+                >
                   Email
                 </label>
                 <input
@@ -146,7 +214,10 @@ export default function Login() {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="password" className="block text-sm font-medium text-[#393939] mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-[#393939] mb-2"
+                >
                   Password
                 </label>
                 <input
@@ -192,7 +263,9 @@ export default function Login() {
                 ) : (
                   <span className="flex items-center">
                     Sign In
-                    <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                    <span className="ml-2 group-hover:translate-x-1 transition-transform">
+                      →
+                    </span>
                   </span>
                 )}
               </button>
@@ -200,8 +273,11 @@ export default function Login() {
 
             <div className="mt-8 text-center">
               <p className="text-[#393939]">
-                Don't have an account?{" "}
-                <Link href="/signup" className="text-[#0f62fe] hover:underline font-medium">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/signup"
+                  className="text-[#0f62fe] hover:underline font-medium"
+                >
                   Sign up
                 </Link>
               </p>
@@ -209,8 +285,13 @@ export default function Login() {
           </div>
 
           <div className="mt-8 text-center animate-fade-in-delayed">
-            <Link href="/" className="inline-flex items-center text-[#0f62fe] font-medium hover:underline group">
-              <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
+            <Link
+              href="/"
+              className="inline-flex items-center text-[#0f62fe] font-medium hover:underline group"
+            >
+              <span className="mr-2 group-hover:-translate-x-1 transition-transform">
+                ←
+              </span>
               Back to home
             </Link>
           </div>
