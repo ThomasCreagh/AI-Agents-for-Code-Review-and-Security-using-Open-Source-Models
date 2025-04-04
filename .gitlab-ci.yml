@@ -69,7 +69,7 @@ deploy:
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-ollama:latest
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
-    - docker compose -f docker-compose-deploy.yml up --build
+    - docker compose -f docker-compose-deploy.yml up --build -d
   only:
     - main
     - deployment
