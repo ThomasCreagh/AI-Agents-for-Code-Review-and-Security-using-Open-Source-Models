@@ -116,8 +116,8 @@ export default function About() {
               standards.
             </p>
             <p className="text-lg text-[#393939] mb-8">
-              If you're interested in learning more about us or our project,
-              feel free to reach out!
+              If you&apos;re interested in learning more about us or our
+              project, feel free to reach out!
             </p>
 
             {/* Connect With Us Section */}
@@ -264,11 +264,10 @@ export default function About() {
                   className={`text-center transition-all duration-300 transform ${showMentorDescription === index ? "scale-105" : "hover:scale-105"} w-full max-w-xs`}
                 >
                   <div
-                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${
-                      showMentorDescription === index
+                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${showMentorDescription === index
                         ? "ring-4 ring-[#0f62fe] shadow-lg shadow-[#0f62fe]/20"
                         : "hover:shadow-lg"
-                    }`}
+                      }`}
                     onClick={() => toggleMentorDescription(index)}
                   >
                     <div className="aspect-square w-full">
@@ -363,11 +362,10 @@ export default function About() {
                   className={`text-center transition-all duration-300 transform ${showDescription === index ? "scale-105" : "hover:scale-105"}`}
                 >
                   <div
-                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${
-                      showDescription === index
+                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${showDescription === index
                         ? "ring-4 ring-[#0f62fe] shadow-lg shadow-[#0f62fe]/20"
                         : "hover:shadow-lg"
-                    }`}
+                      }`}
                     onClick={() => toggleDescription(index)}
                   >
                     <Image
@@ -376,11 +374,10 @@ export default function About() {
                       className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-110"
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${
-                        showDescription === index
+                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${showDescription === index
                           ? "opacity-100"
                           : "opacity-0 hover:opacity-100"
-                      }`}
+                        }`}
                     >
                       <p className="text-white font-medium">
                         {showDescription === index
