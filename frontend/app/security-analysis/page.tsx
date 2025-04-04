@@ -10,8 +10,8 @@ import Head from "next/head";
 import {
   submitCodeForReview,
   getDatabaseStats,
-  // clearDatabase,
-  // uploadDocument,
+  clearDatabase,
+  uploadDocument,
 } from "../../services/apiService";
 import { supabase } from "@/src/services/supabaseClient";
 
@@ -95,6 +95,11 @@ export default function SecurityCodeAnalysis() {
         language,
         referenceDocuments ? "true" : "false",
       );
+
+      console.log(result);
+      if (result.status == "error") {
+        setResponse(result.message);
+      }
       setResponse(result);
     } catch (error) {
       if (error instanceof Error) {
@@ -139,7 +144,8 @@ export default function SecurityCodeAnalysis() {
     setDbError(null);
 
     try {
-      // const result = await clearDatabase();
+      const result = await clearDatabase();
+      console.log(result);
       setDbStats({
         collection_name: dbStats?.collection_name,
         total_documents: 0,
@@ -173,7 +179,8 @@ export default function SecurityCodeAnalysis() {
     setDbError(null);
 
     try {
-      // const result = await uploadDocument(documentFile);
+      const result = await uploadDocument(documentFile);
+      console.log(result);
       setUploadSuccess(`Document "${documentFile.name}" uploaded successfully`);
       setTimeout(() => setUploadSuccess(null), 3000);
       setDocumentFile(null);
