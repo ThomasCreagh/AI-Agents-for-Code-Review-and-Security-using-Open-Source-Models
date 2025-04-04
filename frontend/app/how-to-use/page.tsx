@@ -9,6 +9,8 @@ const ibmPlexSans = IBM_Plex_Sans({
   weight: ["300", "400", "600"],
 });
 
+// bg-[#f4f4f4]
+
 export default function HowToUse() {
   return (
     <>
@@ -17,7 +19,7 @@ export default function HowToUse() {
         <meta property="og:title" content="My page title" key="title" />
       </Head>
       <div
-        className={`min-h-screen bg-[#f4f4f4] text-[#161616] ${ibmPlexSans.className}`}
+        className={`min-h-screen bg-white text-[#161616] ${ibmPlexSans.className}`}
       >
         <div className="container mx-auto px-6 py-16 max-w-4xl">
           <h1 className="text-4xl font-semibold mb-10">

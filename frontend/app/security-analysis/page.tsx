@@ -251,16 +251,16 @@ export default function SecurityCodeAnalysis() {
           </div>
 
           <form className="analysis-form" onSubmit={handleSubmit}>
-            <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
-              <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
+            <div className="file-drop-area relative flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
+              <input
+                type="file"
+                className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
+                onChange={handleFileChange}
+              />
+              <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer relative">
                 <span className="text-lg font-medium">
                   Drag and Drop your code file here:{" "}
                 </span>
-                <input
-                  type="file"
-                  className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
-                  onChange={handleFileChange}
-                />
                 <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
                   Or click to browse...
                 </button>
@@ -475,11 +475,10 @@ export default function SecurityCodeAnalysis() {
                       />
                       <span className="w-4 h-4 rounded-full border-1 border-gray-400 flex items-center justify-center relative">
                         <span
-                          className={`w-2.5 h-2.5 rounded-full bg-blue-600 transition-all duration-200 ${
-                            referenceDocuments === doc
+                          className={`w-2.5 h-2.5 rounded-full bg-blue-600 transition-all duration-200 ${referenceDocuments === doc
                               ? "opacity-100"
                               : "opacity-0"
-                          }`}
+                            }`}
                         />
                       </span>
                       <span className="text-lg text-gray-700">{doc}</span>
@@ -488,17 +487,17 @@ export default function SecurityCodeAnalysis() {
                 </div>
               </div>
 
-              <div className="flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
-                <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer">
+              <div className="file-drop-area relative flex justify-center items-center border-2 border-dashed border-[#0f62fe] rounded-lg py-10 mb-6 cursor-pointer hover:bg-[#e6f0ff] transition-all">
+                <input
+                  type="file"
+                  id="document-file"
+                  className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
+                  onChange={handleDocumentFileChange}
+                />
+                <label className="flex flex-col items-center text-[#0f62fe] space-y-2 cursor-pointer relative">
                   <span className="text-lg font-medium">
                     Drag and Drop your Security Documentation here:{" "}
                   </span>
-                  <input
-                    type="file"
-                    id="document-file"
-                    className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
-                    onChange={handleDocumentFileChange}
-                  />
                   <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
                     Or click to browse...
                   </button>
