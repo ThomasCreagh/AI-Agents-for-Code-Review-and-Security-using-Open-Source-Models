@@ -54,6 +54,7 @@ build:
   only:
     - main
     - deployment
+    - demo
 
 deploy:
   tags:
@@ -73,3 +74,4 @@ deploy:
   only:
     - main
     - deployment
+    - demo
