@@ -1,15 +1,20 @@
-// import { config } from "dotenv";
 import type { NextConfig } from "next";
 
-// // Load environment variables from the root .env file
-// config({ path: "../.env" });
-// config({ path: ".env" });
-
-// console.log("Loaded Environment Variables:", process.env);
-
 const nextConfig: NextConfig = {
-  experimental: {},
-  // Your other config options here
+  async headers() {
+    return [
+      {
+        source: "/fonts/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
+  optimizeFonts: true,
 };
 
 export default nextConfig;

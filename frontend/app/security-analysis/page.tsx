@@ -258,7 +258,7 @@ export default function SecurityCodeAnalysis() {
                 </span>
                 <input
                   type="file"
-                  className="hidden"
+                  className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
                   onChange={handleFileChange}
                 />
                 <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">
@@ -496,7 +496,7 @@ export default function SecurityCodeAnalysis() {
                   <input
                     type="file"
                     id="document-file"
-                    className="hidden"
+                    className="absolute w-full h-full top-0 left-0 opacity-0 cursor-pointer"
                     onChange={handleDocumentFileChange}
                   />
                   <button className="text-sm text-[#0f62fe] bg-white px-4 py-2 rounded-md hover:bg-[#e0e0e0] transition-all">

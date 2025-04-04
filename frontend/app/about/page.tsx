@@ -42,24 +42,51 @@ const teamDescriptions = [
   "Last year, as part of the Programming Project module, she worked on a team developing an application that analyzed and filtered flight data. She mainly worked on the frontend development, using Processing to implement interactive visualizations.",
 ];
 
-export default function About() {
-  const [showDescription, setShowDescription] = useState(9); // 0 = Lucia, 1 = Travis, 2 = Cuan, 3 = Mohamad, 4 = ... , 9 = Nothing
-  const descriptionRef = useRef<HTMLDivElement>(null);
+const mentors = [
+  { name: "Mihai Criveti", img: "MihaiHeadshot.jpg" },
+  { name: "Panpan Lin", img: "PanpanHeadshot.jpg" },
+  { name: "Sebastian Iozu", img: "SebastianHeadshot.jpg" },
+];
 
-  // Scroll to description when it changes
+const mentorsDescriptions = [
+  "Distinguished Engineer at IBM, leading AI Agents, Tools, Integrations, Extensions, and Standards for IBM Advantage—an AI Services Platform supporting 160,000 users. Leads IBM’s Agentic AI strategy to scale GenAI and hybrid cloud solutions globally. Focused on automation, open standards, and delivering real business value through innovation and reusability.",
+  "Advisory Software Engineer at IBM. Co-organiser of Dublin Open Source Meetup. Highly motivated Frontend Engineer with a DevSecOps mindset. Strong advocate for Agile software development methodologies, clean code and measurable code quality.",
+  "Java developer at IBM and Computer Science Graduate from Vrije Universiteit Amsterdam (VU Amsterdam).",
+];
+
+export default function About() {
+  const [showDescription, setShowDescription] = useState(9);
+  const [showMentorDescription, setShowMentorDescription] = useState(9);
+  const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const mentorDescriptionRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (showDescription !== 9 && descriptionRef.current) {
-      const element = descriptionRef.current;
-      const yOffset = -100; // Offset to account for any fixed headers
       const y =
-        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-      window.scrollTo({
-        top: y,
-        behavior: "smooth",
-      });
+        descriptionRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [showDescription]);
+
+  useEffect(() => {
+    if (showMentorDescription !== 9 && mentorDescriptionRef.current) {
+      const y =
+        mentorDescriptionRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }, [showMentorDescription]);
+
+  const toggleDescription = (index: number) => {
+    setShowDescription(showDescription === index ? 9 : index);
+  };
+
+  const toggleMentorDescription = (index: number) => {
+    setShowMentorDescription(showMentorDescription === index ? 9 : index);
+  };
 
   return (
     <>
@@ -67,6 +94,7 @@ export default function About() {
         <title>Keysentinel About</title>
         <meta property="og:title" content="My page title" key="title" />
       </Head>
+
       <div className="min-h-screen bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* About Section */}
@@ -88,8 +116,8 @@ export default function About() {
               standards.
             </p>
             <p className="text-lg text-[#393939] mb-8">
-              If you&apos;re interested in learning more about us or our
-              project, feel free to reach out!
+              If you're interested in learning more about us or our project,
+              feel free to reach out!
             </p>
 
             {/* Connect With Us Section */}
@@ -173,13 +201,107 @@ export default function About() {
             </div>
           </div>
 
-          {/* Team Members Section with Description */}
+          {/* Mentors Section */}
+          <div className="mb-16 relative">
+            <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">
+              Meet Our Mentors
+            </h2>
+
+            {showMentorDescription !== 9 && (
+              <div
+                ref={mentorDescriptionRef}
+                className="max-w-4xl mx-auto mb-12 bg-white p-8 rounded-lg shadow-xl border-l-4 border-[#0f62fe] animate-fade-in relative z-10"
+              >
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#0f62fe] shadow-lg flex-shrink-0 mx-auto md:mx-0">
+                    <Image
+                      src={`/${mentors[showMentorDescription].img}`}
+                      alt={mentors[showMentorDescription].name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <h2 className="text-2xl font-bold text-[#161616] mb-4">
+                        {mentors[showMentorDescription].name}
+                      </h2>
+                      <button
+                        onClick={() => setShowMentorDescription(9)}
+                        className="text-gray-500 hover:text-[#0f62fe] transition-colors"
+                        aria-label="Close"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <p className="text-[#393939] leading-relaxed text-lg">
+                      {mentorsDescriptions[showMentorDescription]}
+                    </p>
+                  </div>
+                </div>
+                {/* Added gradient elements to match team section */}
+                <div className="absolute -bottom-2 -right-2 w-20 h-20 bg-[#edf5ff] rounded-full opacity-50 z-0"></div>
+                <div className="absolute -top-2 -left-2 w-12 h-12 bg-[#0f62fe] rounded-full opacity-10 z-0"></div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+              {mentors.map((mentor, index) => (
+                <div
+                  key={index}
+                  className={`text-center transition-all duration-300 transform ${showMentorDescription === index ? "scale-105" : "hover:scale-105"} w-full max-w-xs`}
+                >
+                  <div
+                    className={`relative overflow-hidden rounded-lg mb-4 cursor-pointer shadow-md transition-all duration-300 ${
+                      showMentorDescription === index
+                        ? "ring-4 ring-[#0f62fe] shadow-lg shadow-[#0f62fe]/20"
+                        : "hover:shadow-lg"
+                    }`}
+                    onClick={() => toggleMentorDescription(index)}
+                  >
+                    <div className="aspect-square w-full">
+                      <Image
+                        src={`/${mentor.img}`}
+                        alt={mentor.name}
+                        className="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-110"
+                      />
+                    </div>
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${showMentorDescription === index ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+                    >
+                      <p className="text-white font-medium">
+                        {showMentorDescription === index
+                          ? "Selected"
+                          : "Click for details"}
+                      </p>
+                    </div>
+                  </div>
+                  <h3 className="font-semibold text-lg text-[#161616]">
+                    {mentor.name}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Team Members Section */}
           <div className="mb-16 relative">
             <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">
               Meet Our Team
             </h2>
 
-            {/* Description Section - Now positioned above the team grid */}
             {showDescription !== 9 && (
               <div
                 ref={descriptionRef}
@@ -190,8 +312,6 @@ export default function About() {
                     <Image
                       src={`/${teamMembers[showDescription].img}`}
                       alt={teamMembers[showDescription].name}
-                      // width={500}
-                      // height={500}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -231,14 +351,11 @@ export default function About() {
                     </p>
                   </div>
                 </div>
-
-                {/* Decorative elements */}
                 <div className="absolute -bottom-2 -right-2 w-20 h-20 bg-[#edf5ff] rounded-full opacity-50 z-0"></div>
                 <div className="absolute -top-2 -left-2 w-12 h-12 bg-[#0f62fe] rounded-full opacity-10 z-0"></div>
               </div>
             )}
 
-            {/* Team Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {teamMembers.map((member, index) => (
                 <div
@@ -251,17 +368,11 @@ export default function About() {
                         ? "ring-4 ring-[#0f62fe] shadow-lg shadow-[#0f62fe]/20"
                         : "hover:shadow-lg"
                     }`}
-                    onClick={() =>
-                      showDescription !== index
-                        ? setShowDescription(index)
-                        : setShowDescription(9)
-                    }
+                    onClick={() => toggleDescription(index)}
                   >
                     <Image
                       src={`/${member.img}`}
                       alt={member.name}
-                      width={500}
-                      height={500}
                       className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-110"
                     />
                     <div
@@ -288,7 +399,6 @@ export default function About() {
           </div>
         </div>
       </div>
-      <div className="container"> ... </div>
       <Footer />
     </>
   );

@@ -1,7 +1,13 @@
 "use client";
 import Image from "next/image";
 import Footer from "../../components/Footer";
+import { IBM_Plex_Sans } from "next/font/google";
 import Head from "next/head";
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "600"],
+});
 
 export default function HowToUse() {
   return (
@@ -10,7 +16,9 @@ export default function HowToUse() {
         <title>Keysentinel How To Use</title>
         <meta property="og:title" content="My page title" key="title" />
       </Head>
-      <div className="min-h-screen bg-[#f4f4f4] text-[#161616] font-['IBM_Plex_Sans']">
+      <div
+        className={`min-h-screen bg-[#f4f4f4] text-[#161616] ${ibmPlexSans.className}`}
+      >
         <div className="container mx-auto px-6 py-16 max-w-4xl">
           <h1 className="text-4xl font-semibold mb-10">
             How to Use Security Analysis
