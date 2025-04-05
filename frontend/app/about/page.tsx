@@ -1,14 +1,32 @@
-"use client"
-import { useState, useRef, useEffect } from "react"
+"use client";
+import { useState, useRef, useEffect } from "react";
 import Footer from "../../components/Footer";
+import Image from "next/image";
+import Head from "next/head";
 
 const teamMembers = [
   { name: "Lucia Brown", img: "LuciaHeadshot.jpg", role: "Backend Developer" },
   { name: "Travis Yusuf", img: "TravisHeadshot.jpg", role: "AI Developer" },
-  { name: "Cuan Shaffrey", img: "CuanHeadshot.jpg", role: "Frontend Developer" },
-  { name: "Mohamed Ali", img: "MohamedHeadshot.jpg", role: "Frontend Developer" },
-  { name: "Jake Casserly", img: "JakeHeadshot.jpeg", role: "Frontend Developer" },
-  { name: "Thomas Keatinge Creagh", img: "TomHeadshot.jpeg", role: "Backend Developer" },
+  {
+    name: "Cuan Shaffrey",
+    img: "CuanHeadshot.jpg",
+    role: "Frontend Developer",
+  },
+  {
+    name: "Mohamed Ali",
+    img: "MohamedHeadshot.jpg",
+    role: "Frontend Developer",
+  },
+  {
+    name: "Jake Casserly",
+    img: "JakeHeadshot.jpeg",
+    role: "Frontend Developer",
+  },
+  {
+    name: "Thomas Keatinge Creagh",
+    img: "TomHeadshot.jpeg",
+    role: "Backend Developer",
+  },
   { name: "Noah Scolard", img: "NoahHeadshot.jpg", role: "AI Developer" },
   { name: "Anna Xue", img: "AnnaHeadshot.jpg", role: "Frontend Developer" },
 ];
@@ -27,66 +45,81 @@ const teamDescriptions = [
 const mentors = [
   { name: "Mihai Criveti", img: "MihaiHeadshot.jpg" },
   { name: "Panpan Lin", img: "PanpanHeadshot.jpg" },
-  { name: "Sebastian Iozu", img: "SebastianHeadshot.jpg" }
+  { name: "Sebastian Iozu", img: "SebastianHeadshot.jpg" },
 ];
 
 const mentorsDescriptions = [
   "Distinguished Engineer at IBM, leading AI Agents, Tools, Integrations, Extensions, and Standards for IBM Advantage—an AI Services Platform supporting 160,000 users. Leads IBM’s Agentic AI strategy to scale GenAI and hybrid cloud solutions globally. Focused on automation, open standards, and delivering real business value through innovation and reusability.",
   "Advisory Software Engineer at IBM. Co-organiser of Dublin Open Source Meetup. Highly motivated Frontend Engineer with a DevSecOps mindset. Strong advocate for Agile software development methodologies, clean code and measurable code quality.",
-  "Java developer at IBM and Computer Science Graduate from Vrije Universiteit Amsterdam (VU Amsterdam)."
+  "Java developer at IBM and Computer Science Graduate from Vrije Universiteit Amsterdam (VU Amsterdam).",
 ];
 
 export default function About() {
   const [showDescription, setShowDescription] = useState(9);
   const [showMentorDescription, setShowMentorDescription] = useState(9);
-  const descriptionRef = useRef(null);
-  const mentorDescriptionRef = useRef(null);
+  const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const mentorDescriptionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (showDescription !== 9 && descriptionRef.current) {
-      const y = descriptionRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+      const y =
+        descriptionRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [showDescription]);
 
   useEffect(() => {
     if (showMentorDescription !== 9 && mentorDescriptionRef.current) {
-      const y = mentorDescriptionRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+      const y =
+        mentorDescriptionRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [showMentorDescription]);
 
-  const toggleDescription = (index) => {
+  const toggleDescription = (index: number) => {
     setShowDescription(showDescription === index ? 9 : index);
   };
 
-  const toggleMentorDescription = (index) => {
+  const toggleMentorDescription = (index: number) => {
     setShowMentorDescription(showMentorDescription === index ? 9 : index);
   };
 
   return (
     <>
+      <Head>
+        <title>Keysentinel About</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </Head>
+
       <div className="min-h-screen bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* About Section */}
           <div className="mb-16 max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-[#161616] mb-6 relative inline-block">
               About Us
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#0f62fe] transform -translate-y-2"></span>
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-[#0f62fe]"></span>
             </h1>
             <p className="text-lg text-[#393939] mb-6">
-              We are a team of passionate 2nd and 3rd-year Computer Science students at Trinity College, collaborating
-              with IBM to develop an AI-powered code review system.
+              We are a team of passionate 2nd and 3rd-year Computer Science
+              students at Trinity College, collaborating with IBM to develop an
+              AI-powered code review system.
             </p>
             <p className="text-lg text-[#393939] mb-6">
-              Our goal is to automate code quality assessments and security testing, making software development faster,
-              safer, and more efficient. As a startup project, we are still in the early stages, actively refining our
-              system to ensure it meets industry standards.
+              Our goal is to automate code quality assessments and security
+              testing, making software development faster, safer, and more
+              efficient. As a startup project, we are still in the early stages,
+              actively refining our system to ensure it meets industry
+              standards.
             </p>
             <p className="text-lg text-[#393939] mb-8">
-              If you're interested in learning more about us or our project, feel free to reach out!
+              If you&apos;re interested in learning more about us or our
+              project, feel free to reach out!
             </p>
-            
+
             {/* Connect With Us Section */}
             <div className="mt-12 animate-fade-in-delayed">
               <p className="text-base md:text-lg text-[#393939] mb-3 font-medium flex items-center justify-center">
@@ -100,7 +133,13 @@ export default function About() {
                   className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
                 >
                   <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M3 8l9 6 9-6M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
                     </svg>
                   </div>
@@ -117,7 +156,13 @@ export default function About() {
                   className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
                 >
                   <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                       <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
                       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -136,7 +181,13 @@ export default function About() {
                   className="flex items-center bg-white border border-[#e0e0e0] hover:border-[#0f62fe] px-5 py-3 transition-colors group hover:shadow-md"
                 >
                   <div className="w-8 h-8 flex items-center justify-center text-[#0f62fe] mr-2 group-hover:scale-110 transition-transform">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
                       <rect x="2" y="9" width="4" height="12" />
                       <circle cx="4" cy="4" r="2" />
@@ -152,7 +203,9 @@ export default function About() {
 
           {/* Mentors Section */}
           <div className="mb-16 relative">
-            <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">Meet Our Mentors</h2>
+            <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">
+              Meet Our Mentors
+            </h2>
 
             {showMentorDescription !== 9 && (
               <div
@@ -161,7 +214,7 @@ export default function About() {
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                   <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#0f62fe] shadow-lg flex-shrink-0 mx-auto md:mx-0">
-                    <img
+                    <Image
                       src={`/${mentors[showMentorDescription].img}`}
                       alt={mentors[showMentorDescription].name}
                       className="w-full h-full object-cover"
@@ -169,14 +222,27 @@ export default function About() {
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
-                      <h2 className="text-2xl font-bold text-[#161616] mb-4">{mentors[showMentorDescription].name}</h2>
+                      <h2 className="text-2xl font-bold text-[#161616] mb-4">
+                        {mentors[showMentorDescription].name}
+                      </h2>
                       <button
                         onClick={() => setShowMentorDescription(9)}
                         className="text-gray-500 hover:text-[#0f62fe] transition-colors"
                         aria-label="Close"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -206,27 +272,35 @@ export default function About() {
                     onClick={() => toggleMentorDescription(index)}
                   >
                     <div className="aspect-square w-full">
-                      <img
+                      <Image
                         src={`/${mentor.img}`}
                         alt={mentor.name}
                         className="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-110"
                       />
                     </div>
-                    <div className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${showMentorDescription === index ? "opacity-100" : "opacity-0 hover:opacity-100"}`}>
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${showMentorDescription === index ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+                    >
                       <p className="text-white font-medium">
-                        {showMentorDescription === index ? "Selected" : "Click for details"}
+                        {showMentorDescription === index
+                          ? "Selected"
+                          : "Click for details"}
                       </p>
                     </div>
                   </div>
-                  <h3 className="font-semibold text-lg text-[#161616]">{mentor.name}</h3>
+                  <h3 className="font-semibold text-lg text-[#161616]">
+                    {mentor.name}
+                  </h3>
                 </div>
               ))}
             </div>
           </div>
 
-           {/* Team Members Section */}
-           <div className="mb-16 relative">
-            <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">Meet Our Team</h2>
+          {/* Team Members Section */}
+          <div className="mb-16 relative">
+            <h2 className="text-3xl font-semibold text-[#161616] mb-10 text-center">
+              Meet Our Team
+            </h2>
 
             {showDescription !== 9 && (
               <div
@@ -235,7 +309,7 @@ export default function About() {
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                   <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#0f62fe] shadow-lg flex-shrink-0 mx-auto md:mx-0">
-                    <img
+                    <Image
                       src={`/${teamMembers[showDescription].img}`}
                       alt={teamMembers[showDescription].name}
                       className="w-full h-full object-cover"
@@ -244,8 +318,12 @@ export default function About() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h2 className="text-2xl font-bold text-[#161616] mb-1">{teamMembers[showDescription].name}</h2>
-                        <p className="text-[#0f62fe] font-medium mb-4">{teamMembers[showDescription].role}</p>
+                        <h2 className="text-2xl font-bold text-[#161616] mb-1">
+                          {teamMembers[showDescription].name}
+                        </h2>
+                        <p className="text-[#0f62fe] font-medium mb-4">
+                          {teamMembers[showDescription].role}
+                        </p>
                       </div>
                       <button
                         onClick={() => setShowDescription(9)}
@@ -259,11 +337,18 @@ export default function About() {
                           viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
-                    <p className="text-[#393939] leading-relaxed text-lg">{teamDescriptions[showDescription]}</p>
+                    <p className="text-[#393939] leading-relaxed text-lg">
+                      {teamDescriptions[showDescription]}
+                    </p>
                   </div>
                 </div>
                 <div className="absolute -bottom-2 -right-2 w-20 h-20 bg-[#edf5ff] rounded-full opacity-50 z-0"></div>
@@ -285,22 +370,28 @@ export default function About() {
                     }`}
                     onClick={() => toggleDescription(index)}
                   >
-                    <img
+                    <Image
                       src={`/${member.img}`}
                       alt={member.name}
                       className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-110"
                     />
                     <div
                       className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 flex flex-col justify-end p-4 ${
-                        showDescription === index ? "opacity-100" : "opacity-0 hover:opacity-100"
+                        showDescription === index
+                          ? "opacity-100"
+                          : "opacity-0 hover:opacity-100"
                       }`}
                     >
                       <p className="text-white font-medium">
-                        {showDescription === index ? "Selected" : "Click for details"}
+                        {showDescription === index
+                          ? "Selected"
+                          : "Click for details"}
                       </p>
                     </div>
                   </div>
-                  <h3 className="font-semibold text-lg text-[#161616]">{member.name}</h3>
+                  <h3 className="font-semibold text-lg text-[#161616]">
+                    {member.name}
+                  </h3>
                   <p className="text-sm text-[#393939]">{member.role}</p>
                 </div>
               ))}

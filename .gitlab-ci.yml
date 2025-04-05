@@ -40,6 +40,8 @@ build:
   stage: build
   before_script:
     - export COMPOSE_BAKE=true
+    - cp $ENV_PATH .env
+    - cp $ENV_PATH frontend/.env
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
@@ -51,14 +53,17 @@ build:
     - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
   only:
     - main
-#    - deployment
+    - deployment
 
 deploy:
   tags:
     - hetzner
   stage: deploy
   before_script:
+    - export COMPOSE_BAKE=true
     - cp $ENV_PATH .env
+    - cp $ENV_PATH frontend/.env
+    - rm -rf backend/chroma
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
@@ -67,4 +72,4 @@ deploy:
     - docker compose -f docker-compose-deploy.yml up --build -d
   only:
     - main
-#    - deployment
+    - deployment
