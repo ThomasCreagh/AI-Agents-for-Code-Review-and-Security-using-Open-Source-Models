@@ -1,5 +1,5 @@
 stages:
-  # - test
+  - test
   - build
   - deploy
 
@@ -11,28 +11,33 @@ before_script:
   - cat /etc/resolv.conf
   - cat /etc/hosts
 
-# test:
-#   tags:
-#     - hetzner
-#   stage: test
-#   image: node:20
-#   before_script:
-#     - cd frontend
-#     - npm install --legacy-peer-deps
-#     - npx jest
-#     - cd ..
-#     - apt-get update && apt-get install -y python3 python3-pip python3.11-venv
-#     - cd backend
-#     - python3 -m venv .venv
-#     - source .venv/bin/activate
-#     - pip install -r requirements.txt
-#     - pip install pytest
-#   script:
-#     - pytest
-#   only:
-#     - main
+frontend_test:
+  tags:
+    - hetzner
+  stage: test
+  image: node:20
+  script:
+    - cd frontend
+    - npm install --legacy-peer-deps
+    - npx jest
+  only:
+    - main
 
-
+backend_test:
+  tags:
+    - hetzner
+  stage: test
+  image: python:3.11
+  script:
+    - apt-get update && apt-get install -y python3-venv
+    - cd backend
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+    - pip install -r requirements.txt
+    - pip install pytest
+    - pytest
+  only:
+    - main
 build:
   tags:
     - hetzner
@@ -40,6 +45,8 @@ build:
   stage: build
   before_script:
     - export COMPOSE_BAKE=true
+    - cp $ENV_PATH .env
+    - cp $ENV_PATH frontend/.env
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker compose build
@@ -57,7 +64,10 @@ deploy:
     - hetzner
   stage: deploy
   before_script:
+    - export COMPOSE_BAKE=true
     - cp $ENV_PATH .env
+    - cp $ENV_PATH frontend/.env
+    - rm -rf backend/chroma
   script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
     - docker pull ${DOCKER_USER}/sweng25_group_23_ibm-backend:latest
