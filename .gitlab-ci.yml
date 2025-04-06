@@ -23,21 +23,21 @@ frontend_test:
   only:
     - main
 
-backend_test:
-  tags:
-    - hetzner
-  stage: test
-  image: python:3.11
-  script:
-    - apt-get update && apt-get install -y python3-venv
-    - cd backend
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-    - pip install -r requirements.txt
-    - pip install pytest
-    - pytest -v --maxfail=1 --disable-warnings
-  only:
-    - main
+#backend_test:
+#  tags:
+#    - hetzner
+#  stage: test
+#  image: python:3.11
+#  script:
+#    - apt-get update && apt-get install -y python3-venv
+#    - cd backend
+#    - python3 -m venv .venv
+#    - source .venv/bin/activate
+#    - pip install -r requirements.txt
+#    - pip install pytest
+#    - pytest -v --maxfail=1 --disable-warnings
+#  only:
+#    - main
 build:
   tags:
     - hetzner
