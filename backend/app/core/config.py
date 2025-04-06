@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from pydantic import AnyHttpUrl, validator
+from pydantic import AnyHttpUrl, field_validator #validator,
 from pydantic_settings import BaseSettings
 
 
@@ -37,7 +37,8 @@ class Settings(BaseSettings):
     # CORS Configuration
     BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]] = ["*"]
 
-    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
         if isinstance(v, str) and v == "*":
             return v
@@ -55,9 +56,10 @@ class Settings(BaseSettings):
     CUDA_VISIBLE_DEVICES: str = "0"
     OLLAMA_GPU_LAYERS: int = 35
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": True,
+    }
 
 
 settings = Settings()
