@@ -31,7 +31,7 @@ before_script:
 #     - pytest
 #   only:
 #     - main
-#     - deployment
+
 
 build:
   tags:
@@ -51,7 +51,6 @@ build:
     - docker push ${DOCKER_USER}/sweng25_group_23_ibm-frontend:latest
   only:
     - main
-    - deployment
 
 deploy:
   tags:
@@ -67,4 +66,3 @@ deploy:
     - docker compose -f docker-compose-deploy.yml up --build -d
   only:
     - main
-    - deployment
