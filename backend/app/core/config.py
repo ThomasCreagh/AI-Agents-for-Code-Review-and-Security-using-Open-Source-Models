@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # API Configuration
+    API_V1_STR: str = "/api/v1"
     NEXT_PUBLIC_API_KEY: str = "t"
     NEXT_PUBLIC_BACKEND_URL: str = "http://localhost:8000/api/v1"
     FRONTEND_HOST: str = "http://localhost:3000"
