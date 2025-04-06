@@ -1,7 +1,6 @@
 from typing import List, Optional, Union
-from pydantic import AnyHttpUrl, field_validator
+from pydantic import field_validator #validator, AnyHttpUrl
 from pydantic_settings import BaseSettings
-
 
 class Settings(BaseSettings):
     # API Configuration

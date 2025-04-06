@@ -35,7 +35,7 @@ backend_test:
     - source .venv/bin/activate
     - pip install -r requirements.txt
     - pip install pytest
-    - pytest
+    - pytest -v --maxfail=1 --disable-warnings
   only:
     - main
 build:
