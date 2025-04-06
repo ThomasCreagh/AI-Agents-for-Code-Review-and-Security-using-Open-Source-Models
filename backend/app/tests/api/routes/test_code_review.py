@@ -5,7 +5,7 @@ from app.core.config import settings
 
 def auth_headers():
 
-    return {"Authorization": f"{settings.REACT_APP_API_KEY}"}
+    return {"Authorization": f"{settings.NEXT_PUBLIC_API_KEY}"}
 
 
 def test_review_code_text(client: TestClient):
