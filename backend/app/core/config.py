@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from pydantic import AnyHttpUrl, field_validator #validator,
+from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -35,7 +35,8 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     # CORS Configuration
-    BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]] = ["*"]
+    BACKEND_CORS_ORIGINS: Union[str, List[str]] = ["*"]
+
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
