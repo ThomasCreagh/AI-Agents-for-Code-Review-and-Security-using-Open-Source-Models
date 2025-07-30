@@ -1,7 +1,5 @@
 # AI Agents for Code Review and Security
 
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/ThomasCreagh/AI-Agents-for-Code-Review-and-Security-using-Open-Source-Models)
-
 This repository contains a full-stack application that leverages AI agents to perform automated code review and security analysis. It uses a sophisticated, graph-based workflow built with LangGraph, allowing for intelligent routing and analysis based on user input. The system is designed to be flexible, supporting both local open-source models via Ollama and powerful cloud APIs like Anthropic's Claude.
 
 ## Key Features
